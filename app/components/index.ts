@@ -1,0 +1,12 @@
+export { default as AnnouncementBar } from './AnnouncementBar';
+export { default as NavigationBar } from './NavigationBar';
+export { default as HeroSection } from './HeroSection';
+export { default as MainContent } from './MainContent';
+export { default as BookNowButton } from './BookNowButton';
+export { default as Logo } from './Logo';
+export { default as PhotoCollage } from './PhotoCollage';
+export { default as AccommodationSection } from './AccommodationSection';
+export { default as ArchitecturalGallery } from './ArchitecturalGallery';
+export { default as LaPuntaSection } from './LaPuntaSection';
+export { default as MapSection } from './MapSection';
+export { default as Footer } from './Footer';
