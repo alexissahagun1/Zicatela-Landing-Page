@@ -16,7 +16,7 @@ export default function PhotoCollage({ images, alt = "Gallery photo" }: PhotoCol
 
   return (
     <div className="w-full max-w-6xl mx-auto p-4">
-      <div className="grid grid-cols-4 grid-rows-3 gap-6">
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 grid-rows-6 sm:grid-rows-4 md:grid-rows-3 gap-2 sm:gap-4 md:gap-6">
         {gridImages.map((image, index) => (
           image ? (
             <div 

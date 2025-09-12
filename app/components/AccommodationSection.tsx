@@ -28,16 +28,14 @@ export default function AccommodationSection() {
   return (
     <div className="bg-white py-16 px-4">
       <div className="max-w-6xl mx-auto">
-        <div className="flex flex-col lg:flex-row md:gap-48 items-start">
+        <div className="flex flex-col lg:flex-row lg:gap-48 items-start">
           {/* Left Content */}
-          <div className="space-y-6">
-            <h2 className="text-4xl font-bold text-gray-800">
+          <div className="space-y-6 w-full lg:w-auto">
+            <h2 className="text-2xl md:text-4xl font-bold text-gray-800">
               Alojamiento
             </h2>
             
-            <p className="text-justify" style={{ 
-              width: '577px', 
-              height: '124px',
+            <p className="text-justify w-full lg:w-[577px] lg:h-[124px]" style={{ 
               fontFamily: 'Courier Prime',
               fontWeight: 400,
               fontSize: '15px',
@@ -49,7 +47,7 @@ export default function AccommodationSection() {
             
              <div className="pt-4 flex justify-end">
                <button 
-                 className="md:w-[186px] md:h-[45px] w-[100px] h-[32px] bg-transparent border border-[#A04E39] text-[#A04E39] text-[20px] leading-[22px] flex items-center justify-center transition-opacity duration-200 hover:opacity-90"
+                 className="md:w-[186px] md:h-[45px] w-[100px] h-[32px] bg-transparent border border-[#A04E39] text-[#A04E39] text-sm md:text-[20px] leading-[22px] flex items-center justify-center transition-opacity duration-200 hover:opacity-90"
                >
                  Book Now
                </button>
@@ -57,7 +55,7 @@ export default function AccommodationSection() {
           </div>
           
            {/* Right Content - Amenities */}
-           <div className="mt-16 space-y-6">
+           <div className="mt-8 lg:mt-16 space-y-4 lg:space-y-6 w-full lg:w-auto">
              {amenities.map((amenity, index) => (
                <div key={index} className="flex items-center space-x-4">
                  <div className="flex-shrink-0">
@@ -69,7 +67,7 @@ export default function AccommodationSection() {
                      className="w-[22px] h-[16px]"
                    />
                  </div>
-                 <span className="text-teal-600 text-lg whitespace-nowrap">
+                 <span className="text-teal-600 text-base lg:text-lg">
                    {amenity.text}
                  </span>
                </div>
