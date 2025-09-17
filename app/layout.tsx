@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Courier_Prime } from "next/font/google";
 import "./globals.css";
+import { LanguageProvider } from "./contexts/LanguageContext";
 
 const courierPrime = Courier_Prime({
   variable: "--font-courier",
@@ -10,8 +11,8 @@ const courierPrime = Courier_Prime({
 });
 
 export const metadata: Metadata = {
-  title: "Casa Zii - Una estancia única en La Punta, Zicatela",
-  description: "Dos espléndidas casas duplex de estilo brutalista diseñadas por Ludwig Godefroy. Donde el diseño se funde con la naturaleza en el corazón de La Punta, Oaxaca.",
+  title: "Casa Zii - A unique stay in La Punta, Zicatela",
+  description: "Two stunning brutalist-style duplex homes designed by Ludwig Godefroy. Where design meets nature in the heart of La Punta, Oaxaca.",
 };
 
 export default function RootLayout({
@@ -24,7 +25,9 @@ export default function RootLayout({
       <body
         className={`${courierPrime.variable} font-courier antialiased`}
       >
-        {children}
+        <LanguageProvider>
+          {children}
+        </LanguageProvider>
       </body>
     </html>
   );

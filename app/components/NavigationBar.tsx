@@ -4,9 +4,26 @@ import { useState } from "react";
 import Logo from "./Logo";
 import Image from "next/image";
 import Link from "next/link";
+import { useLanguage } from '../contexts/LanguageContext';
 
 export default function NavigationBar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { language, toggleLanguage } = useLanguage();
+
+  const navigationText = {
+    es: {
+      casaCampeche: "● CASA CAMPECHE",
+      casaPalmas: "▲ CASA PALMAS",
+      press: "PRENSA"
+    },
+    en: {
+      casaCampeche: "● CASA CAMPECHE",
+      casaPalmas: "▲ CASA PALMAS",
+      press: "PRESS"
+    }
+  };
+
+  const currentNavText = navigationText[language];
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
@@ -25,13 +42,13 @@ export default function NavigationBar() {
         {/* Navigation Links - Hidden on mobile */}
         <div className="hidden md:flex items-center space-x-6 lg:space-x-8 xl:space-x-12 whitespace-nowrap">
           <Link href="/casa-campeche" className="text-[#222222] text-[10px] md:text-[14px] leading-[11px] hover:opacity-70 whitespace-nowrap">
-            ● CASA CAMPECHE
+            {currentNavText.casaCampeche}
           </Link>
           <Link href="/casa-palmas" className="text-[#222222] text-[10px] md:text-[14px] leading-[11px] hover:opacity-70 whitespace-nowrap">
-            ▲ CASA PALMAS
+            {currentNavText.casaPalmas}
           </Link>
           <Link href="/prensa" className="text-[#222222] text-[10px] md:text-[14px] leading-[11px] hover:opacity-70 whitespace-nowrap">
-            PRENSA
+            {currentNavText.press}
           </Link>
         </div>
 
@@ -65,16 +82,30 @@ export default function NavigationBar() {
             />
           </a>
           
-          {/* English with UK Flag - Hidden on mobile */}
-          <div className="hidden md:flex items-center space-x-1">
-            <Image
-              src="/english-logo.png"
-              alt="UK Flag"
-              width={16}
-              height={16}
-            />
-            <span className="text-black text-[13px] leading-[15px]">English</span>
-          </div>
+          {/* Language Toggle with Flag - Hidden on mobile */}
+          <button 
+            onClick={toggleLanguage}
+            className="hidden md:flex items-center space-x-1 hover:opacity-70 cursor-pointer"
+          >
+            {language === 'es' ? (
+              <Image
+                src="/english-logo.png"
+                alt="UK Flag"
+                width={16}
+                height={16}
+              />
+            ) : (
+              <Image
+                src="/Flag_of_Mexico.png"
+                alt="Mexican Flag"
+                width={16}
+                height={16}
+              />
+            )}
+            <span className="text-black text-[13px] leading-[15px]">
+              {language === 'es' ? 'English' : 'Español'}
+            </span>
+          </button>
         </div>
       </nav>
 
@@ -106,21 +137,21 @@ export default function NavigationBar() {
                 className="text-[#222222] text-lg hover:opacity-70"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
-                ● CASA CAMPECHE
+                {currentNavText.casaCampeche}
               </Link>
               <Link 
                 href="/casa-palmas" 
                 className="text-[#222222] text-lg hover:opacity-70"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
-                ▲ CASA PALMAS
+                {currentNavText.casaPalmas}
               </Link>
               <Link 
                 href="/prensa" 
                 className="text-[#222222] text-lg hover:opacity-70"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
-                PRENSA
+                {currentNavText.press}
               </Link>
             </div>
 
@@ -135,15 +166,29 @@ export default function NavigationBar() {
                   className="hover:opacity-70"
                 />
               </a>
-              <div className="flex items-center space-x-1">
-                <Image
-                  src="/english-logo.png"
-                  alt="UK Flag"
-                  width={16}
-                  height={16}
-                />
-                <span className="text-black text-sm">English</span>
-              </div>
+              <button 
+                onClick={toggleLanguage}
+                className="flex items-center space-x-1 hover:opacity-70 cursor-pointer"
+              >
+                {language === 'es' ? (
+                  <Image
+                    src="/english-logo.png"
+                    alt="UK Flag"
+                    width={16}
+                    height={16}
+                  />
+                ) : (
+                  <Image
+                    src="/Flag_of_Mexico.png"
+                    alt="Mexican Flag"
+                    width={16}
+                    height={16}
+                  />
+                )}
+                <span className="text-black text-sm">
+                  {language === 'es' ? 'English' : 'Español'}
+                </span>
+              </button>
             </div>
           </div>
         </div>

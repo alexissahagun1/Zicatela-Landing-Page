@@ -8,6 +8,7 @@ import {
   CarouselItem,
   useCarousel,
 } from "@/components/ui/carousel"
+import { useLanguage } from '../contexts/LanguageContext'
 
 interface GalleryItem {
   id: string
@@ -43,6 +44,20 @@ function CarouselNavigation() {
   const { scrollPrev, scrollNext, canScrollPrev, canScrollNext, api } = useCarousel()
   const [current, setCurrent] = React.useState(0)
   const [isMobile, setIsMobile] = React.useState(false)
+  const { language } = useLanguage()
+
+  const navigationText = {
+    es: {
+      prev: "Prev",
+      next: "Sig"
+    },
+    en: {
+      prev: "Prev",
+      next: "Next"
+    }
+  }
+
+  const currentNavText = navigationText[language]
 
   React.useEffect(() => {
     const checkMobile = () => {
@@ -104,7 +119,7 @@ function CarouselNavigation() {
         className="relative w-[39px] h-[18px] disabled:opacity-50 disabled:cursor-not-allowed transition-opacity"
       >
         <span className="font-courier font-normal text-base leading-[18px] text-[#222222]">
-          Prev
+          {currentNavText.prev}
         </span>
       </button>
       
@@ -126,7 +141,7 @@ function CarouselNavigation() {
         className="relative w-[29px] h-[18px] disabled:opacity-50 disabled:cursor-not-allowed transition-opacity"
       >
         <span className="font-courier font-normal text-base leading-[18px] text-black">
-          Sig
+          {currentNavText.next}
         </span>
       </button>
     </div>
@@ -134,6 +149,15 @@ function CarouselNavigation() {
 }
 
 export default function ArchitecturalGallery() {
+  const { language } = useLanguage()
+
+  const buttonText = {
+    es: "Ver más",
+    en: "Discover"
+  }
+
+  const currentButtonText = buttonText[language]
+
   return (
     <section className="py-16">
       <div className="container mx-auto px-4">
@@ -171,7 +195,7 @@ export default function ArchitecturalGallery() {
                     {/* Ver más button */}
                     <div className="absolute right-[8.25%] bottom-[4.77%]">
                       <button className="font-courier font-normal text-base leading-[18px] text-white border border-white/20 bg-white/8 px-4 py-2 hover:bg-white/20 transition-colors">
-                        Ver más
+                        {currentButtonText}
                       </button>
                     </div>
                   </div>

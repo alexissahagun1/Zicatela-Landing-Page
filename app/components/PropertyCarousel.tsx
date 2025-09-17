@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import { useLanguage } from '../contexts/LanguageContext';
 
 interface PropertyCarouselProps {
   title: string;
@@ -25,6 +26,20 @@ export default function PropertyCarousel({
   layout = "image-left"
 }: PropertyCarouselProps) {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const { language } = useLanguage();
+
+  const navigationText = {
+    es: {
+      prev: "Prev",
+      next: "Sig"
+    },
+    en: {
+      prev: "Prev",
+      next: "Next"
+    }
+  };
+
+  const currentNavText = navigationText[language];
 
   const goToPrevious = () => {
     setCurrentImageIndex((prev) => 
@@ -69,7 +84,7 @@ export default function PropertyCarousel({
               onClick={goToPrevious}
               className="text-[#222222] hover:text-[#A04E39] transition-colors font-['Courier_Prime'] text-base leading-[18px]"
             >
-              Prev
+              {currentNavText.prev}
             </button>
             
             {/* Dots */}
@@ -93,7 +108,7 @@ export default function PropertyCarousel({
               onClick={goToNext}
               className="text-[#000000] hover:text-[#A04E39] transition-colors font-['Courier_Prime'] text-base leading-[18px]"
             >
-              Sig
+              {currentNavText.next}
             </button>
           </div>
         </div>

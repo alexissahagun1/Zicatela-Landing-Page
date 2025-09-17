@@ -1,8 +1,38 @@
+"use client";
+
 import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useLanguage } from '../contexts/LanguageContext';
 
 const Footer: React.FC = () => {
+  const { language } = useLanguage();
+
+  const content = {
+    es: {
+      contact: "CONTACTO",
+      reservations: "CENTRO DE RESERVACIONES",
+      casaCampeche: "CASA CAMPECHE",
+      casaPalmas: "CASA PALMAS",
+      press: "PRENSA",
+      reserve: "RESERVA",
+      privacy: "AVISO DE PRIVACIDAD",
+      terms: "TÉRMINOS Y CONDICIONES"
+    },
+    en: {
+      contact: "CONTACT",
+      reservations: "RESERVATION CENTRE",
+      casaCampeche: "CASA CAMPECHE",
+      casaPalmas: "CASA PALMAS",
+      press: "PRESS",
+      reserve: "BOOKING",
+      privacy: "PRIVACY PRIVACY",
+      terms: "TERMS AND CONDITIONS"
+    }
+  };
+
+  const currentContent = content[language];
+
   return (
     <footer className="relative w-full bg-[#EFEFEF] py-20 px-4 md:px-8 lg:px-16">
       <div className="max-w-4xl mx-auto">
@@ -34,24 +64,24 @@ const Footer: React.FC = () => {
             
             {/* Contact Information */}
             <div className="text-black font-courier text-sm leading-5 space-y-1">
-              <div className="font-regular">CONTACTO</div>
-              <div className="font-regular">CENTRO DE RESERVACIONES</div>
+              <div className="font-regular">{currentContent.contact}</div>
+              <div className="font-regular">{currentContent.reservations}</div>
               <div>+52 00 0000 0000</div>
               <div>reservaciones@casazii.com</div>
             </div>
 
             {/* Locations & Media */}
             <div className="text-black font-courier text-sm leading-5 space-y-1">
-              <div className="font-regular">CASA CAMPECHE</div>
-              <div className="font-regular">CASA PALMAS</div>
-              <div className="font-regular">PRENSA</div>
-              <div className="font-regular">RESERVA</div>
+              <div className="font-regular">{currentContent.casaCampeche}</div>
+              <div className="font-regular">{currentContent.casaPalmas}</div>
+              <div className="font-regular">{currentContent.press}</div>
+              <div className="font-regular">{currentContent.reserve}</div>
             </div>
 
             {/* Legal Information */}
             <div className="text-black font-courier text-sm leading-5 space-y-1">
-              <div className="font-regular">AVISO DE PRIVACIDAD</div>
-              <div className="font-regular">TÉRMINOS Y CONDICIONES</div>
+              <div className="font-regular">{currentContent.privacy}</div>
+              <div className="font-regular">{currentContent.terms}</div>
             </div>
           </div>
 
