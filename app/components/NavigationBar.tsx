@@ -14,12 +14,14 @@ export default function NavigationBar() {
     es: {
       casaCampeche: "● CASA CAMPECHE",
       casaPalmas: "▲ CASA PALMAS",
-      press: "PRENSA"
+      press: "PRENSA",
+      // book: "RESERVA"
     },
     en: {
       casaCampeche: "● CASA CAMPECHE",
       casaPalmas: "▲ CASA PALMAS",
-      press: "PRESS"
+      press: "PRESS",
+      // book: "BOOK"
     }
   };
 
@@ -50,6 +52,9 @@ export default function NavigationBar() {
           <Link href="/prensa" className="text-[#222222] text-[10px] md:text-[14px] leading-[11px] hover:opacity-70 whitespace-nowrap">
             {currentNavText.press}
           </Link>
+          <Link href="/booking" className="text-[#222222] text-[10px] md:text-[14px] leading-[11px] hover:opacity-70 whitespace-nowrap">
+            {currentNavText.book}
+          </Link>
         </div>
 
         {/* Right side - Book Now button, Instagram, and English */}
@@ -65,9 +70,9 @@ export default function NavigationBar() {
             <div className="w-6 h-0.5 bg-black"></div>
           </button>
 
-          <Link href="/contact">
+          <Link href="/booking">
             <button className="w-[100px] md:w-[133px] h-[32px] md:h-[37px] bg-[#A04E39] text-white text-[14px] md:text-[20px] leading-[16px] md:leading-[22px] flex items-center justify-center hover:opacity-90">
-              Book Now
+              {language === 'es' ? 'Book Now' : 'Book Now'}
             </button>
           </Link>
           
@@ -152,6 +157,13 @@ export default function NavigationBar() {
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 {currentNavText.press}
+              </Link>
+              <Link 
+                href="/booking" 
+                className="text-[#222222] text-lg hover:opacity-70"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                {currentNavText.book}
               </Link>
             </div>
 

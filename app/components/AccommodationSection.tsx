@@ -89,11 +89,7 @@ export default function AccommodationSection() {
             </p>
             
              <div className="pt-4 flex justify-end">
-               <button 
-                 className="md:w-[186px] md:h-[45px] w-[100px] h-[32px] bg-transparent border border-[#A04E39] text-[#A04E39] text-sm md:text-[20px] leading-[22px] flex items-center justify-center transition-opacity duration-200 hover:opacity-90"
-               >
-                 Book Now
-               </button>
+               <BookNowButton variant="secondary" />
              </div>
           </div>
           

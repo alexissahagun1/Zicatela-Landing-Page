@@ -1,8 +1,19 @@
+"use client";
+
+import { useLanguage } from '../contexts/LanguageContext';
+
 interface AmenitiesSectionProps {
   amenities: string;
 }
 
 export default function AmenitiesSection({ amenities }: AmenitiesSectionProps) {
+  const { language } = useLanguage();
+
+  const titleText = {
+    es: "AMENIDADES",
+    en: "AMENITIES"
+  };
+
   return (
     <div className="relative bg-white">
       {/* Background Rectangle */}
@@ -14,7 +25,7 @@ export default function AmenitiesSection({ amenities }: AmenitiesSectionProps) {
           {/* Amenities Section */}
           <div className="mb-12 md:mb-8">
             <h2 className="font-courier text-[#222222] text-lg md:text-xl font-regular text-center mb-8">
-              AMENIDADES
+              {titleText[language]}
             </h2>
             
             <div className="text-center">

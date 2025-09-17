@@ -1,5 +1,6 @@
 "use client";
 
+import AnnouncementBar from "../components/AnnouncementBar";
 import NavigationBar from "../components/NavigationBar";
 import Footer from "../components/Footer";
 import PropertyHeader from "../components/PropertyHeader";
@@ -9,12 +10,13 @@ import PropertyCarousel from "../components/PropertyCarousel";
 import MapSection from "../components/MapSection";
 
 export default function CasaCampechePage() {
-  const title = "Casa Campeche I y II";
-  const description = "Casa Campeche es una residencia tipo dúplex con diseño simétrico y funcional. Se puede rentar la casa completa o cada unidad por separado, ya que ambas son totalmente independientes. Se conectan a través de un área común, con alberca privada, perfecta para disfrutar del sol y el entorno tropical. Ideal para grupos o parejas que viajan juntas.";
-  const amenities = "Toallas de baño y de alberca / Shampoo, gel de ducha, acondicionador, jabón de manos, loción corporal / Cocina equipada / WiFi de alta velocidad vía Starlink / Aire acondicionado / Pet Friendly";
+  const title = "Casa Campeche I and II";
+  const description = "Casa Campeche is a stylish duplex residence with a symmetrical and functional design. You can rent the entire house or each unit independently, as both are fully self-contained. The two spaces connect through a shared area featuring a private pool — perfect for soaking up the sun and the lush tropical surroundings. Ideal for groups or couples traveling together.";
+  const amenities = "Bath and pool towels / Shampoo, shower gel, conditioner, hand soap, body lotion / Fully equipped kitchen / High-speed WiFi via Starlink / Air conditioning / Pet friendly";
 
   return (
     <div className="min-h-screen bg-white">
+      <AnnouncementBar />
       <NavigationBar />
       
       {/* Casa Campeche Content */}
@@ -50,14 +52,14 @@ export default function CasaCampechePage() {
               "Casa Campeche I Exterior"
             ]}
             features={[
-              "4 huéspedes",
-              "2 habitaciones",
-              "2 camas matrimoniales",
-              "Alberca privada",
-              "Terraza"
+              "4 guests",
+              "2 bedrooms",
+              "2 double beds",
+              "Private pool",
+              "Terrace"
             ]}
-            connectionNote="*Opción a conectarse con Campeche II por el área de la alberca"
-            buttonText="Explorar fechas disponibles"
+            connectionNote="*Option to connect to Campeche II through the pool area."
+            buttonText="Explore available dates"
             layout="image-left"
             onButtonClick={() => {
               // Handle button click - could navigate to booking page
@@ -77,14 +79,14 @@ export default function CasaCampechePage() {
               "Casa Campeche II Interior"
             ]}
             features={[
-              "4 huéspedes",
-              "2 habitaciones",
-              "2 camas matrimoniales",
-              "Alberca privada",
-              "Terraza"
+              "4 guests",
+              "2 bedrooms",
+              "2 double beds",
+              "Private pool",
+              "Terrace"
             ]}
-            connectionNote="*Opción a conectarse con Campeche I por el área de la alberca"
-            buttonText="Explorar fechas disponibles"
+            connectionNote="*Option to connect to Campeche I through the pool area."
+            buttonText="Explore available dates"
             layout="image-right"
             onButtonClick={() => {
               // Handle button click - could navigate to booking page

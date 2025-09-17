@@ -1,3 +1,4 @@
+import AnnouncementBar from "../components/AnnouncementBar";
 import NavigationBar from "../components/NavigationBar";
 import Footer from "../components/Footer";
 import BookNowButton from "../components/BookNowButton";
@@ -5,6 +6,7 @@ import BookNowButton from "../components/BookNowButton";
 export default function ContactPage() {
   return (
     <div className="min-h-screen">
+      <AnnouncementBar />
       <NavigationBar />
       
       {/* Contact Content */}
