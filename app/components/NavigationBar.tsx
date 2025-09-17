@@ -52,9 +52,9 @@ export default function NavigationBar() {
           <Link href="/prensa" className="text-[#222222] text-[10px] md:text-[14px] leading-[11px] hover:opacity-70 whitespace-nowrap">
             {currentNavText.press}
           </Link>
-          <Link href="/booking" className="text-[#222222] text-[10px] md:text-[14px] leading-[11px] hover:opacity-70 whitespace-nowrap">
+          {/* <Link href="/booking" className="text-[#222222] text-[10px] md:text-[14px] leading-[11px] hover:opacity-70 whitespace-nowrap">
             {currentNavText.book}
-          </Link>
+          </Link> */}
         </div>
 
         {/* Right side - Book Now button, Instagram, and English */}
