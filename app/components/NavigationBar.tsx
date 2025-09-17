@@ -158,13 +158,13 @@ export default function NavigationBar() {
               >
                 {currentNavText.press}
               </Link>
-              <Link 
+              {/* <Link 
                 href="/booking" 
                 className="text-[#222222] text-lg hover:opacity-70"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 {currentNavText.book}
-              </Link>
+              </Link> */}
             </div>
 
             {/* Mobile Menu Footer */}
