@@ -52,17 +52,12 @@ export default function NavigationBar() {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
       
-      // Only apply scroll behavior on mobile
-      if (isMobile) {
-        if (currentScrollY > lastScrollY && currentScrollY > 100) {
-          // Scrolling down and past 100px - hide navbar
-          setIsNavbarVisible(false);
-        } else {
-          // Scrolling up - show navbar
-          setIsNavbarVisible(true);
-        }
+      // Apply scroll behavior on all screen sizes
+      if (currentScrollY > lastScrollY && currentScrollY > 100) {
+        // Scrolling down and past 100px - hide navbar
+        setIsNavbarVisible(false);
       } else {
-        // On desktop, always show navbar
+        // Scrolling up - show navbar
         setIsNavbarVisible(true);
       }
       
@@ -74,13 +69,13 @@ export default function NavigationBar() {
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
-  }, [lastScrollY, isMobile]);
+  }, [lastScrollY]);
 
   return (
     <>
       <nav className={`w-full h-16 md:h-26 bg-white flex items-center justify-between px-4 md:px-8 lg:px-16 xl:px-24 transition-transform duration-300 ease-in-out ${
         isNavbarVisible ? 'translate-y-0' : '-translate-y-full'
-      } ${isMobile ? 'fixed top-0 left-0 z-40' : 'relative'}`}>
+      } fixed top-10 left-0 z-40 md:top-11`}>
         {/* Logo */}
         <div className="flex items-center">
           <Link href="/homepage">

@@ -121,7 +121,7 @@ export default function BookingPage() {
       
       {/* Hero Section with Background */}
       <div 
-        className="relative w-full bg-cover bg-center bg-no-repeat flex items-center justify-center px-4"
+        className="relative w-full bg-cover bg-center bg-no-repeat flex items-center justify-center px-4 pt-26 md:pt-32"
         style={{
           backgroundImage: "url('/BackgroundBookNow.png')",
           height: "75vh"
