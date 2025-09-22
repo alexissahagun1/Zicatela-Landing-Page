@@ -142,7 +142,7 @@ export default function BookingPage() {
             <div className="mb-4 sm:mb-6 lg:mb-8">
               <div className="bg-white p-3 sm:p-4 lg:p-6 flex flex-row items-center justify-center gap-8 sm:gap-6 lg:gap-8" style={{ borderRadius: '50px' }}>
                 {/* Check-in Section */}
-                <div className="flex items-center space-x-2 sm:space-x-3 cursor-pointer" onClick={() => (document.getElementById('checkin-input') as HTMLInputElement)?.showPicker()}>
+                <div className="flex items-center space-x-2 sm:space-x-3 cursor-pointer relative">
                   <CalendarIcon className="h-4 w-4 sm:h-5 sm:w-5 lg:h-6 lg:w-6 text-black" />
                   <span className="font-['Courier_Prime'] text-black text-lg sm:text-base lg:text-lg">
                     {checkInDate ? checkInDate.toLocaleDateString() : currentContent.checkIn}
@@ -153,7 +153,8 @@ export default function BookingPage() {
                     value={checkInDate ? checkInDate.toISOString().split('T')[0] : ''}
                     onChange={(e) => setCheckInDate(e.target.value ? new Date(e.target.value) : undefined)}
                     min={new Date().toISOString().split('T')[0]}
-                    className="absolute opacity-0 pointer-events-none"
+                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                    style={{ zIndex: 1 }}
                   />
                 </div>
 
@@ -163,7 +164,7 @@ export default function BookingPage() {
                 </div>
 
                 {/* Check-out Section */}
-                <div className="flex items-center space-x-2 sm:space-x-3 cursor-pointer" onClick={() => (document.getElementById('checkout-input') as HTMLInputElement)?.showPicker()}>
+                <div className="flex items-center space-x-2 sm:space-x-3 cursor-pointer relative">
                   <span className="font-['Courier_Prime'] text-black text-lg sm:text-base lg:text-lg">
                     {checkOutDate ? checkOutDate.toLocaleDateString() : currentContent.checkOut}
                   </span>
@@ -173,7 +174,8 @@ export default function BookingPage() {
                     value={checkOutDate ? checkOutDate.toISOString().split('T')[0] : ''}
                     onChange={(e) => setCheckOutDate(e.target.value ? new Date(e.target.value) : undefined)}
                     min={checkInDate ? checkInDate.toISOString().split('T')[0] : new Date().toISOString().split('T')[0]}
-                    className="absolute opacity-0 pointer-events-none"
+                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                    style={{ zIndex: 1 }}
                   />
                 </div>
               </div>

@@ -60,7 +60,7 @@ export default function MainContent() {
           <p className="text-[12px] md:text-[16px] leading-[14px] md:leading-[18px] text-[#222222] text-center mb-2">
             {currentContent.subtitle}
           </p>
-          <div className="flex flex-col md:flex-row justify-center items-center space-y-2 md:space-y-0 md:space-x-8">
+          <div className="flex flex-col md:flex-row justify-center items-center space-y-4 md:space-y-0 md:space-x-8">
             <span className="text-[12px] md:text-[16px] leading-[14px] md:leading-[18px] text-[#222222]">
               {currentContent.casaCampeche}
             </span>
@@ -71,7 +71,7 @@ export default function MainContent() {
         </div>
         
         {/* Descriptive paragraphs */}
-        <div className="w-full mx-auto">
+        <div className="w-full mx-auto sm:mt-0 mt-6">
           <p 
             className="text-[12px] md:text-[15px] leading-[14px] md:leading-[17px] text-[#222222] text-left md:text-justify"
             dangerouslySetInnerHTML={{ __html: currentContent.description }}

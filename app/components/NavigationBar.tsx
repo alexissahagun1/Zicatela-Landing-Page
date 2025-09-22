@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Logo from "./Logo";
 import Image from "next/image";
 import Link from "next/link";
@@ -8,6 +8,9 @@ import { useLanguage } from '../contexts/LanguageContext';
 
 export default function NavigationBar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isNavbarVisible, setIsNavbarVisible] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
   const { language, toggleLanguage } = useLanguage();
 
   const navigationText = {
@@ -31,9 +34,53 @@ export default function NavigationBar() {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
 
+  useEffect(() => {
+    // Check if mobile on mount and resize
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    
+    return () => {
+      window.removeEventListener('resize', checkMobile);
+    };
+  }, []);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      
+      // Only apply scroll behavior on mobile
+      if (isMobile) {
+        if (currentScrollY > lastScrollY && currentScrollY > 100) {
+          // Scrolling down and past 100px - hide navbar
+          setIsNavbarVisible(false);
+        } else {
+          // Scrolling up - show navbar
+          setIsNavbarVisible(true);
+        }
+      } else {
+        // On desktop, always show navbar
+        setIsNavbarVisible(true);
+      }
+      
+      setLastScrollY(currentScrollY);
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, [lastScrollY, isMobile]);
+
   return (
     <>
-      <nav className="w-full h-16 md:h-26 bg-white flex items-center justify-between px-4 md:px-8 lg:px-16 xl:px-24">
+      <nav className={`w-full h-16 md:h-26 bg-white flex items-center justify-between px-4 md:px-8 lg:px-16 xl:px-24 transition-transform duration-300 ease-in-out ${
+        isNavbarVisible ? 'translate-y-0' : '-translate-y-full'
+      } ${isMobile ? 'fixed top-0 left-0 z-40' : 'relative'}`}>
         {/* Logo */}
         <div className="flex items-center">
           <Link href="/homepage">
@@ -72,7 +119,7 @@ export default function NavigationBar() {
 
           <Link href="/booking">
             <button className="w-[100px] md:w-[133px] h-[32px] md:h-[37px] bg-[#A04E39] text-white text-[14px] md:text-[20px] leading-[16px] md:leading-[22px] flex items-center justify-center hover:opacity-90">
-              {language === 'es' ? 'Book Now' : 'Book Now'}
+              {language === 'es' ? 'Reservar' : 'Book Now'}
             </button>
           </Link>
           
