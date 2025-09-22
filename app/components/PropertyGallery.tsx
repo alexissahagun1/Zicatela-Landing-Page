@@ -16,7 +16,7 @@ export default function PropertyGallery({
   return (
     <>
       {/* Exterior Image Section */}
-      <div className="relative w-full h-[60vh] md:h-[80vh] overflow-hidden">
+      <div className="relative w-full h-[40vh] md:h-[60vh] md:w-screen md:left-1/2 md:transform md:-translate-x-1/2 overflow-hidden">
         <Image
           src={exteriorImage}
           alt={exteriorAlt}

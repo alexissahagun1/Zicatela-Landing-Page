@@ -20,7 +20,7 @@ export default function CasaPalmasPage() {
       <NavigationBar />
       
       {/* Casa Palmas Content */}
-      <div className="relative">
+      <div className="relative max-w-7xl mx-auto text-center md:text-left">
         {/* Property Gallery */}
         <PropertyGallery
           exteriorImage="/CasaPalmasI.png"

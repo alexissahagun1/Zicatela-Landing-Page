@@ -56,10 +56,10 @@ export default function BookingPage() {
       checkIn: "Check-in",
       checkOut: "Check-out",
       search: "Search",
-      contact: "Contact",
+      contact: "Location",
       casaCampeche: "CASA CAMPECHE",
       casaPalmas: "CASA PALMAS",
-      entryExitPolicies: "Entry and Exit Policies",
+      entryExitPolicies: "Check-In and Check-Out",
       propertyCancellationPolicies: "Property and Cancellation Policies",
       termsConditions: "Terms and Conditions",
       readMore: "Read more",
@@ -132,23 +132,19 @@ export default function BookingPage() {
 
           {/* Airbnb-style Booking Form */}
           <div 
-            className="bg-white/70 backdrop-blur-sm rounded-2xl shadow-2xl p-8 mx-auto"
-            style={{
-              width: "550px",
-              height: "330px"
-            }}
+            className="bg-white/70 backdrop-blur-sm rounded-2xl shadow-2xl p-8 sm:p-6 lg:p-8 mx-auto w-full max-w-sm sm:max-w-md lg:max-w-none h-auto sm:h-auto lg:h-[330px]"
           >
-            <h2 className="text-center text-2xl font-regular text-gray-800 mb-8 font-['Courier_Prime'] uppercase">
+            <h2 className="text-center text-lg sm:text-xl lg:text-2xl font-regular text-gray-800 mb-4 sm:mb-6 lg:mb-8 font-['Courier_Prime'] uppercase">
               {currentContent.selectStayDays}
             </h2>
             
             {/* Single Date Selection Field */}
-            <div className="mb-8">
-              <div className="bg-white p-6 flex items-center justify-center gap-8" style={{ borderRadius: '50px' }}>
+            <div className="mb-4 sm:mb-6 lg:mb-8">
+              <div className="bg-white p-3 sm:p-4 lg:p-6 flex flex-row items-center justify-center gap-8 sm:gap-6 lg:gap-8" style={{ borderRadius: '50px' }}>
                 {/* Check-in Section */}
-                <div className="flex items-center space-x-3 cursor-pointer" onClick={() => (document.getElementById('checkin-input') as HTMLInputElement)?.showPicker()}>
-                  <CalendarIcon className="h-6 w-6 text-black" />
-                  <span className="font-['Courier_Prime'] text-black text-lg">
+                <div className="flex items-center space-x-2 sm:space-x-3 cursor-pointer" onClick={() => (document.getElementById('checkin-input') as HTMLInputElement)?.showPicker()}>
+                  <CalendarIcon className="h-4 w-4 sm:h-5 sm:w-5 lg:h-6 lg:w-6 text-black" />
+                  <span className="font-['Courier_Prime'] text-black text-lg sm:text-base lg:text-lg">
                     {checkInDate ? checkInDate.toLocaleDateString() : currentContent.checkIn}
                   </span>
                   <input
@@ -162,13 +158,13 @@ export default function BookingPage() {
                 </div>
 
                 {/* Arrow Separator */}
-                <div className="text-black text-5xl ">
+                <div className="text-black text-2xl sm:text-3xl lg:text-5xl">
                   →
                 </div>
 
                 {/* Check-out Section */}
-                <div className="flex items-center space-x-3 cursor-pointer" onClick={() => (document.getElementById('checkout-input') as HTMLInputElement)?.showPicker()}>
-                  <span className="font-['Courier_Prime'] text-black text-lg">
+                <div className="flex items-center space-x-2 sm:space-x-3 cursor-pointer" onClick={() => (document.getElementById('checkout-input') as HTMLInputElement)?.showPicker()}>
+                  <span className="font-['Courier_Prime'] text-black text-lg sm:text-base lg:text-lg">
                     {checkOutDate ? checkOutDate.toLocaleDateString() : currentContent.checkOut}
                   </span>
                   <input
@@ -185,11 +181,11 @@ export default function BookingPage() {
 
 
             {/* Search Button */}
-            <div className="mt-8">
+            <div className="mt-4 sm:mt-6 lg:mt-8">
               <Button
                 onClick={handleSearch}
                 disabled={!checkInDate || !checkOutDate}
-                className="w-full text-white py-8  text-2xl  rounded-3xl font-['Courier_Prime']  cursor-pointer"
+                className="w-full text-white py-7 sm:py-6 lg:py-8 text-lg sm:text-xl lg:text-2xl rounded-3xl font-['Courier_Prime'] cursor-pointer"
                 style={{
                   backgroundColor: "#98989A",
                   opacity: 1
@@ -203,22 +199,22 @@ export default function BookingPage() {
       </div>
 
       {/* Contact and Map Section */}
-      <div className="bg-white py-16 px-4">
+      <div className="bg-white py-8 sm:py-12 lg:py-16 px-4">
         <div className="max-w-6xl mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-10 lg:gap-12">
             {/* Contact Information */}
-            <div>
-              <h2 className="text-3xl font-bold text-gray-800 mb-8 font-['Courier_Prime']">
+            <div className="text-center sm:text-left">
+              <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-6 sm:mb-8 font-['Courier_Prime']">
                 {currentContent.contact}
               </h2>
               
-              <div className="space-y-6">
+              <div className="space-y-4 sm:space-y-6">
                 {/* Casa Campeche */}
                 <div>
-                  <h3 className="font-bold text-lg text-gray-800 mb-2 font-['Courier_Prime']">
+                  <h3 className="font-regular text-base sm:text-lg text-gray-800 mb-2 font-['Courier_Prime']">
                     {currentContent.casaCampeche}
                   </h3>
-                  <p className="text-gray-700 font-['Courier_Prime']">
+                  <p className="text-sm sm:text-base text-gray-700 font-['Courier_Prime']">
                     Calle Campeche, sin Número<br />
                     La Punta, Zicatela<br />
                     Oaxaca MX 70900
@@ -227,10 +223,10 @@ export default function BookingPage() {
 
                 {/* Casa Palmas */}
                 <div>
-                  <h3 className="font-bold text-lg text-gray-800 mb-2 font-['Courier_Prime']">
+                  <h3 className="font-regular text-base sm:text-lg text-gray-800 mb-2 font-['Courier_Prime']">
                     {currentContent.casaPalmas}
                   </h3>
-                  <p className="text-gray-700 font-['Courier_Prime']">
+                  <p className="text-sm sm:text-base text-gray-700 font-['Courier_Prime']">
                     Calle PALMAS, sin Número<br />
                     Brisas de Zicatela, Zicatela<br />
                     Oaxaca MX 70900
@@ -238,8 +234,8 @@ export default function BookingPage() {
                 </div>
 
                 {/* Contact Details */}
-                <div className="pt-4">
-                  <p className="text-gray-700 font-['Courier_Prime']">
+                <div className="pt-2 sm:pt-4">
+                  <p className="text-sm sm:text-base text-gray-700 font-['Courier_Prime']">
                     +52 55 9999 9999<br />
                     hola@casazii.com
                   </p>
@@ -262,19 +258,19 @@ export default function BookingPage() {
       </div>
 
       {/* Entry and Exit Policies Section */}
-      <div className="bg-white py-16 px-4">
+      <div className="text-center sm:text-left bg-white py-8 sm:py-12 lg:py-16 px-4">
         <div className="max-w-6xl mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-10 lg:gap-12">
             {/* Entry and Exit Policies */}
             <div>
-              <h3 className="text-xl font-bold text-gray-800 mb-4 font-['Courier_Prime']">
+              <h3 className="text-lg sm:text-xl font-bold text-gray-800 mb-3 sm:mb-4 font-['Courier_Prime']">
                 {currentContent.entryExitPolicies}
               </h3>
-              <div className="space-y-2">
-                <p className="text-gray-700 font-['Courier_Prime']">{currentContent.policies.checkIn}</p>
-                <p className="text-gray-700 font-['Courier_Prime']">{currentContent.policies.checkOut}</p>
-                <p className="text-gray-700 font-['Courier_Prime']">{currentContent.policies.lateCheckout}</p>
-                <p className="text-gray-700 font-['Courier_Prime']">{currentContent.policies.lateCheckoutFee}</p>
+              <div className="space-y-1 sm:space-y-2">
+                <p className="text-sm sm:text-base text-gray-700 font-['Courier_Prime']">{currentContent.policies.checkIn}</p>
+                <p className="text-sm sm:text-base text-gray-700 font-['Courier_Prime']">{currentContent.policies.checkOut}</p>
+                <p className="text-sm sm:text-base text-gray-700 font-['Courier_Prime']">{currentContent.policies.lateCheckout}</p>
+                <p className="text-sm sm:text-base text-gray-700 font-['Courier_Prime']">{currentContent.policies.lateCheckoutFee}</p>
               </div>
             </div>
 
@@ -292,37 +288,37 @@ export default function BookingPage() {
       </div>
 
       {/* Property and Cancellation Policies Section */}
-      <div className="bg-white py-16 px-4">
+      <div className="bg-white py-8 sm:py-12 lg:py-16 px-4">
         <div className="max-w-6xl mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-10 lg:gap-12">
             {/* Property and Cancellation Policies */}
             <div>
-              <h3 className="text-xl font-bold text-gray-800 mb-4 font-['Courier_Prime']">
+              <h3 className="text-lg sm:text-xl font-bold text-gray-800 mb-3 sm:mb-4 font-['Courier_Prime']">
                 {currentContent.propertyCancellationPolicies}
               </h3>
               
-              <div className="space-y-6">
+              <div className="space-y-4 sm:space-y-6">
                 {/* Immediate Payment */}
                 <div>
-                  <h4 className="font-semibold text-gray-800 mb-3 font-['Courier_Prime']">
+                  <h4 className="font-semibold text-sm sm:text-base text-gray-800 mb-2 sm:mb-3 font-['Courier_Prime']">
                     {currentContent.policies.immediatePayment}
                   </h4>
-                  <div className="space-y-2">
-                    <p className="text-gray-700 font-['Courier_Prime']">{currentContent.policies.guaranteePolicy}</p>
-                    <p className="text-gray-700 font-['Courier_Prime']">{currentContent.policies.cancellationPolicy}</p>
-                    <p className="text-gray-700 font-['Courier_Prime']">{currentContent.policies.cancellationFee}</p>
+                  <div className="space-y-1 sm:space-y-2">
+                    <p className="text-xs sm:text-sm text-gray-700 font-['Courier_Prime']">{currentContent.policies.guaranteePolicy}</p>
+                    <p className="text-xs sm:text-sm text-gray-700 font-['Courier_Prime']">{currentContent.policies.cancellationPolicy}</p>
+                    <p className="text-xs sm:text-sm text-gray-700 font-['Courier_Prime']">{currentContent.policies.cancellationFee}</p>
                   </div>
                 </div>
 
                 {/* Later Payment */}
                 <div>
-                  <h4 className="font-semibold text-gray-800 mb-3 font-['Courier_Prime']">
+                  <h4 className="font-semibold text-sm sm:text-base text-gray-800 mb-2 sm:mb-3 font-['Courier_Prime']">
                     {currentContent.policies.laterPayment}
                   </h4>
-                  <div className="space-y-2">
-                    <p className="text-gray-700 font-['Courier_Prime']">{currentContent.policies.laterGuaranteePolicy}</p>
-                    <p className="text-gray-700 font-['Courier_Prime']">{currentContent.policies.laterCancellationPolicy}</p>
-                    <p className="text-gray-700 font-['Courier_Prime']">{currentContent.policies.laterCancellationFee}</p>
+                  <div className="space-y-1 sm:space-y-2">
+                    <p className="text-xs sm:text-sm text-gray-700 font-['Courier_Prime']">{currentContent.policies.laterGuaranteePolicy}</p>
+                    <p className="text-xs sm:text-sm text-gray-700 font-['Courier_Prime']">{currentContent.policies.laterCancellationPolicy}</p>
+                    <p className="text-xs sm:text-sm text-gray-700 font-['Courier_Prime']">{currentContent.policies.laterCancellationFee}</p>
                   </div>
                 </div>
               </div>
@@ -342,40 +338,40 @@ export default function BookingPage() {
       </div>
 
       {/* Terms and Conditions Section */}
-      <div className="bg-white py-16 px-4">
+      <div className="bg-white py-8 sm:py-12 lg:py-16 px-4">
         <div className="max-w-6xl mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-10 lg:gap-12">
             {/* Terms and Conditions */}
             <div>
-              <h3 className="text-xl font-bold text-gray-800 mb-6 font-['Courier_Prime']">
+              <h3 className="text-lg sm:text-xl font-bold text-gray-800 mb-4 sm:mb-6 font-['Courier_Prime']">
                 {currentContent.termsConditions}
               </h3>
               
-              <div className="text-gray-700 text-sm leading-relaxed font-['Courier_Prime'] space-y-4">
+              <div className="text-gray-700 text-xs sm:text-sm leading-relaxed font-['Courier_Prime'] space-y-3 sm:space-y-4">
                 <div>
-                  <h4 className="font-bold text-gray-800 mb-2">{currentContent.terms.article1}</h4>
+                  <h4 className="font-bold text-gray-800 mb-1 sm:mb-2 text-sm sm:text-base">{currentContent.terms.article1}</h4>
                   <p className="text-justify">
                     {currentContent.terms.article1Text}
                   </p>
                 </div>
                 
                 <div>
-                  <h4 className="font-bold text-gray-800 mb-2">{currentContent.terms.article2}</h4>
+                  <h4 className="font-bold text-gray-800 mb-1 sm:mb-2 text-sm sm:text-base">{currentContent.terms.article2}</h4>
                   <p className="text-justify">
                     {currentContent.terms.article2Text}
                   </p>
                 </div>
                 
                 <div>
-                  <h4 className="font-bold text-gray-800 mb-2">{currentContent.terms.article3}</h4>
+                  <h4 className="font-bold text-gray-800 mb-1 sm:mb-2 text-sm sm:text-base">{currentContent.terms.article3}</h4>
                   <p className="text-justify">
                     {currentContent.terms.article3Text}
                   </p>
                 </div>
               </div>
               
-              <div className="mt-8">
-                <button className="bg-gray-100 border border-gray-300 rounded-lg px-6 py-3 text-gray-800 font-['Courier_Prime'] hover:bg-gray-200 transition-colors">
+              <div className="mt-6 sm:mt-8">
+                <button className="bg-gray-100 border border-gray-300 rounded-lg px-4 sm:px-6 py-2 sm:py-3 text-sm sm:text-base text-gray-800 font-['Courier_Prime'] hover:bg-gray-200 transition-colors">
                   {currentContent.readMore} →
                 </button>
               </div>

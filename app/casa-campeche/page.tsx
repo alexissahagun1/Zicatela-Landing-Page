@@ -20,7 +20,7 @@ export default function CasaCampechePage() {
       <NavigationBar />
       
       {/* Casa Campeche Content */}
-      <div className="relative">
+      <div className="relative max-w-7xl mx-auto text-center md:text-left">
         {/* Property Gallery */}
         <PropertyGallery
           exteriorImage="/CasaCampecheI.png"

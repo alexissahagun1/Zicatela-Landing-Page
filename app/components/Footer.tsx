@@ -96,19 +96,6 @@ const Footer: React.FC = () => {
             />
           </div>
         </div>
-
-        {/* Mobile-specific adjustments */}
-        <div className="mt-8 pt-6 border-t border-gray-300 md:hidden">
-          <div className="text-center">
-            <Image
-              src="/LogoCasaZii.png"
-              alt="Casa Zii Logo"
-              width={100}
-              height={32}
-              className="h-8 w-auto mx-auto"
-            />
-          </div>
-        </div>
       </div>
     </footer>
   );

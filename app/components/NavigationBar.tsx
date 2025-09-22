@@ -115,11 +115,12 @@ export default function NavigationBar() {
       </nav>
 
       {/* Mobile Menu Overlay */}
-      {isMobileMenuOpen && (
-        <div className="md:hidden fixed inset-0 z-50 bg-white">
-          <div className="flex flex-col h-full">
+      <div className={`md:hidden fixed inset-0 z-50 bg-[#F5F5F5] transition-all duration-500 ease-in-out ${
+        isMobileMenuOpen ? 'translate-x-0 opacity-100' : 'translate-x-full opacity-0'
+      }`}>
+        <div className="flex flex-col h-full">
             {/* Mobile Menu Header */}
-            <div className="flex items-center justify-between p-4 border-b">
+            <div className="flex items-center justify-between p-4 border-b border-black">
               <Link href="/homepage" onClick={() => setIsMobileMenuOpen(false)}>
                 <Logo />
               </Link>
@@ -136,75 +137,90 @@ export default function NavigationBar() {
             </div>
 
             {/* Mobile Navigation Links */}
-            <div className="flex-1 flex flex-col justify-center items-center space-y-8">
+            <div className="flex-1 flex flex-col justify-start px-6 py-8 space-y-6">
               <Link 
                 href="/casa-campeche" 
-                className="text-[#222222] text-lg hover:opacity-70"
+                className="text-black text-lg font-mono tracking-wide hover:opacity-70"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
-                {currentNavText.casaCampeche}
+                CASA CAMPECHE
               </Link>
               <Link 
                 href="/casa-palmas" 
-                className="text-[#222222] text-lg hover:opacity-70"
+                className="text-black text-lg font-mono tracking-wide hover:opacity-70"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
-                {currentNavText.casaPalmas}
+                CASA PALMAS
               </Link>
               <Link 
                 href="/prensa" 
-                className="text-[#222222] text-lg hover:opacity-70"
+                className="text-black text-lg font-mono tracking-wide hover:opacity-70"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 {currentNavText.press}
               </Link>
-              {/* <Link 
-                href="/booking" 
-                className="text-[#222222] text-lg hover:opacity-70"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                {currentNavText.book}
-              </Link> */}
+              
+              {/* Language Selection */}
+              <div className="pt-4">
+                <button 
+                  onClick={toggleLanguage}
+                  className="flex items-center space-x-2 hover:opacity-70 cursor-pointer"
+                >
+                  {language === 'es' ? (
+                    <Image
+                      src="/english-logo.png"
+                      alt="UK Flag"
+                      width={16}
+                      height={16}
+                    />
+                  ) : (
+                    <Image
+                      src="/Flag_of_Mexico.png"
+                      alt="Mexican Flag"
+                      width={16}
+                      height={16}
+                    />
+                  )}
+                  <span className="text-black text-sm font-mono">
+                    {language === 'es' ? 'English' : 'Español'}
+                  </span>
+                </button>
+              </div>
+
+              {/* Instagram Link */}
+              <div className="pt-2">
+                <a href="https://instagram.com/casazii" target="_blank" rel="noopener noreferrer" className="flex items-center space-x-2 hover:opacity-70">
+                  <Image
+                    src="/instagram-logo.png"
+                    alt="Instagram"
+                    width={21}
+                    height={22}
+                  />
+                  <span className="text-black text-sm font-mono">CASA ZII</span>
+                </a>
+              </div>
+
+              {/* Book Now Button */}
+              <div className="pt-6 flex justify-center">
+                <Link href="/booking" onClick={() => setIsMobileMenuOpen(false)}>
+                  <button className=" px-8 py-4 bg-[#A04E39] text-white text-md font-mono tracking-wide hover:opacity-90 ">
+                    Book Now
+                  </button>
+                </Link>
+              </div>
             </div>
 
-            {/* Mobile Menu Footer */}
-            <div className="p-4 border-t flex items-center justify-center space-x-4">
-              <a href="https://instagram.com/casazii" target="_blank" rel="noopener noreferrer">
-                <Image
-                  src="/instagram-logo.png"
-                  alt="Instagram"
-                  width={21}
-                  height={22}
-                  className="hover:opacity-70"
-                />
-              </a>
-              <button 
-                onClick={toggleLanguage}
-                className="flex items-center space-x-1 hover:opacity-70 cursor-pointer"
-              >
-                {language === 'es' ? (
-                  <Image
-                    src="/english-logo.png"
-                    alt="UK Flag"
-                    width={16}
-                    height={16}
-                  />
-                ) : (
-                  <Image
-                    src="/Flag_of_Mexico.png"
-                    alt="Mexican Flag"
-                    width={16}
-                    height={16}
-                  />
-                )}
-                <span className="text-black text-sm">
-                  {language === 'es' ? 'English' : 'Español'}
-                </span>
-              </button>
+            {/* Contact Information */}
+            <div className="px-6 py-6 border-t border-gray-300">
+              <div className="text-black">
+                <h3 className="text-sm font-mono tracking-wide mb-2">CONTACT</h3>
+                <h4 className="text-sm font-mono tracking-wide mb-2">RESERVATION CENTRE</h4>
+                <p className="text-sm font-mono mb-1">+52 00 0000 0000</p>
+                <p className="text-sm font-mono">reservaciones@CASAZII.COM</p>
+              </div>
             </div>
           </div>
         </div>
-      )}
     </>
   );
 }
