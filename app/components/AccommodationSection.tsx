@@ -106,7 +106,7 @@ export default function AccommodationSection() {
                      className="w-[22px] h-[16px]"
                    />
                  </div>
-                 <span className="text-teal-600 text-base lg:text-lg uppercase">
+                 <span className="text-base lg:text-lg uppercase" style={{ color: '#4C86A0' }}>
                    {amenity.text}
                  </span>
                </div>

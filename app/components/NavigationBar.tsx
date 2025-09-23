@@ -136,21 +136,21 @@ export default function NavigationBar() {
           >
             {language === 'es' ? (
               <Image
-                src="/english-logo.png"
-                alt="UK Flag"
-                width={16}
-                height={16}
-              />
-            ) : (
-              <Image
                 src="/Flag_of_Mexico.png"
                 alt="Mexican Flag"
                 width={16}
                 height={16}
               />
+            ) : (
+              <Image
+                src="/english-logo.png"
+                alt="UK Flag"
+                width={16}
+                height={16}
+              />
             )}
             <span className="text-black text-[13px] leading-[15px]">
-              {language === 'es' ? 'English' : 'Español'}
+              {language === 'es' ? 'Español' : 'English'}
             </span>
           </button>
         </div>
@@ -210,21 +210,21 @@ export default function NavigationBar() {
                 >
                   {language === 'es' ? (
                     <Image
-                      src="/english-logo.png"
-                      alt="UK Flag"
-                      width={16}
-                      height={16}
-                    />
-                  ) : (
-                    <Image
                       src="/Flag_of_Mexico.png"
                       alt="Mexican Flag"
                       width={16}
                       height={16}
                     />
+                  ) : (
+                    <Image
+                      src="/english-logo.png"
+                      alt="UK Flag"
+                      width={16}
+                      height={16}
+                    />
                   )}
                   <span className="text-black text-sm font-mono">
-                    {language === 'es' ? 'English' : 'Español'}
+                    {language === 'es' ? 'Español' : 'English'}
                   </span>
                 </button>
               </div>

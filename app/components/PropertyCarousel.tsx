@@ -61,7 +61,7 @@ export default function PropertyCarousel({
 
   return (
     <div className="relative w-full max-w-4xl mx-auto">
-      <div className={`flex flex-col lg:flex-row gap-8 lg:gap-12 ${
+      <div className={`flex flex-col lg:flex-row gap-2 lg:gap-12 ${
         isImageLeft ? "lg:flex-row" : "lg:flex-row-reverse"
       }`}>
         
@@ -76,46 +76,46 @@ export default function PropertyCarousel({
               priority
             />
           </div>
-          
-          {/* Navigation Controls */}
-          <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex items-center gap-4 bg-white/80 backdrop-blur-sm px-4 py-2 rounded-full">
-            {/* Previous Button */}
-            <button
-              onClick={goToPrevious}
-              className="text-[#222222] hover:text-[#A04E39] transition-colors font-['Courier_Prime'] text-base leading-[18px]"
-            >
-              {currentNavText.prev}
-            </button>
-            
-            {/* Dots */}
-            <div className="flex items-center gap-2">
-              {images.map((_, index) => (
-                <button
-                  key={index}
-                  onClick={() => goToSlide(index)}
-                  className={`w-2.5 h-2.5 rounded-full border border-[#222222] transition-colors ${
-                    index === currentImageIndex 
-                      ? "bg-[#98989A] border-[#222222]" 
-                      : "bg-transparent hover:bg-[#98989A]/50"
-                  }`}
-                  aria-label={`Go to slide ${index + 1}`}
-                />
-              ))}
-            </div>
-            
-            {/* Next Button */}
-            <button
-              onClick={goToNext}
-              className="text-[#000000] hover:text-[#A04E39] transition-colors font-['Courier_Prime'] text-base leading-[18px]"
-            >
-              {currentNavText.next}
-            </button>
-          </div>
         </div>
 
         {/* Content Section */}
         <div className="w-full lg:w-1/2 flex flex-col justify-center">
           <div className="space-y-6">
+            {/* Navigation Controls - Mobile only, above title */}
+            <div className="flex justify-center items-center space-x-4 lg:hidden">
+              <button 
+                onClick={goToPrevious}
+                className="relative w-[39px] h-[18px] disabled:opacity-50 disabled:cursor-not-allowed transition-opacity"
+              >
+                <span className="font-courier font-normal text-base leading-[18px] text-[#222222]">
+                  {currentNavText.prev}
+                </span>
+              </button>
+              
+              {/* Navigation dots */}
+              <div className="flex space-x-2">
+                {images.map((_, index) => (
+                  <button
+                    key={index}
+                    onClick={() => goToSlide(index)}
+                    className={`w-[10px] h-[10px] rounded-full border border-[#222222] transition-colors ${
+                      index === currentImageIndex ? 'bg-[#98989A]' : 'bg-transparent'
+                    }`}
+                    aria-label={`Go to slide ${index + 1}`}
+                  />
+                ))}
+              </div>
+              
+              <button 
+                onClick={goToNext}
+                className="relative w-[29px] h-[18px] disabled:opacity-50 disabled:cursor-not-allowed transition-opacity"
+              >
+                <span className="font-courier font-normal text-base leading-[18px] text-black">
+                  {currentNavText.next}
+                </span>
+              </button>
+            </div>
+
             {/* Title */}
             <h2 className="text-2xl md:text-3xl font-bold text-[#000000] font-['Courier_Prime'] uppercase tracking-wide">
               {title}
@@ -152,6 +152,91 @@ export default function PropertyCarousel({
             </button>
           </div>
         </div>
+      </div>
+      
+      {/* Navigation Controls - Desktop only, centered with image based on layout */}
+      <div className="hidden lg:flex justify-center items-center mt-3 space-x-4">
+        {isImageLeft ? (
+          // Image is on the left, navigation should be on the left
+          <>
+            <div className="w-full lg:w-1/2 flex justify-center">
+              <div className="flex items-center space-x-4">
+                <button 
+                  onClick={goToPrevious}
+                  className="relative w-[39px] h-[18px] disabled:opacity-50 disabled:cursor-not-allowed transition-opacity"
+                >
+                  <span className="font-courier font-normal text-base leading-[18px] text-[#222222]">
+                    {currentNavText.prev}
+                  </span>
+                </button>
+                
+                {/* Navigation dots */}
+                <div className="flex space-x-2">
+                  {images.map((_, index) => (
+                    <button
+                      key={index}
+                      onClick={() => goToSlide(index)}
+                      className={`w-[10px] h-[10px] rounded-full border border-[#222222] transition-colors ${
+                        index === currentImageIndex ? 'bg-[#98989A]' : 'bg-transparent'
+                      }`}
+                      aria-label={`Go to slide ${index + 1}`}
+                    />
+                  ))}
+                </div>
+                
+                <button 
+                  onClick={goToNext}
+                  className="relative w-[29px] h-[18px] disabled:opacity-50 disabled:cursor-not-allowed transition-opacity"
+                >
+                  <span className="font-courier font-normal text-base leading-[18px] text-black">
+                    {currentNavText.next}
+                  </span>
+                </button>
+              </div>
+            </div>
+            <div className="hidden lg:block lg:w-1/2"></div>
+          </>
+        ) : (
+          // Image is on the right, navigation should be on the right
+          <>
+            <div className="hidden lg:block lg:w-1/2"></div>
+            <div className="w-full lg:w-1/2 flex justify-center">
+              <div className="flex items-center space-x-4">
+                <button 
+                  onClick={goToPrevious}
+                  className="relative w-[39px] h-[18px] disabled:opacity-50 disabled:cursor-not-allowed transition-opacity"
+                >
+                  <span className="font-courier font-normal text-base leading-[18px] text-[#222222]">
+                    {currentNavText.prev}
+                  </span>
+                </button>
+                
+                {/* Navigation dots */}
+                <div className="flex space-x-2">
+                  {images.map((_, index) => (
+                    <button
+                      key={index}
+                      onClick={() => goToSlide(index)}
+                      className={`w-[10px] h-[10px] rounded-full border border-[#222222] transition-colors ${
+                        index === currentImageIndex ? 'bg-[#98989A]' : 'bg-transparent'
+                      }`}
+                      aria-label={`Go to slide ${index + 1}`}
+                    />
+                  ))}
+                </div>
+                
+                <button 
+                  onClick={goToNext}
+                  className="relative w-[29px] h-[18px] disabled:opacity-50 disabled:cursor-not-allowed transition-opacity"
+                >
+                  <span className="font-courier font-normal text-base leading-[18px] text-black">
+                    {currentNavText.next}
+                  </span>
+                </button>
+              </div>
+            </div>
+          </>
+        )}
       </div>
     </div>
   );
