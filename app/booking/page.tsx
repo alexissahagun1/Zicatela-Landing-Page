@@ -1,25 +1,23 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import AnnouncementBar from "../components/AnnouncementBar";
 import NavigationBar from "../components/NavigationBar";
 import Footer from "../components/Footer";
-import { useLanguage } from '../contexts/LanguageContext';
-import { Button } from "@/components/ui/button";
-import { CalendarIcon, SearchIcon } from "lucide-react";
-import MapSection from "../components/MapSection";
+import BookingSearchBar, {
+  type BookingSearchValues,
+} from "../components/BookingSearchBar";
+import BookingResults from "../components/BookingResults";
+import { useLanguage } from "../contexts/LanguageContext";
 
 export default function BookingPage() {
   const { language } = useLanguage();
-  const [checkInDate, setCheckInDate] = useState<Date | undefined>();
-  const [checkOutDate, setCheckOutDate] = useState<Date | undefined>();
+  const [search, setSearch] = useState<BookingSearchValues | null>(null);
+  const resultsRef = useRef<HTMLDivElement>(null);
 
   const content = {
     es: {
       selectStayDays: "SELECCIONAR DÍAS DE ESTANCIA",
-      checkIn: "Check-in",
-      checkOut: "Check-out",
-      search: "Buscar",
       contact: "Contacto",
       casaCampeche: "CASA CAMPECHE",
       casaPalmas: "CASA PALMAS",
@@ -53,9 +51,6 @@ export default function BookingPage() {
     },
     en: {
       selectStayDays: "SELECT STAY DAYS",
-      checkIn: "Check-in",
-      checkOut: "Check-out",
-      search: "Search",
       contact: "Location",
       casaCampeche: "CASA CAMPECHE",
       casaPalmas: "CASA PALMAS",
@@ -91,114 +86,43 @@ export default function BookingPage() {
 
   const currentContent = content[language];
 
-  const handleDateSelect = (date: Date | undefined) => {
-    if (!date) return;
-    
-    if (!checkInDate || (checkInDate && checkOutDate)) {
-      setCheckInDate(date);
-      setCheckOutDate(undefined);
-    } else if (checkInDate && !checkOutDate) {
-      if (date > checkInDate) {
-        setCheckOutDate(date);
-      } else {
-        setCheckInDate(date);
-        setCheckOutDate(undefined);
-      }
-    }
-  };
-
-  const handleSearch = () => {
-    if (checkInDate && checkOutDate) {
-      // Handle search logic here
-      console.log("Searching for:", { checkInDate, checkOutDate });
-    }
+  const handleSearch = (values: BookingSearchValues) => {
+    setSearch(values);
+    requestAnimationFrame(() => {
+      resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
   };
 
   return (
     <div className="min-h-screen bg-white">
       <AnnouncementBar />
       <NavigationBar />
-      
+
       {/* Hero Section with Background */}
-      <div 
-        className="relative w-full bg-cover bg-center bg-no-repeat flex items-center justify-center px-4 pt-26 md:pt-32"
+      <div
+        className="relative flex w-full items-center justify-center bg-cover bg-center bg-no-repeat px-4 pt-28 md:pt-32"
         style={{
           backgroundImage: "url('/BackgroundBookNow.png')",
-          height: "75vh"
+          minHeight: "72vh",
         }}
       >
-        {/* Content */}
-        <div className="relative z-10 w-full max-w-4xl mx-auto">
-
-          {/* Airbnb-style Booking Form */}
-          <div 
-            className="bg-white/70 backdrop-blur-sm rounded-2xl shadow-2xl p-8 sm:p-6 lg:p-8 mx-auto w-full max-w-sm sm:max-w-md lg:max-w-none h-auto sm:h-auto lg:h-[330px]"
-          >
-            <h2 className="text-center text-lg sm:text-xl lg:text-2xl font-regular text-gray-800 mb-4 sm:mb-6 lg:mb-8 font-['Courier_Prime'] uppercase">
-              {currentContent.selectStayDays}
-            </h2>
-            
-            {/* Single Date Selection Field */}
-            <div className="mb-4 sm:mb-6 lg:mb-8">
-              <div className="bg-white p-3 sm:p-4 lg:p-6 flex flex-row items-center justify-center gap-8 sm:gap-6 lg:gap-8" style={{ borderRadius: '50px' }}>
-                {/* Check-in Section */}
-                <div className="flex items-center space-x-2 sm:space-x-3 cursor-pointer relative">
-                  <CalendarIcon className="h-4 w-4 sm:h-5 sm:w-5 lg:h-6 lg:w-6 text-black" />
-                  <span className="font-['Courier_Prime'] text-black text-lg sm:text-base lg:text-lg">
-                    {checkInDate ? checkInDate.toLocaleDateString() : currentContent.checkIn}
-                  </span>
-                  <input
-                    id="checkin-input"
-                    type="date"
-                    value={checkInDate ? checkInDate.toISOString().split('T')[0] : ''}
-                    onChange={(e) => setCheckInDate(e.target.value ? new Date(e.target.value) : undefined)}
-                    min={new Date().toISOString().split('T')[0]}
-                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                    style={{ zIndex: 1 }}
-                  />
-                </div>
-
-                {/* Arrow Separator */}
-                <div className="text-black text-2xl sm:text-3xl lg:text-5xl">
-                  →
-                </div>
-
-                {/* Check-out Section */}
-                <div className="flex items-center space-x-2 sm:space-x-3 cursor-pointer relative">
-                  <span className="font-['Courier_Prime'] text-black text-lg sm:text-base lg:text-lg">
-                    {checkOutDate ? checkOutDate.toLocaleDateString() : currentContent.checkOut}
-                  </span>
-                  <input
-                    id="checkout-input"
-                    type="date"
-                    value={checkOutDate ? checkOutDate.toISOString().split('T')[0] : ''}
-                    onChange={(e) => setCheckOutDate(e.target.value ? new Date(e.target.value) : undefined)}
-                    min={checkInDate ? checkInDate.toISOString().split('T')[0] : new Date().toISOString().split('T')[0]}
-                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                    style={{ zIndex: 1 }}
-                  />
-                </div>
-              </div>
-            </div>
-
-
-            {/* Search Button */}
-            <div className="mt-4 sm:mt-6 lg:mt-8">
-              <Button
-                onClick={handleSearch}
-                disabled={!checkInDate || !checkOutDate}
-                className="w-full text-white py-7 sm:py-6 lg:py-8 text-lg sm:text-xl lg:text-2xl rounded-3xl font-['Courier_Prime'] cursor-pointer"
-                style={{
-                  backgroundColor: "#98989A",
-                  opacity: 1
-                }}
-              >
-                {currentContent.search}
-              </Button>
-            </div>
-          </div>
+        <div className="relative z-10 w-full max-w-5xl pb-16 pt-8">
+          <h2 className="mb-6 text-center font-['Courier_Prime'] text-lg uppercase tracking-[0.12em] text-white drop-shadow-sm sm:mb-8 sm:text-xl lg:text-2xl">
+            {currentContent.selectStayDays}
+          </h2>
+          <BookingSearchBar onSearch={handleSearch} />
         </div>
       </div>
+
+      {/* Availability + Quote + Booking request results */}
+      {search && (
+        <div
+          ref={resultsRef}
+          className="scroll-mt-28 bg-white px-4 py-12 sm:py-16"
+        >
+          <BookingResults search={search} />
+        </div>
+      )}
 
       {/* Contact and Map Section */}
       <div className="bg-white py-8 sm:py-12 lg:py-16 px-4">

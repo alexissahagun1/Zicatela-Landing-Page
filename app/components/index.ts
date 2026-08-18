@@ -4,6 +4,8 @@ export { default as AnnouncementBar } from './AnnouncementBar';
 export { default as ArchitecturalGallery } from './ArchitecturalGallery';
 export { default as BookNowButton } from './BookNowButton';
 export { default as BookNowSection } from './BookNowSection';
+export { default as BookingSearchBar } from './BookingSearchBar';
+export { default as BookingResults } from './BookingResults';
 export { default as Footer } from './Footer';
 export { default as HeroSection } from './HeroSection';
 export { default as LaPuntaSection } from './LaPuntaSection';
