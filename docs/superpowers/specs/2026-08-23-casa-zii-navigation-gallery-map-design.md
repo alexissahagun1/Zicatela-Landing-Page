@@ -20,6 +20,52 @@ Align the site with the approved Casa Zii direction in Figma and the supplied re
   - [Casa Yuma](https://www.casayuma.com/)
 - User-provided mobile and desktop screenshots
 
+## Visual board
+
+### Figma navigation reference
+
+<img src="assets/figma-nav.png" alt="Casa Zii navigation and hero reference exported from Figma" width="980" />
+
+### Exact gallery exports
+
+These are the six image exports pulled directly from the Figma rectangle nodes. The order below is the implementation order.
+
+<table>
+  <tr>
+    <td><img src="../../../public/instagram-gallery/figma-01.png" alt="Figma gallery image 1" width="180" /></td>
+    <td><img src="../../../public/instagram-gallery/figma-02.png" alt="Figma gallery image 2" width="180" /></td>
+    <td><img src="../../../public/instagram-gallery/figma-03.png" alt="Figma gallery image 3" width="180" /></td>
+  </tr>
+  <tr>
+    <td><img src="../../../public/instagram-gallery/figma-04.png" alt="Figma gallery image 4" width="180" /></td>
+    <td><img src="../../../public/instagram-gallery/figma-05.png" alt="Figma gallery image 5" width="180" /></td>
+    <td><img src="../../../public/instagram-gallery/figma-06.png" alt="Figma gallery image 6" width="180" /></td>
+  </tr>
+</table>
+
+The local files are intentionally kept at the original export dimensions (`270 × 338px`) so the implementation can preserve the Figma crop rather than deriving a new crop from the old site assets.
+
+### Figma map reference
+
+<img src="assets/figma-map.png" alt="Casa Zii map reference exported from Figma" width="680" />
+
+### Page flow
+
+```mermaid
+flowchart TD
+  A[Fixed white navigation] --> B[Hero image]
+  B --> C[Casa Zii introduction]
+  C --> D[Book now CTA]
+  D --> E[Six-photo Instagram gallery]
+  E --> F[Accommodation information]
+  F --> G[Architectural carousel]
+  G --> H[La Punta editorial section]
+  H --> I[Interactive location map]
+  I --> J[Footer and contact]
+```
+
+The visual hierarchy intentionally moves from image-led discovery to accommodation details, then ends with a practical location module and contact path.
+
 ## Design decisions
 
 ### 1. Shared navigation
