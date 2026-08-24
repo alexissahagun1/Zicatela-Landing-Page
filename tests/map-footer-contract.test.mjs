@@ -142,6 +142,13 @@ test("empty map container is hidden until it is ready", () => {
   );
 });
 
+test("the waiting state explains that the interactive map is optional", () => {
+  assert.match(
+    lazyGoogleMap,
+    /El mapa interactivo es opcional y solo se carga al pulsar el botón\./,
+  );
+});
+
 test("the floating reservation bar remains mounted globally", () => {
   assert.match(layout, /<StickyBookingBar \/>/);
 });

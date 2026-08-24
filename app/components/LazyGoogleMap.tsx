@@ -55,7 +55,10 @@ export default function LazyGoogleMap({
       />
 
       {status === "waiting" && (
-        <div className="absolute inset-0 flex items-center justify-center bg-[#E8E1D7] px-8 text-center font-[family-name:var(--font-courier)]">
+        <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 bg-[#E8E1D7] px-8 text-center font-[family-name:var(--font-courier)]">
+          <p className="max-w-md text-xs leading-5 text-[#222222]/70">
+            El mapa interactivo es opcional y solo se carga al pulsar el botón.
+          </p>
           <button
             type="button"
             onClick={activateMap}
