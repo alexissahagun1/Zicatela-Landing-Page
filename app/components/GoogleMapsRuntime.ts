@@ -274,6 +274,7 @@ export async function renderGoogleMap(
     zoomControl: true,
     gestureHandling: "cooperative",
   });
+  element.dataset.casaZiiMapConstructed = "true";
 
   pins.forEach((pin) => {
     new google.maps.Marker({

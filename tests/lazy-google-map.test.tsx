@@ -32,7 +32,7 @@ test("initial map markup is neutral and contains no Google request or CTA", () =
   assert.doesNotMatch(html, /<button|Ver mapa interactivo|opcional|Cargando mapa/);
 });
 
-test("a failed observed load retries only after leaving and re-entering, then disconnects on success", async () => {
+test("a failed observed load retries only after leaving and re-entering, then disconnects on success", { concurrency: false }, async () => {
   const actGlobal = globalThis as typeof globalThis & {
     IS_REACT_ACT_ENVIRONMENT?: boolean;
   };
@@ -67,7 +67,9 @@ test("a failed observed load retries only after leaving and re-entering, then di
         <LazyGoogleMap center={center} pins={pins} title="Casa Zii map" />,
         {
           createNodeMock(element) {
-            return element.type === "div" ? { isConnected: true } : null;
+            return element.type === "div"
+              ? { isConnected: true, dataset: {} }
+              : null;
           },
         },
       );
@@ -134,6 +136,129 @@ test("a failed observed load retries only after leaving and re-entering, then di
       mountedRenderer.unmount();
     });
   } finally {
+    if (previousWindow) {
+      Object.defineProperty(globalThis, "window", previousWindow);
+    } else {
+      Reflect.deleteProperty(globalThis, "window");
+    }
+
+    if (previousIntersectionObserver) {
+      Object.defineProperty(
+        globalThis,
+        "IntersectionObserver",
+        previousIntersectionObserver,
+      );
+    } else {
+      Reflect.deleteProperty(globalThis, "IntersectionObserver");
+    }
+
+    if (previousApiKey === undefined) {
+      delete process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
+    } else {
+      process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY = previousApiKey;
+    }
+    actGlobal.IS_REACT_ACT_ENVIRONMENT = previousActEnvironment;
+  }
+});
+
+test("a first-idle timeout after map construction never creates a second map", { concurrency: false }, async () => {
+  const actGlobal = globalThis as typeof globalThis & {
+    IS_REACT_ACT_ENVIRONMENT?: boolean;
+  };
+  const previousWindow = Object.getOwnPropertyDescriptor(globalThis, "window");
+  const previousIntersectionObserver = Object.getOwnPropertyDescriptor(
+    globalThis,
+    "IntersectionObserver",
+  );
+  const previousApiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
+  const previousSetTimeout = globalThis.setTimeout;
+  const previousActEnvironment = actGlobal.IS_REACT_ACT_ENVIRONMENT;
+  const observers: MockIntersectionObserver[] = [];
+  const mapElement = { isConnected: true, dataset: {} as Record<string, string> };
+  let mapCreations = 0;
+  let idleTimeout: (() => void) | undefined;
+  actGlobal.IS_REACT_ACT_ENVIRONMENT = true;
+  Object.defineProperty(globalThis, "window", {
+    configurable: true,
+    value: {
+      google: {
+        maps: {
+          Map: class {
+            constructor() {
+              mapCreations += 1;
+            }
+          },
+          Marker: class {},
+          event: {
+            addListenerOnce() {
+              return { remove() {} };
+            },
+          },
+        },
+      },
+    },
+    writable: true,
+  });
+  Object.defineProperty(globalThis, "IntersectionObserver", {
+    configurable: true,
+    value: MockIntersectionObserver,
+    writable: true,
+  });
+  process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY = "test-key";
+  globalThis.setTimeout = ((handler: () => void, timeout?: number) => {
+    if (timeout === 15_000) {
+      idleTimeout = handler;
+      return 1 as unknown as ReturnType<typeof setTimeout>;
+    }
+
+    return previousSetTimeout(handler, timeout);
+  }) as typeof setTimeout;
+
+  try {
+    MockIntersectionObserver.instances = observers;
+    let renderer: ReactTestRenderer | undefined;
+    await act(async () => {
+      renderer = create(
+        <LazyGoogleMap center={center} pins={pins} title="Casa Zii map" />,
+        {
+          createNodeMock(element) {
+            return element.type === "div" ? mapElement : null;
+          },
+        },
+      );
+    });
+
+    if (!renderer) {
+      throw new Error("LazyGoogleMap did not mount.");
+    }
+    const mountedRenderer = renderer;
+    assert.equal(observers.length, 1);
+    await act(async () => {
+      observers[0].trigger(true);
+      await waitForAsyncWork();
+    });
+
+    assert.equal(mapCreations, 1);
+    assert.equal(mapElement.dataset.casaZiiMapConstructed, "true");
+    assert.equal(typeof idleTimeout, "function");
+
+    await act(async () => {
+      idleTimeout?.();
+      await waitForAsyncWork();
+      observers[0].trigger(false);
+      observers[0].trigger(true);
+      await waitForAsyncWork();
+    });
+
+    assert.equal(mapCreations, 1);
+    assert.equal(observers[0].disconnectCalls, 0);
+
+    await act(async () => {
+      mountedRenderer.unmount();
+    });
+  } finally {
+    globalThis.setTimeout = previousSetTimeout;
+
     if (previousWindow) {
       Object.defineProperty(globalThis, "window", previousWindow);
     } else {

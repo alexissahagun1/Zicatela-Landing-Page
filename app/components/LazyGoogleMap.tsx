@@ -54,7 +54,11 @@ export default function LazyGoogleMap({
             }
           })
           .catch(() => {
-            if (mapElementRef.current === mapElement && mapElement.isConnected) {
+            if (
+              mapElementRef.current === mapElement &&
+              mapElement.isConnected &&
+              mapElement.dataset.casaZiiMapConstructed !== "true"
+            ) {
               hasInitializedRef.current = false;
             }
           });

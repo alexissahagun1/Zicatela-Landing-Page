@@ -194,12 +194,12 @@ test("concurrent activations share one Google Maps script", async () => {
     const runtime = await importFreshRuntime();
     const googleDouble = createGoogleDouble();
     const firstRender = runtime.renderGoogleMap(
-      { isConnected: true },
+      { isConnected: true, dataset: {} },
       center,
       exactPins,
     );
     const secondRender = runtime.renderGoogleMap(
-      { isConnected: true },
+      { isConnected: true, dataset: {} },
       center,
       exactPins,
     );
@@ -223,7 +223,7 @@ test("authentication failure rejects and stays sticky without another script", a
   try {
     const runtime = await importFreshRuntime();
     const firstRender = runtime.renderGoogleMap(
-      { isConnected: true },
+      { isConnected: true, dataset: {} },
       center,
       exactPins,
     );
@@ -237,7 +237,7 @@ test("authentication failure rejects and stays sticky without another script", a
     await firstRejection;
 
     await assert.rejects(
-      runtime.renderGoogleMap({ isConnected: true }, center, exactPins),
+      runtime.renderGoogleMap({ isConnected: true, dataset: {} }, center, exactPins),
       /authentication or billing authorization failed/,
     );
     assert.equal(harness.scripts.length, 1);
@@ -253,7 +253,7 @@ test("a missing API key rejects before injecting a script", async () => {
     const runtime = await importFreshRuntime();
 
     await assert.rejects(
-      runtime.renderGoogleMap({ isConnected: true }, center, exactPins),
+      runtime.renderGoogleMap({ isConnected: true, dataset: {} }, center, exactPins),
       /API key is not configured/,
     );
     assert.equal(harness.scripts.length, 0);
@@ -267,7 +267,7 @@ test("a script network error rejects and permits a clean retry", async () => {
   try {
     const runtime = await importFreshRuntime();
     const firstRender = runtime.renderGoogleMap(
-      { isConnected: true },
+      { isConnected: true, dataset: {} },
       center,
       exactPins,
     );
@@ -278,7 +278,7 @@ test("a script network error rejects and permits a clean retry", async () => {
     assert.equal(harness.scripts[0].removed, true);
 
     const retry = runtime.renderGoogleMap(
-      { isConnected: true },
+      { isConnected: true, dataset: {} },
       center,
       exactPins,
     );
@@ -302,7 +302,7 @@ test("authentication failure after script readiness rejects while waiting for id
     const runtime = await importFreshRuntime();
     const googleDouble = createGoogleDouble();
     const render = runtime.renderGoogleMap(
-      { isConnected: true },
+      { isConnected: true, dataset: {} },
       center,
       exactPins,
     );
@@ -340,7 +340,7 @@ test("the first-idle timeout rejects when Google never marks the map ready", asy
     harness.browserWindow.google = googleDouble.google;
     const runtime = await importFreshRuntime();
     const render = runtime.renderGoogleMap(
-      { isConnected: true },
+      { isConnected: true, dataset: {} },
       center,
       exactPins,
     );
@@ -356,6 +356,28 @@ test("the first-idle timeout rejects when Google never marks the map ready", asy
   }
 });
 
+test("the runtime marks an element immediately after constructing its map", async () => {
+  const harness = createBrowserHarness();
+  let googleDouble;
+  let render;
+  try {
+    googleDouble = createGoogleDouble();
+    const element = { isConnected: true, dataset: {} };
+    harness.browserWindow.google = googleDouble.google;
+    const runtime = await importFreshRuntime();
+    render = runtime.renderGoogleMap(element, center, exactPins);
+
+    await Promise.resolve();
+    assert.equal(googleDouble.maps.length, 1);
+    assert.equal(element.dataset.casaZiiMapConstructed, "true");
+
+  } finally {
+    googleDouble?.triggerIdle();
+    await render;
+    harness.restore();
+  }
+});
+
 test("a disconnected element never creates a map", async () => {
   const harness = createBrowserHarness();
   try {
@@ -364,7 +386,7 @@ test("a disconnected element never creates a map", async () => {
     const runtime = await importFreshRuntime();
 
     await assert.rejects(
-      runtime.renderGoogleMap({ isConnected: false }, center, exactPins),
+      runtime.renderGoogleMap({ isConnected: false, dataset: {} }, center, exactPins),
       /container is no longer connected/,
     );
     assert.equal(googleDouble.maps.length, 0);
@@ -381,7 +403,7 @@ test("a ready map creates both exact Casa Zii markers", async () => {
     harness.browserWindow.google = googleDouble.google;
     const runtime = await importFreshRuntime();
     const render = runtime.renderGoogleMap(
-      { isConnected: true },
+      { isConnected: true, dataset: {} },
       center,
       exactPins,
     );
