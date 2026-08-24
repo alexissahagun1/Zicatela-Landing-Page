@@ -1,53 +1,39 @@
 "use client";
 
-import React from 'react';
-import Image from 'next/image';
-import Link from 'next/link';
-import { useLanguage } from '../contexts/LanguageContext';
+import Image from "next/image";
+import Link from "next/link";
+import { useLanguage } from "../contexts/LanguageContext";
 
-const Footer: React.FC = () => {
+const copy = {
+  es: {
+    privacy: "AVISO DE PRIVACIDAD",
+    terms: "TÉRMINOS Y CONDICIONES",
+  },
+  en: {
+    privacy: "PRIVACY POLICY",
+    terms: "TERMS AND CONDITIONS",
+  },
+} as const;
+
+const addressClass = "font-[family-name:var(--font-courier)] text-black";
+
+export default function Footer() {
   const { language } = useLanguage();
-
-  const content = {
-    es: {
-      bookNow: "Reservar",
-      contact: "CONTACTO",
-      reservations: "CENTRO DE RESERVACIONES",
-      privacy: "AVISO DE PRIVACIDAD",
-      terms: "TÉRMINOS Y CONDICIONES"
-    },
-    en: {
-      bookNow: "Book Now",
-      contact: "CONTACT",
-      reservations: "RESERVATION CENTRE",
-      privacy: "PRIVACY POLICY",
-      terms: "TERMS AND CONDITIONS"
-    }
-  };
-
-  const currentContent = content[language];
+  const t = copy[language];
 
   return (
-    <footer className="relative min-h-[372px] w-full bg-[#EFEFEF] px-6 pb-[72px] pt-[51px] md:px-10 lg:px-16">
-      <div className="mx-auto flex min-h-[249px] w-full max-w-[720px] flex-col">
-        <div className="flex justify-center">
-          <Link
-            href="/booking"
-            className="flex h-[67px] w-[214px] items-center justify-center bg-[#222222] font-[family-name:var(--font-courier)] text-[14px] leading-5 text-white transition-opacity hover:opacity-80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#222222]"
-          >
-            {currentContent.bookNow}
-          </Link>
-        </div>
-
+    <footer className="w-full bg-[#F9F9F9]">
+      <div className="relative mx-auto flex min-h-[372px] w-full max-w-[1280px] flex-col overflow-hidden px-6 pb-10 pt-4 text-black md:block md:h-[372px] md:min-h-0 md:px-0 md:pb-0 md:pt-0">
         <Link
           href="https://instagram.com/casazii"
           target="_blank"
           rel="noopener noreferrer"
-          className="mx-0 mt-[46px] flex w-fit items-center gap-2 font-[family-name:var(--font-courier)] text-[14px] leading-5 text-black transition-opacity hover:opacity-70 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#222222] sm:mx-[42px]"
+          aria-label="Instagram de Casa Zii"
+          className="flex w-fit items-center gap-2 self-center font-[family-name:var(--font-courier)] text-[13px] leading-5 transition-opacity hover:opacity-70 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#222222] md:absolute md:left-1/2 md:top-4 md:-translate-x-1/2"
         >
           <Image
-            src="/instagram-logo.png"
-            alt="Instagram de Casa Zii"
+            src="/figma-footer-instagram.svg"
+            alt=""
             width={21}
             height={22}
             className="h-[22px] w-[21px]"
@@ -55,22 +41,31 @@ const Footer: React.FC = () => {
           <span>CASA ZII</span>
         </Link>
 
-        <div className="mx-0 mt-[34px] grid grid-cols-1 gap-8 font-[family-name:var(--font-courier)] text-[14px] leading-5 text-black sm:mx-[42px] sm:mr-[63px] sm:grid-cols-[minmax(0,1fr)_192px] sm:gap-10">
-          <div>
-            <div>{currentContent.contact}</div>
-            <div>{currentContent.reservations}</div>
-            <div>+52 00 0000 0000</div>
-            <div>reservaciones@casazii.com</div>
-          </div>
+        <div className={`${addressClass} mt-12 md:absolute md:left-[4.69%] md:top-[88px] md:mt-0`}>
+          <p className="m-0 text-[20px] leading-5">Casa Zii Palmas</p>
+          <p className="m-0 text-[13px] leading-5">
+            Calle de la Paloma S/N, Brisas de Zicatela
+          </p>
+          <p className="m-0 text-[13px] leading-5">Puerto Escondido, Oaxaca.</p>
+        </div>
 
-          <div>
-            <div>{currentContent.privacy}</div>
-            <div>{currentContent.terms}</div>
-          </div>
+        <div className={`${addressClass} mt-10 md:absolute md:left-[4.69%] md:top-[178px] md:mt-0`}>
+          <p className="m-0 text-[20px] leading-5">Casa Zii Campeche</p>
+          <p className="m-0 text-[13px] leading-5">
+            Calle Campeche S/N, Brisas de Zicatela
+          </p>
+          <p className="m-0 text-[13px] leading-5">Puerto Escondido, Oaxaca.</p>
+        </div>
+
+        <div className="mt-10 font-[family-name:var(--font-courier)] text-[13px] leading-5 text-black md:absolute md:right-[4.71%] md:top-[111px] md:mt-0">
+          <span>FAQs</span>
+        </div>
+
+        <div className="mt-6 font-[family-name:var(--font-courier)] text-[13px] leading-5 text-black md:absolute md:right-[4.71%] md:top-[192px] md:mt-0">
+          <p className="m-0">{t.privacy}</p>
+          <p className="m-0">{t.terms}</p>
         </div>
       </div>
     </footer>
   );
-};
-
-export default Footer;
+}
