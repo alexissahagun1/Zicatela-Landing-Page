@@ -21,32 +21,44 @@ const pins = [
   },
 ];
 
-test("initial map markup contains the opt-in control but no Google request", () => {
+test("initial map markup is neutral and contains no Google request or CTA", () => {
   const html = renderToStaticMarkup(
     <LazyGoogleMap center={center} pins={pins} title="Casa Zii map" />,
   );
 
-  assert.match(html, /Ver mapa interactivo/);
-  assert.match(html, /El mapa interactivo es opcional/);
+  assert.match(html, /bg-\[#E8E1D7\]/);
+  assert.match(html, /aria-hidden="true"/);
   assert.doesNotMatch(html, /maps\.googleapis\.com\/maps\/api\/js/);
+  assert.doesNotMatch(html, /<button|Ver mapa interactivo|opcional|Cargando mapa/);
 });
 
-test("an observable loader failure reaches the custom error UI", async () => {
+test("an observed loader error keeps the neutral surface without blocking UI", async () => {
   const actGlobal = globalThis as typeof globalThis & {
     IS_REACT_ACT_ENVIRONMENT?: boolean;
   };
   const previousWindow = Object.getOwnPropertyDescriptor(globalThis, "window");
+  const previousIntersectionObserver = Object.getOwnPropertyDescriptor(
+    globalThis,
+    "IntersectionObserver",
+  );
   const previousApiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
   const previousActEnvironment = actGlobal.IS_REACT_ACT_ENVIRONMENT;
+  const observers: MockIntersectionObserver[] = [];
   actGlobal.IS_REACT_ACT_ENVIRONMENT = true;
   Object.defineProperty(globalThis, "window", {
     configurable: true,
     value: {},
     writable: true,
   });
+  Object.defineProperty(globalThis, "IntersectionObserver", {
+    configurable: true,
+    value: MockIntersectionObserver,
+    writable: true,
+  });
   delete process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
 
   try {
+    MockIntersectionObserver.instances = observers;
     let renderer: ReactTestRenderer | undefined;
     await act(async () => {
       renderer = create(
@@ -58,18 +70,22 @@ test("an observable loader failure reaches the custom error UI", async () => {
         },
       );
     });
-    assert.ok(renderer);
-    const mountedRenderer = renderer;
 
-    const button = mountedRenderer.root.findByType("button");
+    assert.ok(renderer);
+    assert.equal(observers.length, 1);
+
     await act(async () => {
-      await button.props.onClick();
+      observers[0].trigger();
+      await new Promise((resolve) => setTimeout(resolve, 0));
     });
 
-    const alert = mountedRenderer.root.findByProps({ role: "alert" });
-    assert.match(
-      alert.children.join(""),
-      /El mapa no está disponible en este momento/,
+    const mountedRenderer = renderer;
+    assert.equal(mountedRenderer.root.findAllByType("button").length, 0);
+    assert.equal(mountedRenderer.root.findAllByProps({ role: "alert" }).length, 0);
+    assert.equal(mountedRenderer.root.findAllByProps({ role: "status" }).length, 0);
+    assert.equal(
+      mountedRenderer.root.findAllByProps({ "aria-hidden": true }).length,
+      1,
     );
 
     await act(async () => {
@@ -82,6 +98,16 @@ test("an observable loader failure reaches the custom error UI", async () => {
       Reflect.deleteProperty(globalThis, "window");
     }
 
+    if (previousIntersectionObserver) {
+      Object.defineProperty(
+        globalThis,
+        "IntersectionObserver",
+        previousIntersectionObserver,
+      );
+    } else {
+      Reflect.deleteProperty(globalThis, "IntersectionObserver");
+    }
+
     if (previousApiKey === undefined) {
       delete process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
     } else {
@@ -90,3 +116,22 @@ test("an observable loader failure reaches the custom error UI", async () => {
     actGlobal.IS_REACT_ACT_ENVIRONMENT = previousActEnvironment;
   }
 });
+
+class MockIntersectionObserver {
+  static instances: MockIntersectionObserver[] = [];
+
+  constructor(private readonly callback: IntersectionObserverCallback) {
+    MockIntersectionObserver.instances.push(this);
+  }
+
+  disconnect() {}
+
+  observe() {}
+
+  trigger() {
+    this.callback(
+      [{ isIntersecting: true } as IntersectionObserverEntry],
+      this as unknown as IntersectionObserver,
+    );
+  }
+}
