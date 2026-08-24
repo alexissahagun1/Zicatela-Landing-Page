@@ -1,7 +1,7 @@
 # Casa Zii Google Maps Cost Guard Design
 
 **Date:** 2026-08-24
-**Status:** Approved for implementation planning
+**Status:** Implemented; billing isolation pending
 **Scope:** Google Maps loading behavior, quota isolation, and failure handling
 
 ## Objective
@@ -31,7 +31,7 @@ The existing direct links to Casa Palmas and Casa Campeche remain available with
 
 ### Hard quota
 
-The Google Cloud project `zicatela` has a granted effective `BillableDefaultPerDayPerProject` quota of `250` map loads per day. This limits the project to at most `7,750` loads in any 31-day month, below the Dynamic Maps monthly free usage cap of `10,000`.
+The Google Cloud project `zicatela` has a granted effective `BillableDefaultPerDayPerProject` quota of `250` map loads per day. This limits the project to at most `7,750` loads in a 31-day calendar month, below the Dynamic Maps monthly free usage cap of `10,000`.
 
 The granted Cloud quota is the enforcement boundary for project usage. The component must not treat its own error UI as the quota guard or claim that every exhausted-quota presentation is detectable in the browser.
 
@@ -58,7 +58,7 @@ The implementation does not load Places, Geocoding, Routes, Static Maps, Street 
 
 Before activation, the map panel clearly states that the interactive map is optional and displays one keyboard-accessible button. The panel is not presented as a loaded map and contains no fabricated map image.
 
-During loading, the button is disabled and the panel announces `Cargando mapa`. After success, the map replaces the activation panel. Custom UI shows a concise error for failures it can observe: a missing API key, Google script/network failure, the documented `gm_authFailure`, a detached map container, or a timeout waiting for the first `idle` event.
+During loading, the activation button is replaced by a loading overlay that announces `Cargando mapa`. After success, the map replaces the activation panel. Custom UI shows a concise error for failures it can observe: a missing API key, Google script/network failure, the documented `gm_authFailure`, a detached map container, or a timeout waiting for the first `idle` event.
 
 Google does not expose a dependable client callback for every quota- or billing-related state that may leave a map darkened or watermarked. The component therefore does not claim to detect every quota exhaustion case. The granted `250`-per-day Cloud quota is the enforcement boundary, and the two direct Google Maps destination links remain visible in the activation, loading, success, and failure states.
 
