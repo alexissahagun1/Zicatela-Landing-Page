@@ -15,7 +15,11 @@ These requirements supersede the older footer node `131:91`, the illustrated map
 
 ## Map
 
-Use one public Google My Maps embed. The custom map contains exactly two place markers:
+Use one public Google My Maps embed with map ID `1dCV9ESC259QOIK4lcq_udz08L2uKZvg`. The component uses only the public viewer URL:
+
+`https://www.google.com/maps/d/embed?mid=1dCV9ESC259QOIK4lcq_udz08L2uKZvg`
+
+The supplied `/edit` URL is private authoring information and must never appear in the application, documentation shown to visitors, or generated page markup. The custom map contains exactly two place markers:
 
 - `CASA PALMAS` at `15.831041, -97.040609`.
 - `CASA CAMPECHE` at `15.8315562, -97.0404726`.
@@ -23,6 +27,8 @@ Use one public Google My Maps embed. The custom map contains exactly two place m
 The initial camera shows the Zicatela and La Punta area rather than fitting tightly to the short distance between the houses. The map is interactive and must not render a route. The embed remains lazy-loaded, has a useful accessible title, fills its container, and cannot create horizontal page overflow.
 
 The existing supplied Google Maps destination links remain available for opening each property directly. The implementation does not request or expose a Google Maps API key and does not require billing.
+
+The public embed was verified to respond without authentication. Its returned HTML contained no email, owner, author, or profile field. Before publication, verify the rendered embed once in a signed-out/private browser window; if Google surfaces personal account identity in its runtime interface, do not publish it and move ownership to a Casa Zii-branded Google account.
 
 Creating the public My Maps document is a one-time content operation. Its generated embed URL is stored as a named constant in the map component; the exact property coordinates and direct destination URLs remain visible beside it in source.
 
@@ -65,7 +71,7 @@ No booking, Guesty, navigation, gallery, property-page, or API behavior changes 
 
 ## Verification
 
-1. Confirm the embed displays one map, two named markers, no route, and a Zicatela-area initial view.
+1. In a signed-out/private browser window, confirm the embed displays one map, two named markers, no route, and a Zicatela-area initial view without exposing personal account identity.
 2. Compare the desktop footer against Figma node `29:373` at 1280 px width.
 3. Check footer and map at mobile width for overflow, overlap, and readable order.
 4. Verify both direct Google Maps links open their supplied destinations.
