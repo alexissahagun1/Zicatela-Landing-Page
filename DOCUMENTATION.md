@@ -124,5 +124,6 @@ Shipped against Figma + spec annotations only:
 - Shared `NavigationBar` is fixed, always visible, three-zone desktop layout. `AnnouncementBar` is not rendered on any page.
 - Homepage collage is `InstagramGallery` (`156:2` exports). Press still uses `PhotoCollage`.
 - `Footer` follows the current Figma footer node `29:373` in both languages; the floating reservation bar remains mounted globally outside the footer.
-- `MapSection` uses one public Google My Maps embed (`mid=1dCV9ESC259QOIK4lcq_udz08L2uKZvg`) with the two real locations and no route; both supplied destination links remain available beside it.
+- `MapSection` uses one lazy-loaded Google Maps JavaScript map with the two real locations and no route; both supplied destination links remain available beside it. The Google Cloud project `zicatela` has a hard `250` map-loads-per-day quota, and the browser key is restricted to the local and Casa Zii domains. Google aggregates usage across projects on the same billing account, so other Maps workloads on that account consume the remaining monthly free allowance.
+- `LazyGoogleMap` waits until the map is within 300px of the viewport before loading the Maps JavaScript script. It requests no Places, Geocoding, Routes, or other billable libraries.
 - Gallery tiles use the six exact Instagram post URLs matched to the Figma exports; they do not fall back to the profile.

@@ -1,7 +1,7 @@
 # Casa Zii Map and Footer Correction Design
 
 **Date:** 2026-08-24
-**Status:** Approved for implementation planning
+**Status:** Implemented
 **Scope:** Shared location section and shared footer
 
 ## Sources of truth
@@ -9,28 +9,20 @@
 - Footer: Figma file `2lNQfVwXyb9q3PlVs6yhgP`, node `29:373`.
 - Casa Palmas location: `15.831041, -97.040609` from the supplied Google Maps destination.
 - Casa Campeche location: `15.8315562, -97.0404726` from the supplied Google Maps destination.
-- Product constraint: one interactive map, both exact locations, no route, no mock pins, and no paid API.
+- Product constraint: one interactive map, both exact locations, no route, no mock pins, and a hard usage limit to prevent unexpected API charges.
 
 These requirements supersede the older footer node `131:91`, the illustrated map, and the Google Directions iframe documented previously.
 
 ## Map
 
-Use one public Google My Maps embed with map ID `1dCV9ESC259QOIK4lcq_udz08L2uKZvg`. The component uses only the public viewer URL:
-
-`https://www.google.com/maps/d/embed?mid=1dCV9ESC259QOIK4lcq_udz08L2uKZvg`
-
-The supplied `/edit` URL is private authoring information and must never appear in the application, documentation shown to visitors, or generated page markup. The custom map contains exactly two place markers:
+Use one Google Maps JavaScript map. The browser key is read from `NEXT_PUBLIC_GOOGLE_MAPS_API_KEY`, is restricted by HTTP referrer to the approved local and Casa Zii domains, and is not committed to the repository. The map contains exactly two markers:
 
 - `CASA PALMAS` at `15.831041, -97.040609`.
 - `CASA CAMPECHE` at `15.8315562, -97.0404726`.
 
-The initial camera shows the Zicatela and La Punta area rather than fitting tightly to the short distance between the houses. The map is interactive and must not render a route. The embed remains lazy-loaded, has a useful accessible title, fills its container, and cannot create horizontal page overflow.
+The initial camera shows the Zicatela and La Punta area rather than fitting tightly to the short distance between the houses. The map is interactive and must not render a route. `LazyGoogleMap` waits until the map is within 300px of the viewport before loading the Maps JavaScript script, has a useful accessible title, fills its container, and cannot create horizontal page overflow.
 
-The existing supplied Google Maps destination links remain available for opening each property directly. The implementation does not request or expose a Google Maps API key and does not require billing.
-
-The public embed was verified to respond without authentication. Its returned HTML contained no email, owner, author, or profile field. Before publication, verify the rendered embed once in a signed-out/private browser window; if Google surfaces personal account identity in its runtime interface, do not publish it and move ownership to a Casa Zii-branded Google account.
-
-Creating the public My Maps document is a one-time content operation. Its generated embed URL is stored as a named constant in the map component; the exact property coordinates and direct destination URLs remain visible beside it in source.
+The existing supplied Google Maps destination links remain available for opening each property directly. The project `zicatela` is linked to billing because Google Maps JavaScript API requires it, but its `BillableDefaultPerDayPerProject` quota is set to `250` effective map loads per day. That is at most `7,750` loads in a 31-day month, below the documented monthly free allowance when no other Maps usage shares the billing account. Google aggregates usage across projects on the same billing account, so that remaining headroom is not a global zero-cost guarantee. The implementation requests no Places, Geocoding, Routes, or other billable libraries.
 
 ## Footer
 
@@ -57,21 +49,21 @@ The footer continues to use the existing language context. Spanish and English c
 
 ## Component boundaries
 
-- `app/components/MapSection.tsx` owns the My Maps embed, exact location constants, direct destination links, and location presentation.
+- `app/components/MapSection.tsx` owns the exact location constants, direct destination links, and location presentation.
+- `app/components/LazyGoogleMap.tsx` owns the viewport-triggered Maps JavaScript loader and the two real markers.
 - `app/components/Footer.tsx` owns only the Figma footer composition and localized footer copy.
-- Documentation is updated to point to the new Figma file/node and the My Maps architecture.
+- Documentation is updated to point to the new Figma file/node and the quota-protected Google Maps JavaScript architecture.
 
 No booking, Guesty, navigation, gallery, property-page, or API behavior changes are included.
 
 ## Failure handling
 
-- If the My Maps embed is unavailable, the visible address blocks and direct Google Maps links still let visitors reach both properties.
-- The iframe uses native lazy loading and a restrictive referrer policy.
+- If the Maps JavaScript API is unavailable, the visible address blocks and direct Google Maps links still let visitors reach both properties.
 - No hidden synthetic markers or fallback image imply that the map is interactive when it is not.
 
 ## Verification
 
-1. In a signed-out/private browser window, confirm the embed displays one map, two named markers, no route, and a Zicatela-area initial view without exposing personal account identity.
+1. In a signed-out/private browser window, confirm the JavaScript map displays one map, two named markers, no route, and a Zicatela-area initial view.
 2. Compare the desktop footer against Figma node `29:373` at 1280 px width.
 3. Check footer and map at mobile width for overflow, overlap, and readable order.
 4. Verify both direct Google Maps links open their supplied destinations.
@@ -83,7 +75,7 @@ No booking, Guesty, navigation, gallery, property-page, or API behavior changes 
 
 - Exactly one interactive location map is rendered.
 - Both markers use the supplied exact coordinates and are not connected by a route.
-- The implementation requires no paid API or API key.
+- The implementation uses one restricted browser key, lazy initialization, and a hard 250-loads-per-day project quota to bound usage.
 - The footer matches the content and hierarchy of Figma node `29:373`.
 - No fake phone number, fake email, placeholder, old booking CTA, or stale footer content remains.
 - Desktop and mobile layouts remain usable and free of horizontal overflow.

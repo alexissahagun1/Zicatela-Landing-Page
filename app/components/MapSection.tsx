@@ -1,3 +1,5 @@
+import LazyGoogleMap from "./LazyGoogleMap";
+
 const PALMAS_ADDRESS =
   "Calle de la Paloma S/N, in front of Casa Paloma, La Punta, Brisas de Zicatela, 70938 Puerto Escondido, Oaxaca, Mexico";
 const CAMPECHE_ADDRESS =
@@ -8,21 +10,35 @@ const CAMPECHE_MAPS_URL = "https://maps.app.goo.gl/3pygvtLVaZn8kiYB7";
 const PALMAS_COORDINATES = "15.831041,-97.040609";
 const CAMPECHE_COORDINATES = "15.8315562,-97.0404726";
 
-const MAP_EMBED_SRC =
-  "https://www.google.com/maps/d/embed?mid=1dCV9ESC259QOIK4lcq_udz08L2uKZvg";
+const MAP_CENTER = { lat: 15.8313, lng: -97.04054 };
+
+function parseCoordinates(coordinates: string) {
+  const [lat, lng] = coordinates.split(",").map(Number);
+  return { lat, lng };
+}
+
+const MAP_PINS = [
+  {
+    position: parseCoordinates(PALMAS_COORDINATES),
+    title: "Casa Palmas",
+    label: "CASA PALMAS",
+  },
+  {
+    position: parseCoordinates(CAMPECHE_COORDINATES),
+    title: "Casa Campeche",
+    label: "CASA CAMPECHE",
+  },
+];
 
 export default function MapSection() {
   return (
     <section className="bg-[#F4EFE6] px-4 py-16 md:px-8 md:py-24">
       <div className="mx-auto grid w-full max-w-[1308px] items-start gap-10 md:grid-cols-[minmax(0,680px)_minmax(0,1fr)] md:gap-16">
         <div className="w-full overflow-hidden border border-[#222222]/15 bg-white">
-          <iframe
+          <LazyGoogleMap
             title="Mapa de Casa Zii en Zicatela con las ubicaciones de Casa Palmas y Casa Campeche"
-            src={MAP_EMBED_SRC}
-            loading="lazy"
-            referrerPolicy="no-referrer-when-downgrade"
-            allowFullScreen
-            className="h-[333px] min-h-[333px] w-full border-0"
+            center={MAP_CENTER}
+            pins={MAP_PINS}
           />
         </div>
 

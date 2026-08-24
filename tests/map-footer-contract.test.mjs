@@ -6,6 +6,10 @@ import test from "node:test";
 const root = resolve(import.meta.dirname, "..");
 const footer = readFileSync(resolve(root, "app/components/Footer.tsx"), "utf8");
 const map = readFileSync(resolve(root, "app/components/MapSection.tsx"), "utf8");
+const googleMap = readFileSync(
+  resolve(root, "app/components/LazyGoogleMap.tsx"),
+  "utf8",
+);
 const layout = readFileSync(resolve(root, "app/layout.tsx"), "utf8");
 
 test("footer follows the current Figma content and has no placeholder contact data", () => {
@@ -17,14 +21,19 @@ test("footer follows the current Figma content and has no placeholder contact da
   assert.doesNotMatch(footer, /CENTRO DE RESERVACIONES/);
 });
 
-test("map uses the public My Maps embed instead of a directions route", () => {
-  assert.match(
-    map,
-    /https:\/\/www\.google\.com\/maps\/d\/embed\?mid=1dCV9ESC259QOIK4lcq_udz08L2uKZvg/,
-  );
+test("map uses one lazy-loaded Google Maps JavaScript map", () => {
+  assert.match(map, /<LazyGoogleMap/);
   assert.match(map, /15\.831041,-97\.040609/);
   assert.match(map, /15\.8315562,-97\.0404726/);
+  assert.doesNotMatch(map, /maps\/d\/embed/);
   assert.doesNotMatch(map, /saddr|daddr/);
+  assert.match(googleMap, /"use client"/);
+  assert.match(googleMap, /IntersectionObserver/);
+  assert.match(googleMap, /NEXT_PUBLIC_GOOGLE_MAPS_API_KEY/);
+  assert.match(googleMap, /maps\.googleapis\.com\/maps\/api\/js/);
+  assert.doesNotMatch(googleMap, /libraries=/);
+  assert.match(googleMap, /new google\.maps\.Map/);
+  assert.match(googleMap, /new google\.maps\.Marker/);
 });
 
 test("the floating reservation bar remains mounted globally", () => {
