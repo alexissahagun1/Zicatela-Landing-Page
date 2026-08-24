@@ -36,9 +36,19 @@ test("map loads Google only after explicit activation", () => {
   assert.doesNotMatch(map, /saddr|daddr/);
   assert.match(lazyGoogleMap, /onClick=\{activateMap\}/);
   assert.match(lazyGoogleMap, /Ver mapa interactivo/);
+  const activateMapStart = lazyGoogleMap.indexOf(
+    "const activateMap = async () => {",
+  );
+  assert.notEqual(activateMapStart, -1);
+  const activateMapEnd = lazyGoogleMap.indexOf("\n  };", activateMapStart);
+  assert.notEqual(activateMapEnd, -1);
+  const activateMapHandlerSource = lazyGoogleMap.slice(
+    activateMapStart,
+    activateMapEnd + "\n  };".length,
+  );
   assert.match(
-    lazyGoogleMap,
-    /const activateMap = async \(\) => \{[\s\S]*?await import\("\.\/GoogleMapsRuntime"\)/,
+    activateMapHandlerSource,
+    /await import\("\.\/GoogleMapsRuntime"\)/,
   );
   assert.doesNotMatch(lazyGoogleMap, /IntersectionObserver|useEffect/);
   assert.doesNotMatch(lazyGoogleMap, /maps\.googleapis\.com\/maps\/api\/js/);
