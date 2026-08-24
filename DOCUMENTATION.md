@@ -105,15 +105,15 @@ Listing mapping:
 
 ## Spec vs Figma (2026-08-23)
 
-Implementation source of truth is **only** Figma [CASA ZII](https://www.figma.com/design/JYwQ77v9OOLOlxmlKaTNu7/CASA-ZII) plus the annotations in `docs/superpowers/specs/2026-08-23-casa-zii-navigation-gallery-map-design.md`. No other sites, no invented layout.
+Implementation source of truth is **only** the approved Figma footer node [CASA ZII — Copy](https://www.figma.com/design/2lNQfVwXyb9q3PlVs6yhgP/CASA-ZII--Copy-?node-id=29-373) plus the annotations in `docs/superpowers/specs/2026-08-24-casa-zii-map-footer-correction-design.md` for the map and footer correction. No other sites, no invented layout.
 
 | Node | Locked reading |
 |------|----------------|
 | `69:3` Nav | White 3-zone header. Frame also includes hero (`1308 × 726`). Annotation: fixed, always visible; remove `AnnouncementBar` and mobile strip `131:3`. |
 | `156:2` Galería | `836 × 687.5`, tiles `270 × 337.5`, gutters 13 / 12.5. Annotation: unique Instagram hrefs, no recrop. |
 | `18:227` Mapa | Visual reference only. The implementation must use one Google Maps overview with the real Casa Palmas and Casa Campeche pins; the supplied destination links remain the source of truth. |
-| `131:91` Footer | Updated compact footer `720 × 372`: centered booking button, Instagram/Casa Zii row, contact/reservation block, and privacy/terms block. |
-| Addresses | Use the two strings written in the spec. Do not render the old illustrated map or the old locations/press footer list. |
+| `29:373` Footer | Figma footer `1280 × 372`: centered Instagram/Casa Zii row, both address blocks at left, FAQs and privacy/terms at right. The floating reservation bar remains separate and mounted globally. |
+| Addresses | Use the two strings written in the spec. Do not render the old illustrated map, old footer CTA, fake contact information, or old locations/press footer list. |
 
 The six Instagram post URLs are mapped in `app/components/InstagramGallery.tsx`; the two Google Maps URLs are the supplied Casa Palmas and Casa Campeche destinations.
 
@@ -123,6 +123,6 @@ Shipped against Figma + spec annotations only:
 
 - Shared `NavigationBar` is fixed, always visible, three-zone desktop layout. `AnnouncementBar` is not rendered on any page.
 - Homepage collage is `InstagramGallery` (`156:2` exports). Press still uses `PhotoCollage`.
-- `Footer` follows the updated Figma footer node `131:91` in both languages.
-- `MapSection` uses one Google Maps directions embed between the two supplied exact coordinates so Google renders both real locations in a single Zicatela overview; both supplied destination links remain available beside it.
+- `Footer` follows the current Figma footer node `29:373` in both languages; the floating reservation bar remains mounted globally outside the footer.
+- `MapSection` uses one public Google My Maps embed (`mid=1dCV9ESC259QOIK4lcq_udz08L2uKZvg`) with the two real locations and no route; both supplied destination links remain available beside it.
 - Gallery tiles use the six exact Instagram post URLs matched to the Figma exports; they do not fall back to the profile.
