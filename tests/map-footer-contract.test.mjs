@@ -38,7 +38,7 @@ test("map loads Google only after explicit activation", () => {
   assert.match(lazyGoogleMap, /Ver mapa interactivo/);
   assert.match(
     lazyGoogleMap,
-    /dynamic\(\(\) => import\("\.\/GoogleMapsRuntime"\)\)/,
+    /const activateMap = async \(\) => \{[\s\S]*?await import\("\.\/GoogleMapsRuntime"\)/,
   );
   assert.doesNotMatch(lazyGoogleMap, /IntersectionObserver|useEffect/);
   assert.doesNotMatch(lazyGoogleMap, /maps\.googleapis\.com\/maps\/api\/js/);
