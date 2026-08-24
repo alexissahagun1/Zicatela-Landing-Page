@@ -8,6 +8,7 @@ export { default as BookingSearchBar } from './BookingSearchBar';
 export { default as BookingResults } from './BookingResults';
 export { default as Footer } from './Footer';
 export { default as HeroSection } from './HeroSection';
+export { default as InstagramGallery } from './InstagramGallery';
 export { default as LaPuntaSection } from './LaPuntaSection';
 export { default as Logo } from './Logo';
 export { default as MainContent } from './MainContent';

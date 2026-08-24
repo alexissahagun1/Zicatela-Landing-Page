@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Courier_Prime } from "next/font/google";
 import "./globals.css";
 import { LanguageProvider } from "./contexts/LanguageContext";
+import StickyBookingBar from "./components/StickyBookingBar";
 import { SITE_NAME, SITE_URL } from "@/lib/site";
 
 const courierPrime = Courier_Prime({
@@ -52,6 +53,7 @@ export default function RootLayout({
       >
         <LanguageProvider>
           {children}
+          <StickyBookingBar />
         </LanguageProvider>
         <script
           type="application/ld+json"

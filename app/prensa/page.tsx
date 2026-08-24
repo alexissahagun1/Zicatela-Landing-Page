@@ -1,6 +1,5 @@
 "use client";
 
-import AnnouncementBar from "../components/AnnouncementBar";
 import NavigationBar from "../components/NavigationBar";
 import Footer from "../components/Footer";
 import PhotoCollage from "../components/PhotoCollage";
@@ -94,11 +93,10 @@ export default function PrensaPage() {
 
   return (
     <div className="min-h-screen">
-      <AnnouncementBar />
       <NavigationBar />
       
       {/* Prensa Content */}
-      <div className="bg-white py-16 px-4 pt-26 md:pt-32">
+      <div className="bg-white py-16 px-4 pt-16 md:pt-[74px]">
         <div className="max-w-6xl mx-auto">
           <h1 className="text-4xl font-bold text-gray-800 mb-8 text-center">
             {currentContent.title}

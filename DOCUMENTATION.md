@@ -89,3 +89,25 @@ Listing mapping:
 - Keep Courier Prime and existing Casa Zii palette (white surfaces, `#7A7A7C` search CTA, dark `#222` accents).
 - Search bar is full-bleed over the booking hero image; desktop = pill layout, mobile = stacked card.
 - No payment UI yet — awaits GuestyPay/Stripe decision.
+
+## Spec vs Figma (2026-08-23)
+
+Implementation source of truth is **only** Figma [CASA ZII](https://www.figma.com/design/JYwQ77v9OOLOlxmlKaTNu7/CASA-ZII) plus the annotations in `docs/superpowers/specs/2026-08-23-casa-zii-navigation-gallery-map-design.md`. No other sites, no invented layout.
+
+| Node | Locked reading |
+|------|----------------|
+| `69:3` Nav | White 3-zone header. Frame also includes hero (`1308 × 726`). Annotation: fixed, always visible; remove `AnnouncementBar` and mobile strip `131:3`. |
+| `156:2` Galería | `836 × 687.5`, tiles `270 × 337.5`, gutters 13 / 12.5. Annotation: unique Instagram hrefs, no recrop. |
+| `18:227` Mapa | Illustrated map `680 × 333`, pins `CASA PALMAS` and `CASA CAMPECHE`. Annotation: both spec addresses + Abrir mapa + lazy embed, no API key. |
+| Addresses | Use the two strings written in the spec. Footer restyle is out of scope. |
+
+The six Instagram post URLs are mapped in `app/components/InstagramGallery.tsx`; the two Google Maps URLs are the supplied Casa Palmas and Casa Campeche destinations.
+
+## Navigation, gallery, map (2026-08-23)
+
+Shipped against Figma + spec annotations only:
+
+- Shared `NavigationBar` is fixed, always visible, three-zone desktop layout. `AnnouncementBar` is not rendered on any page.
+- Homepage collage is `InstagramGallery` (`156:2` exports). Press still uses `PhotoCollage`.
+- `MapSection` paints `/figma-map.png` (`18:227`), keeps the interactive Google embed behind an explicit disclosure, shows both spec addresses, and uses the supplied Google Maps URLs.
+- Gallery tiles use the six exact Instagram post URLs matched to the Figma exports; they do not fall back to the profile.

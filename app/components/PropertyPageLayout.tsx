@@ -31,7 +31,7 @@ export default function PropertyPageLayout({
       <NavigationBar />
       
       {/* Property Content */}
-      <div className="relative">
+      <div className="relative pt-16 md:pt-[74px]">
         {/* Property Gallery */}
         <PropertyGallery
           exteriorImage={exteriorImage}

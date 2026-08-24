@@ -34,7 +34,7 @@ const Footer: React.FC = () => {
   const currentContent = content[language];
 
   return (
-    <footer className="relative w-full bg-[#EFEFEF] py-20 px-4 md:px-8 lg:px-16">
+    <footer className="relative w-full bg-[#EFEFEF] px-4 pb-32 pt-20 md:px-8 md:pb-36 md:pt-20 lg:px-16">
       <div className="max-w-4xl mx-auto">
         <div className="space-y-10">
           

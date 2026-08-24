@@ -1,6 +1,5 @@
 "use client";
 
-import AnnouncementBar from "../components/AnnouncementBar";
 import NavigationBar from "../components/NavigationBar";
 import Footer from "../components/Footer";
 import PropertyHeader from "../components/PropertyHeader";
@@ -46,11 +45,10 @@ export default function CasaPalmasPage() {
 
   return (
     <div className="min-h-screen bg-white">
-      <AnnouncementBar />
       <NavigationBar />
       
       {/* Casa Palmas Content */}
-      <div className="relative max-w-7xl mx-auto text-center md:text-left pt-26 md:pt-32">
+      <div className="relative max-w-7xl mx-auto text-center md:text-left pt-16 md:pt-[74px]">
         {/* Property Gallery */}
         <PropertyGallery
           exteriorImage="/CasaPalmasI.png"

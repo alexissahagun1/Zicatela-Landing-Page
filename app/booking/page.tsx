@@ -1,7 +1,6 @@
 "use client";
 
 import { useRef, useState } from "react";
-import AnnouncementBar from "../components/AnnouncementBar";
 import NavigationBar from "../components/NavigationBar";
 import Footer from "../components/Footer";
 import BookingSearchBar, {
@@ -95,12 +94,11 @@ export default function BookingPage() {
 
   return (
     <div className="min-h-screen bg-white">
-      <AnnouncementBar />
       <NavigationBar />
 
       {/* Hero Section with Background */}
       <div
-        className="relative flex w-full items-center justify-center bg-cover bg-center bg-no-repeat px-4 pt-28 md:pt-32"
+        className="relative flex w-full items-center justify-center bg-cover bg-center bg-no-repeat px-4 pt-16 md:pt-[74px]"
         style={{
           backgroundImage: "url('/BackgroundBookNow.png')",
           minHeight: "72vh",

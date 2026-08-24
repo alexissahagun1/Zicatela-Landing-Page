@@ -1,268 +1,196 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import Logo from "./Logo";
 import Image from "next/image";
 import Link from "next/link";
-import { useLanguage } from '../contexts/LanguageContext';
+import { useLanguage } from "../contexts/LanguageContext";
 
 export default function NavigationBar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isNavbarVisible, setIsNavbarVisible] = useState(true);
-  const [lastScrollY, setLastScrollY] = useState(0);
-  const [isMobile, setIsMobile] = useState(false);
   const { language, toggleLanguage } = useLanguage();
 
   const navigationText = {
     es: {
       casaCampeche: "● CASA CAMPECHE",
       casaPalmas: "▲ CASA PALMAS",
-      press: "PRENSA",
-      // book: "RESERVA"
+      book: "Reservar",
     },
     en: {
       casaCampeche: "● CASA CAMPECHE",
       casaPalmas: "▲ CASA PALMAS",
-      press: "PRESS",
-      // book: "BOOK"
-    }
+      book: "Book Now",
+    },
   };
 
   const currentNavText = navigationText[language];
+  const alternateLanguage = language === "es" ? "English" : "Español";
+  const alternateFlag =
+    language === "es" ? "/english-logo.png" : "/Flag_of_Mexico.png";
+  const languageAction =
+    language === "es" ? "Cambiar a inglés" : "Cambiar a español";
 
-  const toggleMobileMenu = () => {
-    setIsMobileMenuOpen(!isMobileMenuOpen);
-  };
-
-  useEffect(() => {
-    // Check if mobile on mount and resize
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-    
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    
-    return () => {
-      window.removeEventListener('resize', checkMobile);
-    };
-  }, []);
+  const closeMobileMenu = () => setIsMobileMenuOpen(false);
 
   useEffect(() => {
-    const handleScroll = () => {
-      const currentScrollY = window.scrollY;
-      
-      // Apply scroll behavior on all screen sizes
-      if (currentScrollY > lastScrollY && currentScrollY > 100) {
-        // Scrolling down and past 100px - hide navbar
-        setIsNavbarVisible(false);
-      } else {
-        // Scrolling up - show navbar
-        setIsNavbarVisible(true);
-      }
-      
-      setLastScrollY(currentScrollY);
-    };
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    
+    document.body.style.overflow = isMobileMenuOpen ? "hidden" : "";
     return () => {
-      window.removeEventListener('scroll', handleScroll);
+      document.body.style.overflow = "";
     };
-  }, [lastScrollY]);
+  }, [isMobileMenuOpen]);
 
   return (
     <>
-      <nav className={`w-full h-16 md:h-26 bg-white flex items-center justify-between px-4 md:px-8 lg:px-16 xl:px-24 transition-transform duration-300 ease-in-out ${
-        isNavbarVisible ? 'translate-y-0' : '-translate-y-full'
-      } fixed top-10 left-0 z-40 md:top-11`}>
-        {/* Logo */}
-        <div className="flex items-center">
-          <Link href="/homepage">
+      <nav className="fixed top-0 left-0 z-40 grid h-16 w-full grid-cols-[1fr_auto_1fr] items-center bg-white px-4 md:h-[74px] md:px-8 lg:px-16 xl:px-24">
+        <div className="justify-self-start">
+          <Link href="/homepage" onClick={closeMobileMenu}>
             <Logo />
           </Link>
         </div>
 
-        {/* Navigation Links - Hidden on mobile */}
-        <div className="hidden md:flex items-center space-x-6 lg:space-x-8 xl:space-x-12 whitespace-nowrap">
-          <Link href="/casa-campeche" className="text-[#222222] text-[10px] md:text-[14px] leading-[11px] hover:opacity-70 whitespace-nowrap">
+        <div className="hidden items-center justify-self-center whitespace-nowrap md:flex md:gap-8 lg:gap-12">
+          <Link
+            href="/casa-campeche"
+            className="font-[family-name:var(--font-courier)] text-[14px] leading-[18px] text-[#222222] hover:opacity-70 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#222222]"
+          >
             {currentNavText.casaCampeche}
           </Link>
-          <Link href="/casa-palmas" className="text-[#222222] text-[10px] md:text-[14px] leading-[11px] hover:opacity-70 whitespace-nowrap">
+          <Link
+            href="/casa-palmas"
+            className="font-[family-name:var(--font-courier)] text-[14px] leading-[18px] text-[#222222] hover:opacity-70 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#222222]"
+          >
             {currentNavText.casaPalmas}
           </Link>
-          <Link href="/prensa" className="text-[#222222] text-[10px] md:text-[14px] leading-[11px] hover:opacity-70 whitespace-nowrap">
-            {currentNavText.press}
-          </Link>
-          {/* <Link href="/booking" className="text-[#222222] text-[10px] md:text-[14px] leading-[11px] hover:opacity-70 whitespace-nowrap">
-            {currentNavText.book}
-          </Link> */}
         </div>
 
-        {/* Right side - Book Now button, Instagram, and English */}
-        <div className="flex items-center space-x-3 md:space-x-4 lg:space-x-6">
-          {/* Mobile Menu Button - Only visible on mobile */}
+        <div className="flex items-center justify-self-end gap-3 md:gap-4 lg:gap-6">
           <button
-            onClick={toggleMobileMenu}
-            className="md:hidden flex flex-col space-y-1 p-2"
-            aria-label="Toggle mobile menu"
+            type="button"
+            onClick={() => setIsMobileMenuOpen((open) => !open)}
+            className="flex flex-col space-y-1 p-2 md:hidden"
+            aria-expanded={isMobileMenuOpen}
+            aria-label={isMobileMenuOpen ? "Cerrar menú" : "Abrir menú"}
           >
-            <div className="w-6 h-0.5 bg-black"></div>
-            <div className="w-6 h-0.5 bg-black"></div>
-            <div className="w-6 h-0.5 bg-black"></div>
+            <span className="h-0.5 w-6 bg-black" />
+            <span className="h-0.5 w-6 bg-black" />
+            <span className="h-0.5 w-6 bg-black" />
           </button>
 
           <Link href="/booking">
-            <button className="w-[100px] md:w-[133px] h-[32px] md:h-[37px] bg-[#A04E39] text-white text-[14px] md:text-[20px] leading-[16px] md:leading-[22px] flex items-center justify-center hover:opacity-90">
-              {language === 'es' ? 'Reservar' : 'Book Now'}
-            </button>
+            <span className="flex h-[32px] w-[100px] items-center justify-center bg-[#A04E39] text-[14px] leading-[16px] text-white hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#A04E39] md:h-[37px] md:w-[133px] md:text-[20px] md:leading-[22px]">
+              {currentNavText.book}
+            </span>
           </Link>
-          
-          {/* Instagram Icon - Hidden on mobile */}
-          <a href="https://instagram.com/casazii" target="_blank" rel="noopener noreferrer">
+
+          <a
+            href="https://instagram.com/casazii"
+            target="_blank"
+            rel="noreferrer"
+            className="hidden hover:opacity-70 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#222222] md:block"
+          >
             <Image
               src="/instagram-logo.png"
-              alt="Instagram"
+              alt="Instagram de Casa Zii"
               width={21}
               height={22}
-              className="hidden md:block hover:opacity-70"
             />
           </a>
-          
-          {/* Language Toggle with Flag - Hidden on mobile */}
-          <button 
+
+          <button
+            type="button"
             onClick={toggleLanguage}
-            className="hidden md:flex items-center space-x-1 hover:opacity-70 cursor-pointer"
+            aria-label={languageAction}
+            title={languageAction}
+            className="hidden cursor-pointer items-center space-x-1 hover:opacity-70 md:flex"
           >
-            {language === 'es' ? (
-              <Image
-                src="/Flag_of_Mexico.png"
-                alt="Mexican Flag"
-                width={16}
-                height={16}
-              />
-            ) : (
-              <Image
-                src="/english-logo.png"
-                alt="UK Flag"
-                width={16}
-                height={16}
-              />
-            )}
-            <span className="text-black text-[13px] leading-[15px]">
-              {language === 'es' ? 'Español' : 'English'}
-            </span>
+            <Image src={alternateFlag} alt="" width={16} height={16} />
+            <span className="text-[13px] leading-[15px] text-black">{alternateLanguage}</span>
           </button>
         </div>
       </nav>
 
-      {/* Mobile Menu Overlay */}
-      <div className={`md:hidden fixed inset-0 z-50 bg-[#F5F5F5] transition-all duration-500 ease-in-out ${
-        isMobileMenuOpen ? 'translate-x-0 opacity-100' : 'translate-x-full opacity-0'
-      }`}>
-        <div className="flex flex-col h-full">
-            {/* Mobile Menu Header */}
-            <div className="flex items-center justify-between p-4 border-b border-black">
-              <Link href="/homepage" onClick={() => setIsMobileMenuOpen(false)}>
-                <Logo />
-              </Link>
+      <div
+        className={`fixed inset-0 z-50 bg-[#F5F5F5] transition-all duration-500 ease-in-out md:hidden ${
+          isMobileMenuOpen
+            ? "translate-x-0 opacity-100"
+            : "pointer-events-none translate-x-full opacity-0"
+        }`}
+      >
+        <div className="flex h-full flex-col">
+          <div className="flex items-center justify-between border-b border-black p-4">
+            <Link href="/homepage" onClick={closeMobileMenu}>
+              <Logo />
+            </Link>
+            <button
+              type="button"
+              onClick={closeMobileMenu}
+              className="p-2"
+              aria-label="Cerrar menú"
+            >
+              <div className="flex h-6 w-6 flex-col justify-center">
+                <div className="h-0.5 w-6 translate-y-0.5 rotate-45 bg-black" />
+                <div className="-translate-y-0.5 h-0.5 w-6 -rotate-45 bg-black" />
+              </div>
+            </button>
+          </div>
+
+          <div className="flex flex-1 flex-col justify-start space-y-6 px-6 py-8">
+            <Link
+              href="/casa-campeche"
+              className="font-mono text-lg tracking-wide text-black hover:opacity-70"
+              onClick={closeMobileMenu}
+            >
+              CASA CAMPECHE
+            </Link>
+            <Link
+              href="/casa-palmas"
+              className="font-mono text-lg tracking-wide text-black hover:opacity-70"
+              onClick={closeMobileMenu}
+            >
+              CASA PALMAS
+            </Link>
+            <div className="pt-4">
               <button
-                onClick={toggleMobileMenu}
-                className="p-2"
-                aria-label="Close mobile menu"
+                type="button"
+                onClick={toggleLanguage}
+                aria-label={languageAction}
+                title={languageAction}
+                className="flex cursor-pointer items-center space-x-2 hover:opacity-70"
               >
-                <div className="w-6 h-6 flex flex-col justify-center">
-                  <div className="w-6 h-0.5 bg-black transform rotate-45 translate-y-0.5"></div>
-                  <div className="w-6 h-0.5 bg-black transform -rotate-45 -translate-y-0.5"></div>
-                </div>
+                <Image src={alternateFlag} alt="" width={16} height={16} />
+                <span className="font-mono text-sm text-black">{alternateLanguage}</span>
               </button>
             </div>
 
-            {/* Mobile Navigation Links */}
-            <div className="flex-1 flex flex-col justify-start px-6 py-8 space-y-6">
-              <Link 
-                href="/casa-campeche" 
-                className="text-black text-lg font-mono tracking-wide hover:opacity-70"
-                onClick={() => setIsMobileMenuOpen(false)}
+            <div className="pt-2">
+              <a
+                href="https://instagram.com/casazii"
+                target="_blank"
+                rel="noreferrer"
+                className="flex items-center space-x-2 hover:opacity-70"
               >
-                CASA CAMPECHE
-              </Link>
-              <Link 
-                href="/casa-palmas" 
-                className="text-black text-lg font-mono tracking-wide hover:opacity-70"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                CASA PALMAS
-              </Link>
-              <Link 
-                href="/prensa" 
-                className="text-black text-lg font-mono tracking-wide hover:opacity-70"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                {currentNavText.press}
-              </Link>
-              
-              {/* Language Selection */}
-              <div className="pt-4">
-                <button 
-                  onClick={toggleLanguage}
-                  className="flex items-center space-x-2 hover:opacity-70 cursor-pointer"
-                >
-                  {language === 'es' ? (
-                    <Image
-                      src="/Flag_of_Mexico.png"
-                      alt="Mexican Flag"
-                      width={16}
-                      height={16}
-                    />
-                  ) : (
-                    <Image
-                      src="/english-logo.png"
-                      alt="UK Flag"
-                      width={16}
-                      height={16}
-                    />
-                  )}
-                  <span className="text-black text-sm font-mono">
-                    {language === 'es' ? 'Español' : 'English'}
-                  </span>
-                </button>
-              </div>
-
-              {/* Instagram Link */}
-              <div className="pt-2">
-                <a href="https://instagram.com/casazii" target="_blank" rel="noopener noreferrer" className="flex items-center space-x-2 hover:opacity-70">
-                  <Image
-                    src="/instagram-logo.png"
-                    alt="Instagram"
-                    width={21}
-                    height={22}
-                  />
-                  <span className="text-black text-sm font-mono">CASA ZII</span>
-                </a>
-              </div>
-
-              {/* Book Now Button */}
-              <div className="pt-6 flex justify-center">
-                <Link href="/booking" onClick={() => setIsMobileMenuOpen(false)}>
-                  <button className=" px-8 py-4 bg-[#A04E39] text-white text-md font-mono tracking-wide hover:opacity-90 ">
-                    Book Now
-                  </button>
-                </Link>
-              </div>
+                <Image
+                  src="/instagram-logo.png"
+                  alt=""
+                  width={21}
+                  height={22}
+                />
+                <span className="font-mono text-sm text-black">
+                  Instagram de Casa Zii
+                </span>
+              </a>
             </div>
 
-            {/* Contact Information */}
-            <div className="px-6 py-6 border-t border-gray-300">
-              <div className="text-black">
-                <h3 className="text-sm font-mono tracking-wide mb-2">CONTACT</h3>
-                <h4 className="text-sm font-mono tracking-wide mb-2">RESERVATION CENTRE</h4>
-                <p className="text-sm font-mono mb-1">+52 00 0000 0000</p>
-                <p className="text-sm font-mono">reservaciones@CASAZII.COM</p>
-              </div>
+            <div className="flex justify-center pt-6">
+              <Link href="/booking" onClick={closeMobileMenu}>
+                <span className="bg-[#A04E39] px-8 py-4 font-mono text-md tracking-wide text-white hover:opacity-90">
+                  {currentNavText.book}
+                </span>
+              </Link>
             </div>
           </div>
         </div>
+      </div>
     </>
   );
 }
