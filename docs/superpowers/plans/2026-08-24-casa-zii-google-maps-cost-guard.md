@@ -4,7 +4,7 @@
 
 **Goal:** Keep the two-pin Google map while ensuring no Google Maps request occurs until a visitor explicitly activates it and the project remains mathematically below 10,000 monthly Dynamic Maps loads.
 
-**Architecture:** Replace viewport-triggered initialization with a button-driven client component. Move the Google Maps loader and map construction into a dynamically imported runtime module so neither the Google script nor its loader code is fetched until activation. Keep the existing 250-load daily Cloud quota, restricted key, direct destination links, and isolate `zicatela` on a dedicated billing account before claiming a strict zero-charge guarantee.
+**Architecture:** Replace viewport-triggered initialization with a button-driven client component. Move the Google Maps loader and map construction into a dynamically imported runtime module so neither the Google script nor its loader code is fetched until activation. Keep the existing 250-load daily Cloud quota, restricted key, and direct destination links. Google Maps projects remain consolidated under the existing shared billing account; an account-wide zero-cost claim additionally requires aggregate hard quotas for every Maps project and billable SKU on that account.
 
 **Tech Stack:** Next.js 15, React 19, TypeScript, Google Maps JavaScript API, Google Cloud Quotas API, Node test runner, Tailwind CSS.
 
@@ -16,8 +16,22 @@
 - `app/components/GoogleMapsRuntime.ts`: singleton Google script loader and creation of one map with the supplied pins.
 - `app/components/MapSection.tsx`: exact coordinates, addresses, center, and direct Google Maps links; no behavioral change.
 - `tests/map-footer-contract.test.mjs`: source contracts for explicit activation, no automatic loading, two real pins, and no optional libraries.
-- `DOCUMENTATION.md`: current cost-control behavior and billing-isolation caveat.
+- `DOCUMENTATION.md`: current cost-control behavior and shared-billing caveat.
 - `docs/superpowers/specs/2026-08-24-casa-zii-map-footer-correction-design.md`: align the earlier map architecture note with explicit activation.
+
+## Current implementation status (2026-08-24)
+
+- [x] Explicit click-to-load boundary implemented; opening, hydrating, or scrolling the page does not request Google Maps.
+- [x] One Maps JavaScript map with the two exact Casa Zii pins, no route, and direct location links implemented.
+- [x] `zicatela` API key restrictions and effective `250` daily Maps JavaScript quota verified. This caps that project at `7,750` Dynamic Maps loads in a 31-day month, so the project cannot process its own 10,001st monthly load.
+- [x] Tests, TypeScript, production build, initial HTML, HTTP response, and absence of a spawned headless browser verified.
+- [ ] Billing-account-wide zero cost is not yet guaranteed. `zicatela` shares `012C70-4D8CB5-F1B87D` with `gen-lang-client-0908147005`; Maps JavaScript is enabled there with an unlimited daily quota, and Static Maps is also enabled.
+
+Metrics for 2026-08-01 through 2026-08-24 showed zero Maps requests in both projects. This historical observation is not a hard cap and does not prove future zero cost. Budgets and billing alerts are likewise notifications, not enforcement boundaries.
+
+Creating another Google Maps-related billing account is explicitly out of scope because Google identifies multiple Maps-related billing accounts as a Terms of Service violation. The compliant remaining work is to inventory and hard-cap aggregate Maps usage on the existing billing account. See the [Billing Account Violation FAQ](https://developers.google.com/maps/billing-account-violation), [pay-as-you-go aggregation rules](https://developers.google.com/maps/billing-and-pricing/pay-as-you-go), and [billing overview](https://developers.google.com/maps/billing-and-pricing/billing-overview).
+
+Maps Embed remains free but does not meet the approved one-map/two-custom-pin design without the rejected Google My Maps presentation, so the implementation retains Maps JavaScript API.
 
 ### Task 1: Lock explicit activation with a failing contract test
 
@@ -391,40 +405,20 @@ git add DOCUMENTATION.md docs/superpowers/specs/2026-08-24-casa-zii-map-footer-c
 git commit -m "docs: document on-demand Maps loading"
 ```
 
-### Task 4: Isolate billing and verify hard enforcement
+### Task 4: Verify shared billing and establish aggregate hard enforcement
 
 **Files:**
 - No repository files
 
-- [ ] **Step 1: Create the dedicated billing account**
+- [x] **Step 1: Verify the compliant billing topology**
 
-The account owner creates one billing account named exactly `Casa Zii Maps` in Google Cloud Billing and attaches a valid payment method. This human-owned legal/payment step cannot be completed by repository code or the Cloud SDK.
+Verified on 2026-08-24: `zicatela` and `gen-lang-client-0908147005` are linked to billing account `012C70-4D8CB5-F1B87D`. Both have Maps JavaScript enabled; the latter also has Static Maps enabled. Do not create or move `zicatela` to a second Maps-related billing account. Google requires Maps projects to be consolidated and aggregates monthly usage from projects linked to the billing account.
 
-- [ ] **Step 2: Resolve the account ID without a placeholder and link the project**
+- [x] **Step 2: Record current usage without treating it as a guarantee**
 
-Run:
+Maps metrics for 2026-08-01 through 2026-08-24 showed zero requests in both projects. This verifies only the observed period. It does not constrain later requests, and billing budgets or alerts do not stop usage.
 
-```bash
-casa_zii_billing_account="$(gcloud billing accounts list --filter='displayName="Casa Zii Maps" AND open=true' --format='value(name.basename())')"
-test -n "$casa_zii_billing_account"
-gcloud billing projects link zicatela --billing-account="$casa_zii_billing_account"
-```
-
-Expected: the shell assertion passes and `zicatela` reports billing enabled on the `Casa Zii Maps` account.
-
-- [ ] **Step 3: Verify billing isolation**
-
-Run:
-
-```bash
-gcloud billing projects list \
-  --billing-account="$casa_zii_billing_account" \
-  --format='value(projectId)'
-```
-
-Expected: output contains `zicatela` and no other project using the Dynamic Maps SKU.
-
-- [ ] **Step 4: Verify the granted daily quota**
+- [x] **Step 3: Verify the granted `zicatela` daily quota**
 
 Run:
 
@@ -440,7 +434,7 @@ curl -fsS \
 
 Expected: `true`, exit `0`.
 
-- [ ] **Step 5: Verify API-key restrictions without printing the key**
+- [x] **Step 4: Verify API-key restrictions without printing the key**
 
 Run:
 
@@ -456,6 +450,14 @@ gcloud services api-keys describe \
 ```
 
 Expected: `true`, exit `0`; the API key string is never printed.
+
+- [ ] **Step 5: Bound every project and SKU on the shared account**
+
+Before claiming account-wide zero cost, inventory every Maps-enabled project and billable SKU on `012C70-4D8CB5-F1B87D`. Disable unused APIs or assign hard project quotas whose 31-day aggregate stays within each SKU's current monthly free usage cap.
+
+For the known Dynamic Maps configuration, `zicatela` contributes at most `250 × 31 = 7,750` loads. If only `zicatela` and `gen-lang-client-0908147005` can generate Dynamic Maps, setting the latter to no more than `72` per day would bound their aggregate to `9,982` loads in a 31-day month. This number must be recalculated if another project can generate the SKU, a quota changes, or Google changes pricing/free usage caps. Static Maps and any other billable SKU require their own independent bound.
+
+Expected: no Maps-enabled project has an unlimited relevant quota, and the sum of hard project bounds for every billable SKU remains within that SKU's current free usage cap.
 
 ### Task 5: Complete verification and leave the local server healthy
 
@@ -521,3 +523,10 @@ git add tests/map-footer-contract.test.mjs
 git commit -m "test: finalize Maps cost guard contract"
 ```
 
+## Final acceptance state
+
+- **Application and `zicatela` project:** accepted. Google loads only after explicit activation, and the granted `250` daily quota mathematically prevents `zicatela` from reaching 10,001 Dynamic Maps loads in a calendar month.
+- **Complete billing account:** pending. Zero cost cannot be guaranteed while `gen-lang-client-0908147005` retains an unlimited Maps JavaScript quota or while any enabled Maps SKU lacks an aggregate hard bound.
+- **Budgets and alerts:** informational only; they are not accepted as hard caps.
+- **Billing topology:** keep Google Maps projects consolidated on the existing account. A second Maps-related billing account is not an accepted mitigation.
+- **API choice:** retain Maps JavaScript API. Maps Embed is free but does not implement the approved two-custom-pin design without My Maps.

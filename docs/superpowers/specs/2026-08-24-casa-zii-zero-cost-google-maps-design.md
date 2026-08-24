@@ -1,12 +1,12 @@
 # Casa Zii Google Maps Cost Guard Design
 
 **Date:** 2026-08-24
-**Status:** Implemented; billing isolation pending
-**Scope:** Google Maps loading behavior, quota isolation, and failure handling
+**Status:** Application guard implemented; billing-account-wide guard pending
+**Scope:** Google Maps loading behavior, project quota, shared-account governance, and failure handling
 
 ## Objective
 
-Keep the Google Maps JavaScript implementation with the two exact Casa Zii locations while preventing the `zicatela` project from processing a 10,001st monthly Dynamic Maps load. The project quota bounds Casa Zii usage, but an absolute `$0` guarantee additionally requires billing-account isolation.
+Keep the Google Maps JavaScript implementation with the two exact Casa Zii locations while preventing the `zicatela` project from processing a 10,001st monthly Dynamic Maps load. The `zicatela` quota provides that project-level bound. It does not guarantee zero cost for the complete shared billing account unless every Maps project and billable SKU on that account is also bounded within its applicable free usage cap.
 
 ## Current constraints
 
@@ -17,7 +17,10 @@ Keep the Google Maps JavaScript implementation with the two exact Casa Zii locat
 - The map must not draw a route or use mock markers.
 - The floating reservation bar and Figma footer remain unchanged.
 - Google Maps JavaScript requires an API key and a billing-enabled project.
-- The current billing account is shared with `gen-lang-client-0908147005`, which also has Maps JavaScript and Static Maps enabled. Because Google aggregates free usage by billing account and SKU, the shared account cannot provide an absolute zero-charge guarantee for Casa Zii; `zicatela` must be the only Dynamic Maps project on a dedicated account first.
+- `zicatela` shares billing account `012C70-4D8CB5-F1B87D` with `gen-lang-client-0908147005`.
+- Maps JavaScript API is enabled in both projects. The effective daily Maps JavaScript quota is `250` in `zicatela` and was unlimited in `gen-lang-client-0908147005` when verified on 2026-08-24. Static Maps is also enabled in the latter project.
+- Google aggregates monthly usage across all projects linked to the billing account when applying usage tiers and free usage caps. Multiple Google Maps-related billing accounts are not a compliant isolation strategy and must not be created to avoid fees.
+- Maps metrics for 2026-08-01 through 2026-08-24 showed zero requests in both projects. This is historical evidence only and does not constrain future usage.
 
 ## Architecture
 
@@ -35,11 +38,28 @@ The Google Cloud project `zicatela` has a granted effective `BillableDefaultPerD
 
 The granted Cloud quota is the enforcement boundary for project usage. The component must not treat its own error UI as the quota guard or claim that every exhausted-quota presentation is detectable in the browser.
 
-### Billing isolation
+### Shared billing account and compliant cost guard
 
-For a strict zero-charge guarantee, `zicatela` must be the only Dynamic Maps project on a dedicated billing account. The API key, enabled API, and daily quota remain in `zicatela`; only the billing-account association changes.
+Google's billing guidance requires Google Maps-related projects to remain consolidated under one billing account. Creating or maintaining a second Maps-related billing account to separate free usage is prohibited. The compliant strategy is to keep the projects on `012C70-4D8CB5-F1B87D` and bound their aggregate usage.
 
-Until that isolation is complete, the site is strongly bounded but not guaranteed to cost zero because another project can consume the shared billing account's monthly free Dynamic Maps allowance.
+The `zicatela` project is already bounded to `250` daily Dynamic Maps loads, or at most `7,750` loads in a 31-day month. It therefore cannot process the 10,001st monthly Dynamic Maps load through its own quota. The billing account as a whole is not yet guaranteed to remain free because `gen-lang-client-0908147005` has an unlimited Maps JavaScript daily quota and can consume the remaining shared allowance.
+
+Account-wide zero-cost acceptance requires all of the following:
+
+- Inventory every project on `012C70-4D8CB5-F1B87D` that uses a Google Maps Platform API and every billable SKU it can generate.
+- Disable unused Maps APIs or apply hard project quotas so the maximum aggregate monthly usage for each SKU remains within that SKU's current free usage cap. For Dynamic Maps, if only the two known projects can generate the SKU and `zicatela` remains at `250` per day, a daily cap no greater than `72` on `gen-lang-client-0908147005` bounds the 31-day aggregate to `9,982` loads. Any additional project or quota increase requires recalculating this bound.
+- Independently cap or disable Static Maps and any other enabled billable Maps SKU; the Dynamic Maps quota does not protect those SKUs.
+- Recheck official pricing and granted quotas after any Google pricing, SKU, API, project, or billing configuration change.
+
+Budgets and billing alerts are monitoring controls, not hard spending caps. They may provide warning, but they cannot replace enforced service quotas in this acceptance test.
+
+Google Maps Embed is free, but it does not satisfy the approved single-map design with two custom real-location pins without returning to the rejected Google My Maps presentation. The implementation therefore keeps Maps JavaScript API behind explicit visitor activation.
+
+Official references:
+
+- [Billing Account Violation FAQ](https://developers.google.com/maps/billing-account-violation)
+- [Google Maps Platform pay-as-you-go pricing](https://developers.google.com/maps/billing-and-pricing/pay-as-you-go)
+- [Google Maps Platform billing overview](https://developers.google.com/maps/billing-and-pricing/billing-overview)
 
 ### API restrictions
 
@@ -68,7 +88,7 @@ Google does not expose a dependable client callback for every quota- or billing-
 - `LazyGoogleMap.tsx` owns the explicit button activation and activation/loading/error UI.
 - `GoogleMapsRuntime.ts` owns the singleton Google loader, auth readiness, and creation of the map and its two markers.
 - Google Cloud owns the hard quota and API-key restrictions.
-- Billing-account isolation is an infrastructure prerequisite for the absolute zero-charge guarantee.
+- Google Cloud quotas across every Maps-enabled project on the shared billing account are the infrastructure prerequisite for an account-wide zero-charge guarantee.
 
 ## Testing
 
@@ -91,6 +111,8 @@ Verification includes Node tests, TypeScript, a production build with no develop
 - One explicit activation creates at most one map instance in that component.
 - The project quota remains granted at `250` map loads per day.
 - The project cannot mathematically reach `10,001` Dynamic Maps loads in a calendar month through this quota.
-- The absolute zero-charge claim is made only after `zicatela` is the sole Dynamic Maps project on a dedicated billing account.
+- No repository or operations documentation claims that a separate Maps-related billing account is a valid isolation mechanism.
+- The application-level acceptance criterion is satisfied: `zicatela` cannot process a 10,001st monthly Dynamic Maps load while its granted daily quota remains `250`.
+- The billing-account-wide zero-charge criterion remains pending until every Maps-enabled project and billable SKU on `012C70-4D8CB5-F1B87D` has an aggregate hard bound within the corresponding free usage cap. The current zero-request metrics do not satisfy this future-use criterion.
 - The two markers use the supplied coordinates and the map draws no route.
 - Direct Google Maps links remain visible for all custom UI outcomes, including observable API failures; quota enforcement does not depend on the component detecting every exhausted-quota map state.
