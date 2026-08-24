@@ -33,10 +33,14 @@ export default function LazyGoogleMap({
     try {
       const { renderGoogleMap } = await import("./GoogleMapsRuntime");
       await renderGoogleMap(mapElement, center, pins);
-      setStatus("ready");
+      if (mapElementRef.current === mapElement && mapElement.isConnected) {
+        setStatus("ready");
+      }
     } catch {
-      hasInitializedRef.current = false;
-      setStatus("error");
+      if (mapElementRef.current === mapElement && mapElement.isConnected) {
+        hasInitializedRef.current = false;
+        setStatus("error");
+      }
     }
   };
 
@@ -45,8 +49,9 @@ export default function LazyGoogleMap({
       <div
         ref={mapElementRef}
         className="h-full w-full"
-        role="application"
-        aria-label={title}
+        role={status === "ready" ? "application" : undefined}
+        aria-label={status === "ready" ? title : undefined}
+        aria-hidden={status === "ready" ? undefined : true}
       />
 
       {status === "waiting" && (

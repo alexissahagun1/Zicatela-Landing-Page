@@ -59,6 +59,51 @@ test("map loads Google only after explicit activation", () => {
   assert.match(googleMapsRuntime, /new google\.maps\.Marker/);
 });
 
+test("Google Maps readiness uses the API callback", () => {
+  assert.match(googleMapsRuntime, /callback=__casaZiiGoogleMapsReady/);
+  assert.doesNotMatch(googleMapsRuntime, /addEventListener\("load"/);
+});
+
+test("Google Maps authentication failures are handled and remain sticky", () => {
+  assert.match(googleMapsRuntime, /gm_authFailure/);
+  assert.match(googleMapsRuntime, /googleMapsAuthFailure/);
+});
+
+test("Google Maps is not constructed in a detached element", () => {
+  assert.match(googleMapsRuntime, /if \(!element\.isConnected\)/);
+});
+
+test("lazy map state updates stay bounded to the connected captured element", () => {
+  const activateMapStart = lazyGoogleMap.indexOf(
+    "const activateMap = async () => {",
+  );
+  const activateMapEnd = lazyGoogleMap.indexOf("\n  };", activateMapStart);
+  const activateMapHandlerSource = lazyGoogleMap.slice(
+    activateMapStart,
+    activateMapEnd + "\n  };".length,
+  );
+  const connectedElementChecks = activateMapHandlerSource.match(
+    /mapElementRef\.current === mapElement && mapElement\.isConnected/g,
+  );
+
+  assert.equal(connectedElementChecks?.length, 2);
+});
+
+test("empty map container is hidden until it is ready", () => {
+  assert.match(
+    lazyGoogleMap,
+    /role=\{status === "ready" \? "application" : undefined\}/,
+  );
+  assert.match(
+    lazyGoogleMap,
+    /aria-label=\{status === "ready" \? title : undefined\}/,
+  );
+  assert.match(
+    lazyGoogleMap,
+    /aria-hidden=\{status === "ready" \? undefined : true\}/,
+  );
+});
+
 test("the floating reservation bar remains mounted globally", () => {
   assert.match(layout, /<StickyBookingBar \/>/);
 });
