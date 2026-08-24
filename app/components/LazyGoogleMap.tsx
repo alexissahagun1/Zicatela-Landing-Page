@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import type { LatLng, MapPin } from "./GoogleMapsRuntime";
 
@@ -11,7 +11,7 @@ type LazyGoogleMapProps = {
   title: string;
 };
 
-type MapStatus = "waiting" | "loading" | "ready" | "error";
+type MapStatus = "waiting" | "ready";
 
 export default function LazyGoogleMap({
   center,
@@ -22,31 +22,44 @@ export default function LazyGoogleMap({
   const hasInitializedRef = useRef(false);
   const [status, setStatus] = useState<MapStatus>("waiting");
 
-  const activateMap = async () => {
+  useEffect(() => {
     const mapElement = mapElementRef.current;
-    if (!mapElement || hasInitializedRef.current || status === "loading") {
+    if (!mapElement || hasInitializedRef.current) {
       return;
     }
 
-    hasInitializedRef.current = true;
-    setStatus("loading");
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (
+          !entries.some((entry) => entry.isIntersecting) ||
+          hasInitializedRef.current
+        ) {
+          return;
+        }
 
-    try {
-      const { renderGoogleMap } = await import("./GoogleMapsRuntime");
-      await renderGoogleMap(mapElement, center, pins);
-      if (mapElementRef.current === mapElement && mapElement.isConnected) {
-        setStatus("ready");
-      }
-    } catch {
-      if (mapElementRef.current === mapElement && mapElement.isConnected) {
-        hasInitializedRef.current = false;
-        setStatus("error");
-      }
-    }
-  };
+        hasInitializedRef.current = true;
+        observer.disconnect();
+
+        void import("./GoogleMapsRuntime")
+          .then(({ renderGoogleMap }) => renderGoogleMap(mapElement, center, pins))
+          .then(() => {
+            if (mapElementRef.current === mapElement && mapElement.isConnected) {
+              setStatus("ready");
+            }
+          })
+          .catch(() => {
+            // The neutral frame intentionally stays unobtrusive if Maps is unavailable.
+          });
+      },
+      { rootMargin: "0px 0px 240px 0px" },
+    );
+
+    observer.observe(mapElement);
+    return () => observer.disconnect();
+  }, [center, pins]);
 
   return (
-    <div className="relative h-[333px] min-h-[333px] w-full bg-[#E8E1D7]">
+    <div className="aspect-[4/3] w-full bg-[#E8E1D7] md:aspect-[16/10]">
       <div
         ref={mapElementRef}
         className="h-full w-full"
@@ -54,41 +67,6 @@ export default function LazyGoogleMap({
         aria-label={status === "ready" ? title : undefined}
         aria-hidden={status === "ready" ? undefined : true}
       />
-
-      {status === "waiting" && (
-        <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 bg-[#E8E1D7] px-8 text-center font-[family-name:var(--font-courier)]">
-          <p className="max-w-md text-xs leading-5 text-[#222222]/70">
-            El mapa interactivo es opcional y solo se carga al pulsar el botón.
-          </p>
-          <button
-            type="button"
-            onClick={activateMap}
-            className="border border-[#222222] px-6 py-3 text-xs uppercase tracking-[0.16em] text-[#222222] transition-colors hover:bg-[#222222] hover:text-[#E8E1D7] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#222222]"
-          >
-            Ver mapa interactivo
-          </button>
-        </div>
-      )}
-
-      {status === "loading" && (
-        <div
-          className="pointer-events-none absolute inset-0 flex items-center justify-center bg-[#E8E1D7]/80 font-[family-name:var(--font-courier)] text-xs uppercase tracking-[0.16em] text-[#222222]/60"
-          role="status"
-          aria-live="polite"
-        >
-          Cargando mapa
-        </div>
-      )}
-
-      {status === "error" && (
-        <div
-          className="absolute inset-0 flex items-center justify-center bg-[#E8E1D7] px-8 text-center font-[family-name:var(--font-courier)] text-xs leading-5 text-[#222222]/70"
-          role="alert"
-        >
-          El mapa no está disponible en este momento. Usa los enlaces visibles de
-          Google Maps para abrir cada ubicación.
-        </div>
-      )}
     </div>
   );
 }

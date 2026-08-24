@@ -28,35 +28,34 @@ test("footer follows the current Figma content and has no placeholder contact da
   assert.doesNotMatch(footer, /CENTRO DE RESERVACIONES/);
 });
 
-test("map loads Google only after explicit activation", () => {
+test("map remains a single Google map with the two exact pins and no route", () => {
   assert.match(map, /<LazyGoogleMap/);
   assert.match(map, /15\.831041,-97\.040609/);
   assert.match(map, /15\.8315562,-97\.0404726/);
   assert.doesNotMatch(map, /maps\/d\/embed/);
   assert.doesNotMatch(map, /saddr|daddr/);
-  assert.match(lazyGoogleMap, /onClick=\{activateMap\}/);
-  assert.match(lazyGoogleMap, /Ver mapa interactivo/);
-  const activateMapStart = lazyGoogleMap.indexOf(
-    "const activateMap = async () => {",
-  );
-  assert.notEqual(activateMapStart, -1);
-  const activateMapEnd = lazyGoogleMap.indexOf("\n  };", activateMapStart);
-  assert.notEqual(activateMapEnd, -1);
-  const activateMapHandlerSource = lazyGoogleMap.slice(
-    activateMapStart,
-    activateMapEnd + "\n  };".length,
-  );
-  assert.match(
-    activateMapHandlerSource,
-    /await import\("\.\/GoogleMapsRuntime"\)/,
-  );
-  assert.doesNotMatch(lazyGoogleMap, /IntersectionObserver|useEffect/);
-  assert.doesNotMatch(lazyGoogleMap, /maps\.googleapis\.com\/maps\/api\/js/);
   assert.match(googleMapsRuntime, /NEXT_PUBLIC_GOOGLE_MAPS_API_KEY/);
   assert.match(googleMapsRuntime, /maps\.googleapis\.com\/maps\/api\/js/);
   assert.doesNotMatch(googleMapsRuntime, /libraries=/);
   assert.match(googleMapsRuntime, /new google\.maps\.Map/);
   assert.match(googleMapsRuntime, /new google\.maps\.Marker/);
+});
+
+test("map section is a centered contemporary visual without location copy or links", () => {
+  assert.match(map, /mx-auto w-full max-w-\[1180px\]/);
+  assert.doesNotMatch(map, /Calle de la Paloma|Calle Campeche/);
+  assert.doesNotMatch(map, /Abrir mapa|maps\.app\.goo\.gl|<a\b/);
+});
+
+test("map waits for nearby scroll, then initializes only once without an overlay", () => {
+  assert.match(lazyGoogleMap, /useEffect/);
+  assert.match(lazyGoogleMap, /new IntersectionObserver/);
+  assert.match(lazyGoogleMap, /rootMargin:\s*["']0px 0px 240px 0px["']/);
+  assert.match(lazyGoogleMap, /hasInitializedRef\.current/);
+  assert.match(lazyGoogleMap, /import\("\.\/GoogleMapsRuntime"\)/);
+  assert.doesNotMatch(lazyGoogleMap, /<button\b|Ver mapa interactivo/);
+  assert.doesNotMatch(lazyGoogleMap, /El mapa interactivo es opcional/);
+  assert.doesNotMatch(lazyGoogleMap, /Cargando mapa/);
 });
 
 test("Google Maps readiness uses the API callback", () => {
@@ -111,20 +110,11 @@ test("Google Maps is not constructed in a detached element", () => {
   assert.match(googleMapsRuntime, /if \(!element\.isConnected\)/);
 });
 
-test("lazy map state updates stay bounded to the connected captured element", () => {
-  const activateMapStart = lazyGoogleMap.indexOf(
-    "const activateMap = async () => {",
+test("nearby initialization only updates a connected captured element", () => {
+  assert.match(
+    lazyGoogleMap,
+    /mapElementRef\.current === mapElement && mapElement\.isConnected/,
   );
-  const activateMapEnd = lazyGoogleMap.indexOf("\n  };", activateMapStart);
-  const activateMapHandlerSource = lazyGoogleMap.slice(
-    activateMapStart,
-    activateMapEnd + "\n  };".length,
-  );
-  const connectedElementChecks = activateMapHandlerSource.match(
-    /mapElementRef\.current === mapElement && mapElement\.isConnected/g,
-  );
-
-  assert.equal(connectedElementChecks?.length, 2);
 });
 
 test("empty map container is hidden until it is ready", () => {
@@ -139,13 +129,6 @@ test("empty map container is hidden until it is ready", () => {
   assert.match(
     lazyGoogleMap,
     /aria-hidden=\{status === "ready" \? undefined : true\}/,
-  );
-});
-
-test("the waiting state explains that the interactive map is optional", () => {
-  assert.match(
-    lazyGoogleMap,
-    /El mapa interactivo es opcional y solo se carga al pulsar el botón\./,
   );
 });
 
