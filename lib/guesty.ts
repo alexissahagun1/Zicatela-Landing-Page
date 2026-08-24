@@ -317,6 +317,7 @@ export type GuestyQuote = {
   checkOut: string;
   nights: number;
   expiresAt: string | null;
+  coupons: string[];
   ratePlans: QuoteRatePlan[];
 };
 
@@ -327,13 +328,14 @@ export async function createQuote(opts: {
   adults: number;
   children?: number;
   infants?: number;
+  couponCode?: string;
 }): Promise<GuestyQuote> {
   const token = await getGuestyToken();
   const adults = opts.adults;
   const children = opts.children ?? 0;
   const infants = opts.infants ?? 0;
 
-  const body = {
+  const body: Record<string, unknown> = {
     numberOfGuests: {
       numberOfChildren: children,
       numberOfInfants: infants,
@@ -348,6 +350,7 @@ export async function createQuote(opts: {
     ignoreCalendar: false,
     ignoreBlocks: false,
   };
+  if (opts.couponCode) body.couponCode = opts.couponCode;
 
   const res = await fetch(`${GUESTY_BASE_URL}/quotes`, {
     method: "POST",
@@ -406,6 +409,9 @@ function normalizeQuote(raw: any): GuestyQuote {
     checkOut: raw?.checkOutDateLocalized ?? "",
     nights: nightsBetween(raw?.checkInDateLocalized, raw?.checkOutDateLocalized),
     expiresAt: raw?.expiresAt ?? null,
+    coupons: Array.isArray(raw?.coupons)
+      ? raw.coupons.filter((coupon: unknown): coupon is string => typeof coupon === "string")
+      : [],
     ratePlans,
   };
 }
@@ -434,6 +440,7 @@ export async function createGuest(input: NewGuestInput): Promise<string> {
     body.phone = input.phone;
     body.phones = [input.phone];
   }
+  if (input.notes) body.notes = input.notes;
 
   const res = await fetch(`${GUESTY_BASE_URL}/guests-crud`, {
     method: "POST",
@@ -458,6 +465,81 @@ export async function createGuest(input: NewGuestInput): Promise<string> {
 
 export type ReservationStatus = "inquiry" | "reserved" | "confirmed";
 
+export type ReservationResult = {
+  reservationId: string;
+  confirmationCode: string | null;
+  status: string;
+};
+
+export function getReservationHoldHours(): number {
+  const configured = Number(process.env.GUESTY_RESERVED_UNTIL_HOURS ?? "24");
+  const allowed = [0.17, 0.25, 0.5, 24, 48, 72];
+  return allowed.includes(configured) ? configured : 24;
+}
+
+function normalizeReservation(raw: any, fallbackStatus: ReservationStatus): ReservationResult {
+  return {
+    reservationId: raw?.reservationId ?? raw?._id ?? raw?.id ?? "",
+    confirmationCode: raw?.confirmationCode ?? null,
+    status: raw?.status ?? fallbackStatus,
+  };
+}
+
+export async function createReservationFromQuote(opts: {
+  quoteId: string;
+  ratePlanId?: string;
+  status?: ReservationStatus;
+  reservedUntil?: number;
+  originId?: string;
+  guestId?: string;
+  guest?: NewGuestInput;
+}): Promise<ReservationResult> {
+  const token = await getGuestyToken();
+
+  let guestId = opts.guestId;
+  if (!guestId && opts.guest) {
+    guestId = await createGuest(opts.guest);
+  }
+  if (!guestId) {
+    throw new GuestyError(
+      "Se requiere guestId o guest para crear la reservación.",
+      400,
+      "GUESTY_VALIDATION"
+    );
+  }
+
+  const status = opts.status ?? "reserved";
+  const body: Record<string, unknown> = {
+    quoteId: opts.quoteId,
+    status,
+    guestId,
+    ignoreCalendar: false,
+    ignoreTerms: false,
+    ignoreBlocks: false,
+    origin: "Casa Zii website",
+  };
+  if (opts.ratePlanId) body.ratePlanId = opts.ratePlanId;
+  if (status === "reserved") body.reservedUntil = opts.reservedUntil ?? getReservationHoldHours();
+  if (opts.originId) body.originId = opts.originId.slice(0, 50);
+
+  const res = await fetch(`${GUESTY_BASE_URL}/reservations-v3/quote`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(body),
+    cache: "no-store",
+  });
+  const data: any = await res.json().catch(() => null);
+  if (!res.ok) {
+    throw guestyResponseError(res, data, "Error creando reservación");
+  }
+
+  return normalizeReservation(data, status);
+}
+
 export async function createReservation(opts: {
   listingId: string;
   checkIn: string;
@@ -466,7 +548,7 @@ export async function createReservation(opts: {
   status?: ReservationStatus;
   guestId?: string;
   guest?: NewGuestInput;
-}): Promise<{ reservationId: string; confirmationCode: string | null; status: string }> {
+}): Promise<ReservationResult> {
   const token = await getGuestyToken();
 
   let guestId = opts.guestId;
@@ -487,10 +569,15 @@ export async function createReservation(opts: {
     checkOutDateLocalized: opts.checkOut,
     status: opts.status ?? "reserved",
     guestId,
+    source: "Casa Zii website",
+    ignoreCalendar: false,
+    ignoreTerms: false,
+    ignoreBlocks: false,
   };
-  if (opts.guestsCount) body.guestsCount = opts.guestsCount;
+  body.guestsCount = opts.guestsCount ?? 1;
+  if (body.status === "reserved") body.reservedUntil = getReservationHoldHours();
 
-  const res = await fetch(`${GUESTY_BASE_URL}/reservations`, {
+  const res = await fetch(`${GUESTY_BASE_URL}/reservations-v3`, {
     method: "POST",
     headers: {
       Authorization: `Bearer ${token}`,
@@ -505,11 +592,7 @@ export async function createReservation(opts: {
     throw guestyResponseError(res, data, "Error creando reservación");
   }
 
-  return {
-    reservationId: data?._id ?? "",
-    confirmationCode: data?.confirmationCode ?? null,
-    status: data?.status ?? "reserved",
-  };
+  return normalizeReservation(data, (opts.status ?? "reserved") as ReservationStatus);
 }
 
 // ---------------------------------------------------------------------------

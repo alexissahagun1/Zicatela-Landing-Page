@@ -10,23 +10,17 @@ const Footer: React.FC = () => {
 
   const content = {
     es: {
+      bookNow: "Reservar",
       contact: "CONTACTO",
       reservations: "CENTRO DE RESERVACIONES",
-      casaCampeche: "CASA CAMPECHE",
-      casaPalmas: "CASA PALMAS",
-      press: "PRENSA",
-      reserve: "RESERVA",
       privacy: "AVISO DE PRIVACIDAD",
       terms: "TÉRMINOS Y CONDICIONES"
     },
     en: {
+      bookNow: "Book Now",
       contact: "CONTACT",
       reservations: "RESERVATION CENTRE",
-      casaCampeche: "CASA CAMPECHE",
-      casaPalmas: "CASA PALMAS",
-      press: "PRESS",
-      reserve: "BOOKING",
-      privacy: "PRIVACY PRIVACY",
+      privacy: "PRIVACY POLICY",
       terms: "TERMS AND CONDITIONS"
     }
   };
@@ -34,66 +28,44 @@ const Footer: React.FC = () => {
   const currentContent = content[language];
 
   return (
-    <footer className="relative w-full bg-[#EFEFEF] px-4 pb-32 pt-20 md:px-8 md:pb-36 md:pt-20 lg:px-16">
-      <div className="max-w-4xl mx-auto">
-        <div className="space-y-10">
-          
-          {/* Instagram Link */}
-          <div className="flex items-center space-x-3">
-            <Link 
-              href="https://instagram.com/casazii" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="flex items-center space-x-3 hover:opacity-80 transition-opacity"
-            >
-              <Image
-                src="/instagram-logo.png"
-                alt="Instagram"
-                width={20}
-                height={20}
-                className="w-5 h-5"
-              />
-              <span className="text-black font-courier text-sm leading-5">
-                CASA ZII
-              </span>
-            </Link>
+    <footer className="relative min-h-[372px] w-full bg-[#EFEFEF] px-6 pb-[72px] pt-[51px] md:px-10 lg:px-16">
+      <div className="mx-auto flex min-h-[249px] w-full max-w-[720px] flex-col">
+        <div className="flex justify-center">
+          <Link
+            href="/booking"
+            className="flex h-[67px] w-[214px] items-center justify-center bg-[#222222] font-[family-name:var(--font-courier)] text-[14px] leading-5 text-white transition-opacity hover:opacity-80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#222222]"
+          >
+            {currentContent.bookNow}
+          </Link>
+        </div>
+
+        <Link
+          href="https://instagram.com/casazii"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mx-0 mt-[46px] flex w-fit items-center gap-2 font-[family-name:var(--font-courier)] text-[14px] leading-5 text-black transition-opacity hover:opacity-70 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#222222] sm:mx-[42px]"
+        >
+          <Image
+            src="/instagram-logo.png"
+            alt="Instagram de Casa Zii"
+            width={21}
+            height={22}
+            className="h-[22px] w-[21px]"
+          />
+          <span>CASA ZII</span>
+        </Link>
+
+        <div className="mx-0 mt-[34px] grid grid-cols-1 gap-8 font-[family-name:var(--font-courier)] text-[14px] leading-5 text-black sm:mx-[42px] sm:mr-[63px] sm:grid-cols-[minmax(0,1fr)_192px] sm:gap-10">
+          <div>
+            <div>{currentContent.contact}</div>
+            <div>{currentContent.reservations}</div>
+            <div>+52 00 0000 0000</div>
+            <div>reservaciones@casazii.com</div>
           </div>
 
-          {/* All Text Content in Aligned Container */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
-            
-            {/* Contact Information */}
-            <div className="text-black font-courier text-sm leading-5 space-y-1">
-              <div className="font-regular">{currentContent.contact}</div>
-              <div className="font-regular">{currentContent.reservations}</div>
-              <div>+52 00 0000 0000</div>
-              <div>reservaciones@casazii.com</div>
-            </div>
-
-            {/* Locations & Media */}
-            <div className="text-black font-courier text-sm leading-5 space-y-1">
-              <div className="font-regular">{currentContent.casaCampeche}</div>
-              <div className="font-regular">{currentContent.casaPalmas}</div>
-              <div className="font-regular">{currentContent.press}</div>
-              <div className="font-regular">{currentContent.reserve}</div>
-            </div>
-
-            {/* Legal Information */}
-            <div className="text-black font-courier text-sm leading-5 space-y-1">
-              <div className="font-regular">{currentContent.privacy}</div>
-              <div className="font-regular">{currentContent.terms}</div>
-            </div>
-          </div>
-
-          {/* Casa Zii Logo */}
-          <div className="flex items-center">
-            <Image
-              src="/LogoCasaZii.png"
-              alt="Casa Zii Logo"
-              width={138}
-              height={64}
-              className="h-18 w-auto"
-            />
+          <div>
+            <div>{currentContent.privacy}</div>
+            <div>{currentContent.terms}</div>
           </div>
         </div>
       </div>

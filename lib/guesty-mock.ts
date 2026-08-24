@@ -110,6 +110,7 @@ export function mockCreateQuote(opts: {
   checkIn: string;
   checkOut: string;
   adults: number;
+  promoCode?: string;
 }): GuestyQuote {
   if (opts.listingId === "69e2642c0cc24200134a0257") {
     throw new GuestyError(
@@ -144,6 +145,7 @@ export function mockCreateQuote(opts: {
     checkOut: opts.checkOut,
     nights,
     expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
+    coupons: opts.promoCode ? [opts.promoCode] : [],
     ratePlans: [
       {
         id: `mock_rate_${opts.listingId.slice(-6)}`,
@@ -161,6 +163,7 @@ export function mockCreateQuote(opts: {
 
 export function mockCreateReservation(opts: {
   listingId: string;
+  quoteId: string;
   guest?: { firstName: string; lastName: string; email: string };
 }): { reservationId: string; confirmationCode: string | null; status: string } {
   if (opts.guest?.email.toLowerCase().includes("fail")) {

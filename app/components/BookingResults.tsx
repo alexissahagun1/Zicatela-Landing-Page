@@ -42,6 +42,7 @@ type GuestyQuote = {
   checkOut: string;
   nights: number;
   expiresAt: string | null;
+  coupons: string[];
   ratePlans: QuoteRatePlan[];
 };
 
@@ -76,7 +77,7 @@ const copy = {
         requested === 1 ? "unidad" : "unidades"
       }, pero solo hay ${available} disponible${available === 1 ? "" : "s"} para esas fechas.`,
     promoNote: (code: string) =>
-      `El código "${code}" no se puede aplicar automáticamente con la Open API; requiere la Booking Engine API.`,
+      `El código "${code}" se aplicará al solicitar la cotización.`,
     perNight: "/noche",
     from: "Desde",
     plusCleaning: (amount: string) => `+ limpieza ${amount}`,
@@ -84,6 +85,7 @@ const copy = {
     quoteLoading: "Calculando cotización…",
     quoteError: "No se pudo calcular la cotización.",
     quoteTitle: "Cotización",
+    noRatePlan: "Guesty no devolvió una tarifa reservable para estas fechas.",
     ratePlan: "Tarifa",
     nightsBreakdown: "noches",
     subtotal: "Subtotal",
@@ -91,7 +93,7 @@ const copy = {
     total: "Total",
     validUntil: "Válida hasta",
     requestCta: "Solicitar reservación",
-    requestInfo: "Se enviará una solicitud de reservación. No se realiza ningún cobro en este paso.",
+    requestInfo: "Se enviará una solicitud a Guesty y se reservarán temporalmente las fechas. No se realiza ningún cobro en este paso.",
     firstName: "Nombre",
     lastName: "Apellido",
     email: "Email",
@@ -103,7 +105,7 @@ const copy = {
     invalidEmail: "El email no es válido.",
     bookingError: "No se pudo enviar la solicitud. Intenta de nuevo.",
     bookingDone: "¡Solicitud enviada!",
-    bookingDoneInfo: "Te contactaremos para confirmar la disponibilidad. No se realizó ningún cobro.",
+    bookingDoneInfo: "La solicitud quedó registrada en Guesty. Te contactaremos para confirmar; no se realizó ningún cobro.",
     confirmationCode: "Código de confirmación",
     back: "Volver",
     retry: "Reintentar",
@@ -122,7 +124,7 @@ const copy = {
         available === 1 ? "is" : "are"
       } available for those dates.`,
     promoNote: (code: string) =>
-      `The code "${code}" cannot be applied automatically with the Open API; it requires the Booking Engine API.`,
+      `The code "${code}" will be applied when the quote is requested.`,
     perNight: "/night",
     from: "From",
     plusCleaning: (amount: string) => `+ cleaning ${amount}`,
@@ -130,6 +132,7 @@ const copy = {
     quoteLoading: "Calculating quote…",
     quoteError: "Could not calculate the quote.",
     quoteTitle: "Quote",
+    noRatePlan: "Guesty did not return a bookable rate for these dates.",
     ratePlan: "Rate plan",
     nightsBreakdown: "nights",
     subtotal: "Subtotal",
@@ -137,7 +140,7 @@ const copy = {
     total: "Total",
     validUntil: "Valid until",
     requestCta: "Request booking",
-    requestInfo: "A booking request will be sent. No payment is taken at this step.",
+    requestInfo: "A request will be sent to Guesty and the dates will be held temporarily. No payment is taken at this step.",
     firstName: "First name",
     lastName: "Last name",
     email: "Email",
@@ -149,7 +152,7 @@ const copy = {
     invalidEmail: "Email is not valid.",
     bookingError: "Could not send the request. Please try again.",
     bookingDone: "Request sent!",
-    bookingDoneInfo: "We will contact you to confirm availability. No payment was taken.",
+    bookingDoneInfo: "The request was registered in Guesty. We will contact you to confirm; no payment was taken.",
     confirmationCode: "Confirmation code",
     back: "Back",
     retry: "Retry",
@@ -184,6 +187,13 @@ function formatMoney(amount: number, currency: string | null, language: "es" | "
   }
 }
 
+function createIdempotencyKey(): string {
+  if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") {
+    return crypto.randomUUID();
+  }
+  return `casa-zii-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+}
+
 const inputClass =
   "w-full rounded-lg border border-[#E6E6E6] bg-white px-3 py-2 font-['Courier_Prime'] text-sm text-[#222] outline-none transition-colors placeholder:text-[#B0B0B0] focus:border-[#7A7A7C]";
 
@@ -200,6 +210,7 @@ export default function BookingResults({ search }: BookingResultsProps) {
   const [nights, setNights] = useState(0);
   const [quotes, setQuotes] = useState<Record<string, QuoteState>>({});
   const [bookings, setBookings] = useState<Record<string, BookingState>>({});
+  const [idempotencyKeys, setIdempotencyKeys] = useState<Record<string, string>>({});
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
   const [form, setForm] = useState({
     firstName: "",
@@ -224,6 +235,7 @@ export default function BookingResults({ search }: BookingResultsProps) {
       setResults([]);
       setQuotes({});
       setBookings({});
+      setIdempotencyKeys({});
       try {
         const params = new URLSearchParams({
           checkIn: toDateInput(from),
@@ -256,6 +268,11 @@ export default function BookingResults({ search }: BookingResultsProps) {
 
   async function handleQuote(listing: AvailableListing) {
     setQuotes((current) => ({ ...current, [listing.id]: { status: "loading" } }));
+    setIdempotencyKeys((current) => {
+      const next = { ...current };
+      delete next[listing.id];
+      return next;
+    });
     try {
       const res = await fetch("/api/guesty/quote", {
         method: "POST",
@@ -265,13 +282,18 @@ export default function BookingResults({ search }: BookingResultsProps) {
           checkIn: toDateInput(checkInDate),
           checkOut: toDateInput(checkOutDate),
           adults: search.adults,
+          promoCode: search.promoCode || undefined,
         }),
       });
       const data = await res.json().catch(() => null);
       if (!res.ok) throw new Error(data?.error ?? "GUESTY_QUOTE_ERROR");
+      const quote = data.quote as GuestyQuote;
+      if (!quote?.quoteId || !Array.isArray(quote.ratePlans) || quote.ratePlans.length === 0) {
+        throw new Error(t.noRatePlan);
+      }
       setQuotes((current) => ({
         ...current,
-        [listing.id]: { status: "ready", quote: data.quote as GuestyQuote },
+        [listing.id]: { status: "ready", quote },
       }));
     } catch (err) {
       setQuotes((current) => ({
@@ -294,14 +316,28 @@ export default function BookingResults({ search }: BookingResultsProps) {
       return;
     }
 
+    const quoteState = quotes[listing.id];
+    if (quoteState?.status !== "ready" || !quoteState.quote.quoteId) {
+      setFormErrors((current) => ({ ...current, [listing.id]: t.noRatePlan }));
+      return;
+    }
+    const selectedRatePlan = quoteState.quote.ratePlans[0];
+
     setFormErrors((current) => ({ ...current, [listing.id]: "" }));
     setBookings((current) => ({ ...current, [listing.id]: { status: "submitting" } }));
+    const idempotencyKey = idempotencyKeys[listing.id] ?? createIdempotencyKey();
+    setIdempotencyKeys((current) => ({ ...current, [listing.id]: idempotencyKey }));
     try {
       const res = await fetch("/api/guesty/reservation", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          "Idempotency-Key": idempotencyKey,
+        },
         body: JSON.stringify({
           listingId: listing.id,
+          quoteId: quoteState.quote.quoteId,
+          ratePlanId: selectedRatePlan?.id || undefined,
           checkIn: toDateInput(checkInDate),
           checkOut: toDateInput(checkOutDate),
           adults: search.adults,

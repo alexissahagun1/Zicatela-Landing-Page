@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createQuote } from "@/lib/guesty";
 import { mockCreateQuote } from "@/lib/guesty-mock";
-import { DATE_RE, badRequest, toErrorResponse } from "../_shared";
+import { badRequest, toErrorResponse, validateDateRange } from "../_shared";
 
 export async function POST(request: NextRequest) {
   let body: any;
@@ -17,18 +17,21 @@ export async function POST(request: NextRequest) {
   const adults = Number(body?.adults ?? 2);
   const children = body?.children == null ? 0 : Number(body.children);
   const infants = body?.infants == null ? 0 : Number(body.infants);
+  if (body?.promoCode != null && typeof body.promoCode !== "string") {
+    return badRequest("promoCode debe ser texto.");
+  }
+  const promoCode = body?.promoCode == null ? "" : body.promoCode.trim().toUpperCase();
 
   if (typeof listingId !== "string" || !listingId.trim()) {
     return badRequest("listingId es obligatorio.");
   }
-  if (typeof checkIn !== "string" || !DATE_RE.test(checkIn)) {
-    return badRequest("checkIn debe ser una fecha en formato YYYY-MM-DD.");
+  if (typeof checkIn !== "string" || typeof checkOut !== "string") {
+    return badRequest("checkIn y checkOut deben ser fechas en formato YYYY-MM-DD.");
   }
-  if (typeof checkOut !== "string" || !DATE_RE.test(checkOut)) {
-    return badRequest("checkOut debe ser una fecha en formato YYYY-MM-DD.");
-  }
-  if (checkOut <= checkIn) {
-    return badRequest("checkOut debe ser posterior a checkIn.");
+  const dateError = validateDateRange(checkIn, checkOut);
+  if (dateError) return badRequest(dateError);
+  if (promoCode.length > 50 || (promoCode && !/^[A-Z0-9_-]+$/.test(promoCode))) {
+    return badRequest("promoCode solo puede contener letras, números, guiones y guiones bajos.");
   }
   if (!Number.isInteger(adults) || adults < 1 || adults > 30) {
     return badRequest("adults debe ser un entero entre 1 y 30.");
@@ -47,7 +50,13 @@ export async function POST(request: NextRequest) {
   try {
     const quote =
       process.env.GUESTY_MOCK === "1"
-        ? mockCreateQuote({ listingId: listingId.trim(), checkIn, checkOut, adults })
+        ? mockCreateQuote({
+            listingId: listingId.trim(),
+            checkIn,
+            checkOut,
+            adults,
+            promoCode: promoCode || undefined,
+          })
         : await createQuote({
             listingId: listingId.trim(),
             checkIn,
@@ -55,6 +64,7 @@ export async function POST(request: NextRequest) {
             adults,
             children,
             infants,
+            couponCode: promoCode || undefined,
           });
     return NextResponse.json(
       {
