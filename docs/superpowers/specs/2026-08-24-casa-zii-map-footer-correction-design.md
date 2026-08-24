@@ -9,7 +9,7 @@
 - Footer: Figma file `2lNQfVwXyb9q3PlVs6yhgP`, node `29:373`.
 - Casa Palmas location: `15.831041, -97.040609` from the supplied Google Maps destination.
 - Casa Campeche location: `15.8315562, -97.0404726` from the supplied Google Maps destination.
-- Product constraint: one interactive map, both exact locations, no route, no mock pins, and a hard usage limit that bounds `zicatela` project usage and reduces charge risk. Because billing is currently shared, it cannot provide an absolute `$0` guarantee until `zicatela` is isolated as the only Dynamic Maps project on a dedicated billing account.
+- Product constraint: one interactive map, both exact locations, no route, no mock pins, and a hard usage limit that bounds `zicatela` project usage and reduces charge risk. Because billing is shared, the `zicatela` quota alone cannot guarantee `$0` for the complete account; that requires aggregate hard bounds for every Maps project and billable SKU on the existing billing account.
 
 These requirements supersede the older footer node `131:91`, the illustrated map, and the Google Directions iframe documented previously.
 
@@ -22,7 +22,7 @@ Use one Google Maps JavaScript map. The browser key is read from `NEXT_PUBLIC_GO
 
 The initial camera shows the Zicatela and La Punta area rather than fitting tightly to the short distance between the houses. The map is interactive and must not render a route. `LazyGoogleMap` presents a `Ver mapa interactivo` button and owns the activation, loading, and error UI. Only that button press dynamically imports `GoogleMapsRuntime`; the runtime then loads Google Maps and initializes one map with the two markers. Page load, hydration, scrolling, and viewport intersection do not load a Google script or make a map request. The loaded map has a useful accessible title, fills its container, and cannot create horizontal page overflow.
 
-The existing supplied Google Maps destination links remain visible for opening each property directly. The project `zicatela` is linked to billing because Google Maps JavaScript API requires it, but its granted `BillableDefaultPerDayPerProject` quota is `250` effective map loads per day. That is at most `7,750` loads in a 31-day calendar month. The current billing account is shared, and Google aggregates Dynamic Maps usage across its projects, so this project limit is not an absolute `$0` guarantee. That guarantee requires `zicatela` to be the only Dynamic Maps project on a dedicated billing account. The implementation uses one restricted browser key and requests no optional Places, Geocoding, Routes, Static Maps, or Street View services or libraries.
+The existing supplied Google Maps destination links remain visible for opening each property directly. The project `zicatela` is linked to billing because Google Maps JavaScript API requires it, but its granted `BillableDefaultPerDayPerProject` quota is `250` effective map loads per day. That is at most `7,750` loads in a 31-day calendar month. The current billing account is shared, and Google aggregates Dynamic Maps usage across its projects, so this project limit is not an absolute `$0` guarantee for the account. Google prohibits using multiple Maps-related billing accounts to avoid fees; the compliant remaining control is to hard-cap aggregate usage for every Maps project and billable SKU on the existing account. The implementation uses one restricted browser key and requests no optional Places, Geocoding, Routes, Static Maps, or Street View services or libraries.
 
 ## Footer
 
@@ -78,7 +78,7 @@ No booking, Guesty, navigation, gallery, property-page, or API behavior changes 
 - One explicit press of `Ver mapa interactivo` dynamically imports the runtime and initializes at most one interactive location map; loading, hydration, scrolling, and viewport intersection do not activate Google Maps.
 - Both markers use the supplied exact coordinates and are not connected by a route.
 - The implementation uses one restricted browser key, click-to-load initialization, and a granted 250-loads-per-day project quota to bound usage to at most 7,750 loads in a 31-day calendar month.
-- An absolute `$0` guarantee requires `zicatela` to be the only Dynamic Maps project on a dedicated billing account.
+- An account-wide `$0` guarantee requires aggregate hard bounds for every Maps project and billable SKU on the existing billing account; budgets and alerts are not hard caps.
 - The footer matches the content and hierarchy of Figma node `29:373`.
 - No fake phone number, fake email, placeholder, old booking CTA, or stale footer content remains.
 - Desktop and mobile layouts remain usable and free of horizontal overflow.

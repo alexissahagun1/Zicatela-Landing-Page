@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import { useRef, useState } from "react";
 
 import type { LatLng, MapPin } from "./GoogleMapsRuntime";

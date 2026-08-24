@@ -107,6 +107,9 @@ function createBrowserHarness() {
         addEventListener(eventName, handler) {
           listeners.set(eventName, handler);
         },
+        dispatch(eventName) {
+          listeners.get(eventName)?.();
+        },
         removeEventListener(eventName, handler) {
           if (listeners.get(eventName) === handler) {
             listeners.delete(eventName);
@@ -239,6 +242,116 @@ test("authentication failure rejects and stays sticky without another script", a
     );
     assert.equal(harness.scripts.length, 1);
   } finally {
+    harness.restore();
+  }
+});
+
+test("a missing API key rejects before injecting a script", async () => {
+  const harness = createBrowserHarness();
+  try {
+    delete process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
+    const runtime = await importFreshRuntime();
+
+    await assert.rejects(
+      runtime.renderGoogleMap({ isConnected: true }, center, exactPins),
+      /API key is not configured/,
+    );
+    assert.equal(harness.scripts.length, 0);
+  } finally {
+    harness.restore();
+  }
+});
+
+test("a script network error rejects and permits a clean retry", async () => {
+  const harness = createBrowserHarness();
+  try {
+    const runtime = await importFreshRuntime();
+    const firstRender = runtime.renderGoogleMap(
+      { isConnected: true },
+      center,
+      exactPins,
+    );
+
+    assert.equal(harness.scripts.length, 1);
+    harness.scripts[0].dispatch("error");
+    await assert.rejects(firstRender, /failed to load/);
+    assert.equal(harness.scripts[0].removed, true);
+
+    const retry = runtime.renderGoogleMap(
+      { isConnected: true },
+      center,
+      exactPins,
+    );
+    assert.equal(harness.scripts.length, 2);
+
+    const googleDouble = createGoogleDouble();
+    harness.browserWindow.google = googleDouble.google;
+    harness.browserWindow.__casaZiiGoogleMapsReady();
+    await Promise.resolve();
+    await Promise.resolve();
+    googleDouble.triggerIdle();
+    await retry;
+  } finally {
+    harness.restore();
+  }
+});
+
+test("authentication failure after script readiness rejects while waiting for idle", async () => {
+  const harness = createBrowserHarness();
+  try {
+    const runtime = await importFreshRuntime();
+    const googleDouble = createGoogleDouble();
+    const render = runtime.renderGoogleMap(
+      { isConnected: true },
+      center,
+      exactPins,
+    );
+
+    harness.browserWindow.google = googleDouble.google;
+    harness.browserWindow.__casaZiiGoogleMapsReady();
+    await Promise.resolve();
+    await Promise.resolve();
+    assert.equal(googleDouble.maps.length, 1);
+
+    harness.browserWindow.gm_authFailure();
+    await assert.rejects(
+      render,
+      /authentication or billing authorization failed/,
+    );
+  } finally {
+    harness.restore();
+  }
+});
+
+test("the first-idle timeout rejects when Google never marks the map ready", async () => {
+  const harness = createBrowserHarness();
+  const previousSetTimeout = globalThis.setTimeout;
+  const previousClearTimeout = globalThis.clearTimeout;
+  let timeoutHandler;
+
+  try {
+    globalThis.setTimeout = (handler) => {
+      timeoutHandler = handler;
+      return 1;
+    };
+    globalThis.clearTimeout = () => {};
+
+    const googleDouble = createGoogleDouble();
+    harness.browserWindow.google = googleDouble.google;
+    const runtime = await importFreshRuntime();
+    const render = runtime.renderGoogleMap(
+      { isConnected: true },
+      center,
+      exactPins,
+    );
+
+    await Promise.resolve();
+    assert.equal(typeof timeoutHandler, "function");
+    timeoutHandler();
+    await assert.rejects(render, /did not become ready within 15 seconds/);
+  } finally {
+    globalThis.setTimeout = previousSetTimeout;
+    globalThis.clearTimeout = previousClearTimeout;
     harness.restore();
   }
 });
