@@ -23,7 +23,7 @@ Turn the global fixed booking bar into a real reservation search entry point. A 
 
    `promoCode` is omitted when empty.
 8. The booking page parses and validates the query once on load, initializes its search controls from it, and calls the existing availability flow automatically. The results scroll into view after rendering.
-9. If a URL has missing, malformed, past, or reversed dates, the booking page keeps the user on its normal empty search state and does not call availability. Invalid guest counts fall back to the existing defaults; an invalid promotion is displayed but not sent to quote until corrected.
+9. If a URL has missing, malformed, past, or reversed dates, the booking page keeps the user on its normal empty search state and does not call availability. Invalid guest counts fall back to the existing defaults; an invalid promotion is treated as empty and is not sent to quote.
 
 ## Architecture
 
