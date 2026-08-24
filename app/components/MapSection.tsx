@@ -8,9 +8,8 @@ const CAMPECHE_MAPS_URL = "https://maps.app.goo.gl/3pygvtLVaZn8kiYB7";
 const PALMAS_COORDINATES = "15.831041,-97.040609";
 const CAMPECHE_COORDINATES = "15.8315562,-97.0404726";
 
-const MAP_OVERVIEW_SRC =
-  `https://maps.google.com/maps?saddr=${PALMAS_COORDINATES}` +
-  `&daddr=${CAMPECHE_COORDINATES}&output=embed&z=15&hl=es`;
+const MAP_EMBED_SRC =
+  "https://www.google.com/maps/d/embed?mid=1dCV9ESC259QOIK4lcq_udz08L2uKZvg";
 
 export default function MapSection() {
   return (
@@ -19,10 +18,11 @@ export default function MapSection() {
         <div className="w-full overflow-hidden border border-[#222222]/15 bg-white">
           <iframe
             title="Mapa de Casa Zii en Zicatela con las ubicaciones de Casa Palmas y Casa Campeche"
-            src={MAP_OVERVIEW_SRC}
+            src={MAP_EMBED_SRC}
             loading="lazy"
             referrerPolicy="no-referrer-when-downgrade"
-            className="h-[333px] w-full border-0"
+            allowFullScreen
+            className="h-[333px] min-h-[333px] w-full border-0"
           />
         </div>
 
