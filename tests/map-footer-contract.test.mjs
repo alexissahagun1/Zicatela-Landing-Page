@@ -66,7 +66,45 @@ test("Google Maps readiness uses the API callback", () => {
 
 test("Google Maps authentication failures are handled and remain sticky", () => {
   assert.match(googleMapsRuntime, /gm_authFailure/);
-  assert.match(googleMapsRuntime, /googleMapsAuthFailure/);
+  assert.match(googleMapsRuntime, /authFailureError/);
+});
+
+test("Google Maps keeps auth failure monitoring active for map readiness", () => {
+  assert.match(
+    googleMapsRuntime,
+    /const authFailureSubscribers = new Set<\(error: Error\) => void>\(\)/,
+  );
+  assert.match(googleMapsRuntime, /authFailureSubscribers\.forEach/);
+  assert.match(googleMapsRuntime, /authFailureSubscribers\.add/);
+  assert.match(googleMapsRuntime, /authFailureSubscribers\.delete/);
+  assert.doesNotMatch(googleMapsRuntime, /delete browserWindow\.gm_authFailure/);
+  assert.doesNotMatch(
+    googleMapsRuntime,
+    /browserWindow\.gm_authFailure = previousAuthFailure/,
+  );
+});
+
+test("Google Maps runtime listens once for the first map idle event", () => {
+  assert.match(googleMapsRuntime, /addListenerOnce/);
+  assert.match(
+    googleMapsRuntime,
+    /google\.maps\.event\.addListenerOnce\(map, "idle", handleIdle\)/,
+  );
+  assert.match(googleMapsRuntime, /idleListener\.remove\(\)/);
+});
+
+test("renderGoogleMap waits for authenticated map readiness after markers", () => {
+  const renderGoogleMapStart = googleMapsRuntime.indexOf(
+    "export async function renderGoogleMap(",
+  );
+  const renderGoogleMapSource = googleMapsRuntime.slice(renderGoogleMapStart);
+  const markerIndex = renderGoogleMapSource.indexOf("new google.maps.Marker");
+  const readinessIndex = renderGoogleMapSource.indexOf(
+    "await waitForMapReady(google, map);",
+  );
+
+  assert.notEqual(markerIndex, -1);
+  assert.ok(readinessIndex > markerIndex);
 });
 
 test("Google Maps is not constructed in a detached element", () => {
