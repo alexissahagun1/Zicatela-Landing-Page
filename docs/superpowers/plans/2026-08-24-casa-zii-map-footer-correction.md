@@ -244,4 +244,3 @@ Expected: no runaway headless browser process.
 Run: `git status --short && git log --oneline -8`
 
 Expected: only intentional commits are present and the worktree is clean.
-
