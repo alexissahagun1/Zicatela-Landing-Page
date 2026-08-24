@@ -32,7 +32,7 @@ test("initial map markup is neutral and contains no Google request or CTA", () =
   assert.doesNotMatch(html, /<button|Ver mapa interactivo|opcional|Cargando mapa/);
 });
 
-test("an observed loader error keeps the neutral surface without blocking UI", async () => {
+test("a failed observed load retries only after leaving and re-entering, then disconnects on success", async () => {
   const actGlobal = globalThis as typeof globalThis & {
     IS_REACT_ACT_ENVIRONMENT?: boolean;
   };
@@ -44,10 +44,12 @@ test("an observed loader error keeps the neutral surface without blocking UI", a
   const previousApiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
   const previousActEnvironment = actGlobal.IS_REACT_ACT_ENVIRONMENT;
   const observers: MockIntersectionObserver[] = [];
+  const browserWindow: { google?: object } = {};
+  let mapCreations = 0;
   actGlobal.IS_REACT_ACT_ENVIRONMENT = true;
   Object.defineProperty(globalThis, "window", {
     configurable: true,
-    value: {},
+    value: browserWindow,
     writable: true,
   });
   Object.defineProperty(globalThis, "IntersectionObserver", {
@@ -75,11 +77,12 @@ test("an observed loader error keeps the neutral surface without blocking UI", a
     assert.equal(observers.length, 1);
 
     await act(async () => {
-      observers[0].trigger();
-      await new Promise((resolve) => setTimeout(resolve, 0));
+      observers[0].trigger(true);
+      await waitForAsyncWork();
     });
 
     const mountedRenderer = renderer;
+    assert.equal(observers[0].disconnectCalls, 0);
     assert.equal(mountedRenderer.root.findAllByType("button").length, 0);
     assert.equal(mountedRenderer.root.findAllByProps({ role: "alert" }).length, 0);
     assert.equal(mountedRenderer.root.findAllByProps({ role: "status" }).length, 0);
@@ -87,6 +90,45 @@ test("an observed loader error keeps the neutral surface without blocking UI", a
       mountedRenderer.root.findAllByProps({ "aria-hidden": true }).length,
       1,
     );
+
+    process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY = "test-key";
+    browserWindow.google = {
+      maps: {
+        Map: class {
+          constructor() {
+            mapCreations += 1;
+          }
+        },
+        Marker: class {},
+        event: {
+          addListenerOnce(_map: object, _eventName: string, handler: () => void) {
+            const timeoutId = setTimeout(handler, 0);
+            return { remove: () => clearTimeout(timeoutId) };
+          },
+        },
+      },
+    };
+
+    await act(async () => {
+      observers[0].trigger(false);
+      observers[0].trigger(true);
+      await waitForAsyncWork();
+    });
+
+    assert.equal(mapCreations, 1);
+    assert.equal(observers[0].disconnectCalls, 1);
+    assert.equal(
+      mountedRenderer.root.findAllByProps({ role: "application" }).length,
+      1,
+    );
+
+    await act(async () => {
+      observers[0].trigger(false);
+      observers[0].trigger(true);
+      await waitForAsyncWork();
+    });
+
+    assert.equal(mapCreations, 1);
 
     await act(async () => {
       mountedRenderer.unmount();
@@ -117,20 +159,33 @@ test("an observed loader error keeps the neutral surface without blocking UI", a
   }
 });
 
+function waitForAsyncWork() {
+  return new Promise((resolve) => setTimeout(resolve, 10));
+}
+
 class MockIntersectionObserver {
   static instances: MockIntersectionObserver[] = [];
+  disconnectCalls = 0;
+  private disconnected = false;
 
   constructor(private readonly callback: IntersectionObserverCallback) {
     MockIntersectionObserver.instances.push(this);
   }
 
-  disconnect() {}
+  disconnect() {
+    this.disconnectCalls += 1;
+    this.disconnected = true;
+  }
 
   observe() {}
 
-  trigger() {
+  trigger(isIntersecting: boolean) {
+    if (this.disconnected) {
+      return;
+    }
+
     this.callback(
-      [{ isIntersecting: true } as IntersectionObserverEntry],
+      [{ isIntersecting } as IntersectionObserverEntry],
       this as unknown as IntersectionObserver,
     );
   }

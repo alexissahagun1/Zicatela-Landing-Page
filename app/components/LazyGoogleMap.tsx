@@ -20,6 +20,7 @@ export default function LazyGoogleMap({
 }: LazyGoogleMapProps) {
   const mapElementRef = useRef<HTMLDivElement>(null);
   const hasInitializedRef = useRef(false);
+  const isInViewportRef = useRef(false);
   const [status, setStatus] = useState<MapStatus>("waiting");
 
   useEffect(() => {
@@ -30,25 +31,32 @@ export default function LazyGoogleMap({
 
     const observer = new IntersectionObserver(
       (entries) => {
-        if (
-          !entries.some((entry) => entry.isIntersecting) ||
-          hasInitializedRef.current
-        ) {
+        const isIntersecting = entries.some((entry) => entry.isIntersecting);
+
+        if (!isIntersecting) {
+          isInViewportRef.current = false;
           return;
         }
 
+        if (isInViewportRef.current || hasInitializedRef.current) {
+          return;
+        }
+
+        isInViewportRef.current = true;
         hasInitializedRef.current = true;
-        observer.disconnect();
 
         void import("./GoogleMapsRuntime")
           .then(({ renderGoogleMap }) => renderGoogleMap(mapElement, center, pins))
           .then(() => {
             if (mapElementRef.current === mapElement && mapElement.isConnected) {
+              observer.disconnect();
               setStatus("ready");
             }
           })
           .catch(() => {
-            // The neutral frame intentionally stays unobtrusive if Maps is unavailable.
+            if (mapElementRef.current === mapElement && mapElement.isConnected) {
+              hasInitializedRef.current = false;
+            }
           });
       },
       { rootMargin: "0px 0px 240px 0px" },
