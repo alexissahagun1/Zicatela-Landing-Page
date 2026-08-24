@@ -20,9 +20,9 @@ Use one Google Maps JavaScript map. The browser key is read from `NEXT_PUBLIC_GO
 - `CASA PALMAS` at `15.831041, -97.040609`.
 - `CASA CAMPECHE` at `15.8315562, -97.0404726`.
 
-The initial camera shows the Zicatela and La Punta area rather than fitting tightly to the short distance between the houses. The map is interactive and must not render a route. `LazyGoogleMap` waits until the map is within 300px of the viewport before loading the Maps JavaScript script, has a useful accessible title, fills its container, and cannot create horizontal page overflow.
+The initial camera shows the Zicatela and La Punta area rather than fitting tightly to the short distance between the houses. The map is interactive and must not render a route. `LazyGoogleMap` presents a `Ver mapa interactivo` button and owns the activation, loading, and error UI. Only that button press dynamically imports `GoogleMapsRuntime`; the runtime then loads Google Maps and initializes one map with the two markers. Page load, hydration, scrolling, and viewport intersection do not load a Google script or make a map request. The loaded map has a useful accessible title, fills its container, and cannot create horizontal page overflow.
 
-The existing supplied Google Maps destination links remain available for opening each property directly. The project `zicatela` is linked to billing because Google Maps JavaScript API requires it, but its `BillableDefaultPerDayPerProject` quota is set to `250` effective map loads per day. That is at most `7,750` loads in a 31-day month, below the documented monthly free allowance when no other Maps usage shares the billing account. Google aggregates usage across projects on the same billing account, so that remaining headroom is not a global zero-cost guarantee. The implementation requests no Places, Geocoding, Routes, or other billable libraries.
+The existing supplied Google Maps destination links remain visible for opening each property directly. The project `zicatela` is linked to billing because Google Maps JavaScript API requires it, but its granted `BillableDefaultPerDayPerProject` quota is `250` effective map loads per day. That is at most `7,750` loads in a 31-day month. The current billing account is shared, and Google aggregates Dynamic Maps usage across its projects, so this project limit is not an absolute `$0` guarantee. That guarantee requires `zicatela` to be the only Dynamic Maps project on a dedicated billing account. The implementation uses one restricted browser key and requests no optional Places, Geocoding, Routes, Static Maps, or Street View services or libraries.
 
 ## Footer
 
@@ -50,7 +50,8 @@ The footer continues to use the existing language context. Spanish and English c
 ## Component boundaries
 
 - `app/components/MapSection.tsx` owns the exact location constants, direct destination links, and location presentation.
-- `app/components/LazyGoogleMap.tsx` owns the viewport-triggered Maps JavaScript loader and the two real markers.
+- `app/components/LazyGoogleMap.tsx` owns the explicit button activation and activation/loading/error UI.
+- `app/components/GoogleMapsRuntime.ts` owns the singleton Google loader, auth readiness, and creation of the map and its two real markers.
 - `app/components/Footer.tsx` owns only the Figma footer composition and localized footer copy.
 - Documentation is updated to point to the new Figma file/node and the quota-protected Google Maps JavaScript architecture.
 
@@ -59,11 +60,12 @@ No booking, Guesty, navigation, gallery, property-page, or API behavior changes 
 ## Failure handling
 
 - If the Maps JavaScript API is unavailable, the visible address blocks and direct Google Maps links still let visitors reach both properties.
+- Custom UI reports failures it can observe, while the granted `250`-per-day Cloud quota remains the usage-enforcement boundary; Google does not expose a dependable client callback for every quota or billing state that can produce a darkened or watermarked map.
 - No hidden synthetic markers or fallback image imply that the map is interactive when it is not.
 
 ## Verification
 
-1. In a signed-out/private browser window, confirm the JavaScript map displays one map, two named markers, no route, and a Zicatela-area initial view.
+1. In a signed-out/private browser window, confirm no Google script or map request occurs before pressing `Ver mapa interactivo`, then confirm the button loads one map with two named markers, no route, and a Zicatela-area initial view.
 2. Compare the desktop footer against Figma node `29:373` at 1280 px width.
 3. Check footer and map at mobile width for overflow, overlap, and readable order.
 4. Verify both direct Google Maps links open their supplied destinations.
@@ -73,9 +75,10 @@ No booking, Guesty, navigation, gallery, property-page, or API behavior changes 
 
 ## Acceptance criteria
 
-- Exactly one interactive location map is rendered.
+- One explicit press of `Ver mapa interactivo` dynamically imports the runtime and initializes exactly one interactive location map; loading, hydration, scrolling, and viewport intersection do not activate Google Maps.
 - Both markers use the supplied exact coordinates and are not connected by a route.
-- The implementation uses one restricted browser key, lazy initialization, and a hard 250-loads-per-day project quota to bound usage.
+- The implementation uses one restricted browser key, click-to-load initialization, and a granted 250-loads-per-day project quota to bound usage to at most 7,750 loads in 31 days.
+- An absolute `$0` guarantee requires `zicatela` to be the only Dynamic Maps project on a dedicated billing account.
 - The footer matches the content and hierarchy of Figma node `29:373`.
 - No fake phone number, fake email, placeholder, old booking CTA, or stale footer content remains.
 - Desktop and mobile layouts remain usable and free of horizontal overflow.
