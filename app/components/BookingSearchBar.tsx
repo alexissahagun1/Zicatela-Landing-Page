@@ -357,11 +357,11 @@ export default function BookingSearchBar({
               locale={language === "es" ? es : enUS}
               className="mb-28 [--cell-size:3rem] lg:[--cell-size:3.25rem]"
               classNames={{
-                months: "flex flex-col gap-8 md:flex-row lg:gap-14 rdp-months",
-                month: "flex w-full flex-col gap-7 lg:w-[22.75rem] lg:shrink-0 rdp-month",
+                months: "flex flex-col items-start gap-8 md:flex-row lg:gap-14 rdp-months",
+                month: "flex w-full self-start flex-col gap-7 lg:min-h-[34rem] lg:w-[22.75rem] lg:shrink-0 rdp-month",
                 table: "w-full border-collapse lg:w-[22.75rem] rdp-month_grid",
                 week: "mt-4 flex w-full rdp-week",
-                nav: "absolute top-[calc(var(--cell-size)/2+2rem)] left-24 right-24 flex w-auto items-center justify-between rdp-nav",
+                nav: "absolute top-[calc(var(--cell-size)/2+2rem)] left-24 right-24 z-10 flex w-auto items-center justify-between rdp-nav",
               }}
             />
             <div className="mt-8 flex min-h-[76px] items-center justify-end border-t border-[#EFEFEF] px-2 pt-5">

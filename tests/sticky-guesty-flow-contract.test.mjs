@@ -25,6 +25,8 @@ test("sticky booking bar reuses the reservation form and opens Guesty results in
   assert.match(search, /nav: "absolute top-\[calc\(var\(--cell-size\)\/2\+2rem\)\]/);
   assert.match(search, /mt-8 flex min-h-\[76px\]/);
   assert.match(search, /mb-28 \[--cell-size:3rem\]/);
+  assert.match(search, /lg:min-h-\[34rem\]/);
+  assert.match(search, /z-10 flex w-auto items-center justify-between rdp-nav/);
   assert.match(styles, /casaZiiBookingPanelEnter/);
   assert.match(styles, /transform-origin: center bottom/);
   assert.match(styles, /casaZiiBookingScrimEnter/);
