@@ -5,7 +5,7 @@
 
 ## Goal
 
-Turn the global fixed booking bar into a real reservation search entry point. A guest chooses a stay, party size, and optional promotion from any non-booking page; pressing the primary action opens `/booking` with those exact values restored and automatically searches Guesty availability.
+Turn the global fixed booking bar into a real Guesty reservation entry point. A guest chooses a stay, party size, and optional promotion from any non-booking page; pressing the primary action searches Guesty directly in an in-page reservation panel. The separate `/booking` page remains available, but is not part of this flow.
 
 ## User flow
 
@@ -14,24 +14,18 @@ Turn the global fixed booking bar into a real reservation search entry point. A 
 3. **When** opens the existing date-range calendar *above* the bar. Past dates are disabled. A complete check-in/check-out range is required to reserve.
 4. **Who** opens a panel above the bar with bounded steppers: 1–16 adults and 1–4 rooms.
 5. **Promotion** opens an input above the bar. The value is uppercased and uses the same validation already enforced by the quote API.
-6. The primary action is disabled until both dates exist. It never performs a fake search or a bare redirect.
-7. On submit, the bar navigates to:
-
-   ```text
-   /booking?checkIn=YYYY-MM-DD&checkOut=YYYY-MM-DD&adults=N&rooms=N&promoCode=CODE
-   ```
-
-   `promoCode` is omitted when empty.
-8. The booking page parses and validates the query once on load, initializes its search controls from it, and calls the existing availability flow automatically. The results scroll into view after rendering.
-9. If a URL has missing, malformed, past, or reversed dates, the booking page keeps the user on its normal empty search state and does not call availability. Invalid guest counts fall back to the existing defaults; an invalid promotion is treated as empty and is not sent to quote.
+6. The primary action is disabled until both dates exist. It never performs a fake search or redirects to `/booking`.
+7. On submit, the bar opens an accessible in-page panel containing the existing `BookingResults` flow. It queries Guesty availability directly, then supports quote and reservation request with the existing Guesty API routes.
+8. The standalone booking page remains unchanged and independently usable.
+9. Missing, partial, or invalid stays keep the date panel open and never call Guesty. Invalid guest counts fall back to the existing defaults; an invalid promotion is treated as empty and is not sent to quote.
 
 ## Architecture
 
 `BookingSearchBar` becomes the single owner of booking search UI and state. It gains controlled initial values and a submit callback, while retaining its standalone default behavior for the booking page.
 
-`StickyBookingBar` renders `BookingSearchBar` in a compact fixed-shell variant instead of reproducing static summary links. The compact variant uses the same calendar, guest steppers, promotion normalization, keyboard escape/outside-click behavior, and validation. Its dropdowns use upward positioning so the fixed bar never hides the current page or the reservation controls.
+`StickyBookingBar` renders `BookingSearchBar` directly, instead of reproducing static summary links. The bar is therefore visually identical to the form on `/booking`. Its calendar and panels open upward so they remain visible above the fixed shell.
 
-`app/booking/page.tsx` owns URL hydration and synchronization with `BookingSearchBar`. It uses `useSearchParams` and `useRouter` only for the booking route. A valid query triggers exactly one `handleSearch` call after initial hydration; future changes through the full booking form replace the query to preserve a shareable, back-button-safe search state.
+`StickyBookingBar` owns the direct reservation panel. A valid form submission provides the selected values to `BookingResults`, which already owns availability, quote, guest details, idempotency, and Guesty reservation requests.
 
 ## Accessibility and responsive behavior
 
@@ -43,18 +37,17 @@ Turn the global fixed booking bar into a real reservation search entry point. A 
 
 ## Failure behavior
 
-- The bar does not call Guesty; it only creates a validated booking URL.
-- The booking page remains responsible for availability, quote, and reservation API errors via its existing `BookingResults` states.
-- Query parsing must never throw. A malformed shared URL produces an editable empty booking form.
+- The bar calls Guesty only after a valid complete stay is submitted.
+- The in-page reservation panel uses the existing `BookingResults` API error states for availability, quote, and reservation failures.
 
 ## Tests and adversarial dogfood acceptance
 
 Automated tests must cover:
 
 - required dates block submission;
-- a valid compact-bar search builds the canonical booking URL with dates, adults, rooms, and optional promotion;
-- URL parsing accepts a valid round trip and rejects malformed/past/reversed ranges;
-- a valid booking URL triggers one availability search and restores visible form values;
+- a valid compact-bar search opens the in-page Guesty reservation panel with dates, adults, rooms, and optional promotion;
+- no sticky-bar action navigates to `/booking`;
+- a valid direct submission triggers one availability search;
 - the initial fixed bar, its panels, and the booking page remain bilingual.
 
 After implementation, dogfood `http://localhost:3000` as a guest without reading source while testing:
@@ -62,7 +55,7 @@ After implementation, dogfood `http://localhost:3000` as a guest without reading
 - desktop and narrow mobile viewport selection;
 - empty, partial, reversed, past, and shared-URL dates;
 - guest/room boundaries and promotion normalization;
-- submit, back navigation, reload, and direct copied booking URL;
+- submit, drawer close/reopen, reload, and the standalone `/booking` page;
 - availability, quote, and reservation error states; and
 - console errors, focus/keyboard escape, panel overlap, and sticky-bar clipping.
 

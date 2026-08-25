@@ -39,6 +39,9 @@ yarn-error.log*
 # local git worktrees
 .worktrees/
 
+# visual brainstorming sessions
+.superpowers/
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts

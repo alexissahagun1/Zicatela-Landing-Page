@@ -1,77 +1,129 @@
 "use client";
 
-import Link from "next/link";
+import { useEffect, useRef, useState } from "react";
+import { X } from "lucide-react";
 import { usePathname } from "next/navigation";
+import BookingResults from "./BookingResults";
+import BookingSearchBar, { type BookingSearchValues } from "./BookingSearchBar";
 import { useLanguage } from "../contexts/LanguageContext";
 
 const copy = {
   es: {
-    who: "QUIÉN",
-    whoValue: "2 adultos · 1 habitación",
-    promo: "PROMOCIÓN",
-    promoValue: "Código",
     action: "RESERVAR",
-    label: "Reservar una estancia en Casa Zii",
+    close: "Cerrar reserva",
+    panel: "Reserva directa con Casa Zii",
   },
   en: {
-    who: "WHO",
-    whoValue: "2 adults · 1 room",
-    promo: "PROMOTION",
-    promoValue: "Code",
     action: "BOOK NOW",
-    label: "Book a stay at Casa Zii",
+    close: "Close booking",
+    panel: "Book directly with Casa Zii",
   },
 } as const;
 
 export default function StickyBookingBar() {
   const pathname = usePathname();
   const { language } = useLanguage();
+  const [search, setSearch] = useState<BookingSearchValues | null>(null);
+  const [isPanelOpen, setIsPanelOpen] = useState(false);
+  const [isPanelClosing, setIsPanelClosing] = useState(false);
+  const closeTimerRef = useRef<number | null>(null);
+  const t = copy[language];
+
+  useEffect(() => {
+    if (!isPanelOpen) return;
+    const previousOverflow = document.body.style.overflow;
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") closePanel();
+    }
+    document.body.style.overflow = "hidden";
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [isPanelOpen]);
+
+  useEffect(() => {
+    return () => {
+      if (closeTimerRef.current !== null) window.clearTimeout(closeTimerRef.current);
+    };
+  }, []);
 
   if (pathname === "/booking") return null;
 
-  const t = copy[language];
+  function handleSearch(values: BookingSearchValues) {
+    if (closeTimerRef.current !== null) {
+      window.clearTimeout(closeTimerRef.current);
+      closeTimerRef.current = null;
+    }
+    setSearch(values);
+    setIsPanelClosing(false);
+    setIsPanelOpen(true);
+  }
+
+  function closePanel() {
+    if (isPanelClosing) return;
+    setIsPanelClosing(true);
+    closeTimerRef.current = window.setTimeout(() => {
+      setIsPanelOpen(false);
+      setIsPanelClosing(false);
+      closeTimerRef.current = null;
+    }, 180);
+  }
 
   return (
-    <aside
-      aria-label={t.label}
-      className="pointer-events-none fixed inset-x-0 bottom-0 z-30 px-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] md:px-6"
-    >
-      <div className="pointer-events-auto mx-auto grid max-w-[760px] grid-cols-[1fr_auto] overflow-hidden border border-[#E4E4E4] bg-white/95 shadow-[0_-10px_35px_rgba(0,0,0,0.12)] backdrop-blur-sm md:grid-cols-[1fr_1fr_auto]">
-        <Link
-          href="/booking"
-          className="flex min-w-0 items-center px-4 py-3 text-left hover:bg-[#FAFAFA] md:px-6 md:py-4"
-        >
-          <span className="min-w-0">
-            <span className="block font-['Courier_Prime'] text-[10px] tracking-[0.12em] text-[#8A8A8A]">
-              {t.who}
-            </span>
-            <span className="block truncate font-['Courier_Prime'] text-[13px] text-[#222] md:text-[15px]">
-              {t.whoValue}
-            </span>
-          </span>
-        </Link>
+    <>
+      <aside
+        aria-label={t.panel}
+        className="pointer-events-none fixed inset-x-0 bottom-0 z-30 px-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] md:px-6"
+      >
+        <div className="pointer-events-auto mx-auto w-full max-w-5xl">
+          <BookingSearchBar
+            onSearch={handleSearch}
+            popoverDirection="up"
+            submitLabel={t.action}
+          />
+        </div>
+      </aside>
 
-        <Link
-          href="/booking"
-          className="hidden min-w-0 items-center border-l border-[#E4E4E4] px-6 py-4 text-left hover:bg-[#FAFAFA] md:flex"
+      {isPanelOpen && search && (
+        <div
+          className="fixed inset-0 z-50 flex items-end justify-center p-3 pt-16 md:items-center md:p-6"
+          role="dialog"
+          aria-modal="true"
+          aria-label={t.panel}
         >
-          <span className="min-w-0">
-            <span className="block font-['Courier_Prime'] text-[10px] tracking-[0.12em] text-[#8A8A8A]">
-              {t.promo}
-            </span>
-            <span className="block truncate font-['Courier_Prime'] text-[15px] text-[#222]">
-              {t.promoValue}
-            </span>
-          </span>
-        </Link>
-
-        <Link
-          href="/booking"
-          className="flex items-center justify-center bg-[#222] px-5 py-3 font-['Courier_Prime'] text-[12px] tracking-[0.08em] text-white transition-colors hover:bg-[#A04E39] md:min-w-[150px] md:px-7 md:py-4 md:text-[14px]"
-        >
-          {t.action}
-        </Link>
-      </div>
-    </aside>
+          <button
+            type="button"
+            aria-label={t.close}
+            onClick={closePanel}
+            className="casa-zii-booking-scrim absolute inset-0 bg-black/30 backdrop-blur-[2px]"
+          />
+          <section
+            data-state={isPanelClosing ? "closing" : "open"}
+            className={`casa-zii-booking-panel relative flex max-h-full w-full max-w-6xl flex-col overflow-hidden rounded-[28px] bg-white shadow-[0_32px_100px_rgba(0,0,0,0.28)] ${
+              isPanelClosing ? "casa-zii-booking-panel-exit" : ""
+            }`}
+          >
+            <header className="flex items-center justify-between border-b border-[#E6E6E6] px-5 py-4 md:px-7">
+              <p className="font-[family-name:var(--font-courier)] text-[11px] uppercase tracking-[0.16em] text-[#222]">
+                {t.panel}
+              </p>
+              <button
+                type="button"
+                onClick={closePanel}
+                className="flex h-11 w-11 items-center justify-center rounded-full border border-[#E0E0E0] text-[#222] transition-colors hover:bg-[#F7F7F7] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#222]"
+                aria-label={t.close}
+              >
+                <X className="h-4 w-4" strokeWidth={1.5} />
+              </button>
+            </header>
+            <div className="overflow-y-auto px-5 py-6 md:px-8 md:py-8">
+              <BookingResults search={search} />
+            </div>
+          </section>
+        </div>
+      )}
+    </>
   );
 }

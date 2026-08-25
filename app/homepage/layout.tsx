@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Casa Zii | Villas con alberca en La Punta, Zicatela",
+  title: "Casa Zii - Villas de Lujo en Zicatela",
   description:
     "Villas de diseño solo para adultos con alberca privada en La Punta, Zicatela, Puerto Escondido. Reserva directa en Casa Campeche o Casa Palmas.",
   alternates: {
@@ -13,7 +13,7 @@ export const metadata: Metadata = {
     },
   },
   openGraph: {
-    title: "Casa Zii | Villas con alberca en La Punta, Zicatela",
+    title: "Casa Zii - Villas de Lujo en Zicatela",
     description:
       "Villas de diseño solo para adultos con alberca privada en La Punta, Zicatela, Puerto Escondido.",
     images: ["/beach-hero.png"],

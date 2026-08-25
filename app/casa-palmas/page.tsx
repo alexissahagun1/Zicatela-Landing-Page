@@ -24,7 +24,6 @@ export default function CasaPalmasPage() {
         pool: "Alberca privada",
         terrace: "Terraza"
       },
-      buttonText: "Explorar fechas disponibles"
     },
     en: {
       title: "Casa Palmas I and II",
@@ -37,7 +36,6 @@ export default function CasaPalmasPage() {
         pool: "Private pool",
         terrace: "Terrace"
       },
-      buttonText: "Explore available dates"
     }
   };
 
@@ -87,12 +85,7 @@ export default function CasaPalmasPage() {
               currentContent.features.terrace
             ]}
             connectionNote=""
-            buttonText={currentContent.buttonText}
             layout="image-left"
-            onButtonClick={() => {
-              // Handle button click - could navigate to booking page
-              console.log("Navigate to booking for Palmas I");
-            }}
           />
           
           {/* Casa Palmas II */}
@@ -114,12 +107,7 @@ export default function CasaPalmasPage() {
               currentContent.features.terrace
             ]}
             connectionNote=""
-            buttonText={currentContent.buttonText}
             layout="image-right"
-            onButtonClick={() => {
-              // Handle button click - could navigate to booking page
-              console.log("Navigate to booking for Palmas II");
-            }}
           />
         </div>
         

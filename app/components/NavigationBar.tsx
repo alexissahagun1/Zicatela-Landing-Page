@@ -103,7 +103,13 @@ export default function NavigationBar() {
             title={languageAction}
             className="hidden cursor-pointer items-center space-x-1 hover:opacity-70 md:flex"
           >
-            <Image src={alternateFlag} alt="" width={16} height={16} />
+            <Image
+              src={alternateFlag}
+              alt=""
+              width={22}
+              height={22}
+              style={{ width: 16, height: "auto" }}
+            />
             <span className="text-[13px] leading-[15px] text-black">{alternateLanguage}</span>
           </button>
         </div>
@@ -157,7 +163,13 @@ export default function NavigationBar() {
                 title={languageAction}
                 className="flex cursor-pointer items-center space-x-2 hover:opacity-70"
               >
-                <Image src={alternateFlag} alt="" width={16} height={16} />
+                <Image
+                  src={alternateFlag}
+                  alt=""
+                  width={22}
+                  height={22}
+                  style={{ width: 16, height: "auto" }}
+                />
                 <span className="font-mono text-sm text-black">{alternateLanguage}</span>
               </button>
             </div>

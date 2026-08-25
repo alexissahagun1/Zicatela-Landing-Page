@@ -25,8 +25,8 @@ const MAP_PINS = [
 
 export default function MapSection() {
   return (
-    <section className="bg-[#F4EFE6] px-4 py-16 md:px-8 md:py-24">
-      <div className="mx-auto w-full max-w-[1180px] overflow-hidden border border-[#222222]/10 bg-[#E8E1D7]">
+    <section className="bg-[#F4EFE6] px-4 py-14 md:px-8 md:py-20">
+      <div className="mx-auto w-full max-w-[640px] overflow-hidden border border-[#222222]/10 bg-[#E8E1D7]">
         <LazyGoogleMap
           title="Mapa de Casa Zii en Zicatela con las ubicaciones de Casa Palmas y Casa Campeche"
           center={MAP_CENTER}

@@ -1,6 +1,5 @@
 import NavigationBar from "../components/NavigationBar";
 import Footer from "../components/Footer";
-import BookNowButton from "../components/BookNowButton";
 
 export default function ContactPage() {
   return (
@@ -39,13 +38,6 @@ export default function ContactPage() {
               </div>
             </div>
             
-            {/* Book Now Section */}
-            <div className="flex flex-col justify-center items-center">
-              <h2 className="text-2xl font-semibold text-gray-800 mb-6 text-center">
-                Ready to Book?
-              </h2>
-              <BookNowButton variant="primary" />
-            </div>
           </div>
         </div>
       </div>

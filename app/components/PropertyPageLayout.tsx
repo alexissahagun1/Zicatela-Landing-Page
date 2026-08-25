@@ -3,7 +3,6 @@ import Footer from "./Footer";
 import PropertyHeader from "./PropertyHeader";
 import AmenitiesSection from "./AmenitiesSection";
 import PropertyGallery from "./PropertyGallery";
-import BookNowSection from "./BookNowSection";
 
 interface PropertyPageLayoutProps {
   title: string;
@@ -13,7 +12,6 @@ interface PropertyPageLayoutProps {
   interiorImage: string;
   exteriorAlt: string;
   interiorAlt: string;
-  bookNowTitle: string;
 }
 
 export default function PropertyPageLayout({
@@ -24,7 +22,6 @@ export default function PropertyPageLayout({
   interiorImage,
   exteriorAlt,
   interiorAlt,
-  bookNowTitle
 }: PropertyPageLayoutProps) {
   return (
     <div className="min-h-screen bg-white">
@@ -49,8 +46,6 @@ export default function PropertyPageLayout({
         {/* Amenities Section */}
         <AmenitiesSection amenities={amenities} />
         
-        {/* Book Now Section */}
-        <BookNowSection title={bookNowTitle} />
       </div>
       
       <Footer />

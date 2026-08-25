@@ -28,6 +28,8 @@ type OpenPanel = "when" | "who" | "promo" | null;
 type BookingSearchBarProps = {
   onSearch?: (values: BookingSearchValues) => void;
   className?: string;
+  popoverDirection?: "up" | "down";
+  submitLabel?: string;
 };
 
 const copy = {
@@ -121,12 +123,16 @@ function Stepper({
 export default function BookingSearchBar({
   onSearch,
   className,
+  popoverDirection = "down",
+  submitLabel,
 }: BookingSearchBarProps) {
   const { language } = useLanguage();
   const t = copy[language];
   const rootRef = useRef<HTMLDivElement>(null);
+  const closeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const [openPanel, setOpenPanel] = useState<OpenPanel>(null);
+  const [isPopoverClosing, setIsPopoverClosing] = useState(false);
   const [dateRange, setDateRange] = useState<DateRange | undefined>();
   const [adults, setAdults] = useState(2);
   const [rooms, setRooms] = useState(1);
@@ -136,11 +142,11 @@ export default function BookingSearchBar({
   useEffect(() => {
     function handlePointerDown(event: MouseEvent) {
       if (!rootRef.current?.contains(event.target as Node)) {
-        setOpenPanel(null);
+        requestPopoverClose();
       }
     }
     function handleEscape(event: KeyboardEvent) {
-      if (event.key === "Escape") setOpenPanel(null);
+      if (event.key === "Escape") requestPopoverClose();
     }
     document.addEventListener("mousedown", handlePointerDown);
     document.addEventListener("keydown", handleEscape);
@@ -148,10 +154,16 @@ export default function BookingSearchBar({
       document.removeEventListener("mousedown", handlePointerDown);
       document.removeEventListener("keydown", handleEscape);
     };
+  }, [openPanel, isPopoverClosing]);
+
+  useEffect(() => {
+    return () => {
+      if (closeTimerRef.current) clearTimeout(closeTimerRef.current);
+    };
   }, []);
 
   useEffect(() => {
-    const media = window.matchMedia("(min-width: 768px)");
+    const media = window.matchMedia("(min-width: 1024px)");
     const sync = () => setCalendarMonths(media.matches ? 2 : 1);
     sync();
     media.addEventListener("change", sync);
@@ -172,17 +184,42 @@ export default function BookingSearchBar({
     language,
     t.datePlaceholder
   );
+  const popoverAnchor =
+    popoverDirection === "up"
+      ? "bottom-[calc(100%+10px)]"
+      : "top-[calc(100%+10px)]";
 
-  function togglePanel(panel: OpenPanel) {
-    setOpenPanel((current) => (current === panel ? null : panel));
+  function requestPopoverClose() {
+    if (!openPanel || isPopoverClosing) return;
+
+    setIsPopoverClosing(true);
+    closeTimerRef.current = setTimeout(() => {
+      setOpenPanel(null);
+      setIsPopoverClosing(false);
+      closeTimerRef.current = null;
+    }, 190);
+  }
+
+  function togglePanel(panel: Exclude<OpenPanel, null>) {
+    if (closeTimerRef.current) clearTimeout(closeTimerRef.current);
+
+    if (openPanel === panel && !isPopoverClosing) {
+      requestPopoverClose();
+      return;
+    }
+
+    setOpenPanel(panel);
+    setIsPopoverClosing(false);
   }
 
   function handleSearch() {
     if (!canSearch) {
+      if (closeTimerRef.current) clearTimeout(closeTimerRef.current);
       setOpenPanel("when");
+      setIsPopoverClosing(false);
       return;
     }
-    setOpenPanel(null);
+    requestPopoverClose();
     onSearch?.({
       checkIn,
       checkOut,
@@ -204,11 +241,11 @@ export default function BookingSearchBar({
         <button
           type="button"
           onClick={() => togglePanel("when")}
-          aria-expanded={openPanel === "when"}
+          aria-expanded={openPanel === "when" && !isPopoverClosing}
           className={cn(
             "group relative flex min-w-0 flex-1 items-center gap-3 px-5 py-4 text-left transition-colors",
             "rounded-t-2xl lg:rounded-l-full lg:rounded-tr-none",
-            openPanel === "when" ? "bg-[#F7F7F7]" : "hover:bg-[#FAFAFA]"
+            openPanel === "when" && !isPopoverClosing ? "bg-[#F7F7F7]" : "hover:bg-[#FAFAFA]"
           )}
         >
           <CalendarIcon className="h-5 w-5 shrink-0 text-[#6B6B6B]" strokeWidth={1.5} />
@@ -234,10 +271,10 @@ export default function BookingSearchBar({
         <button
           type="button"
           onClick={() => togglePanel("who")}
-          aria-expanded={openPanel === "who"}
+          aria-expanded={openPanel === "who" && !isPopoverClosing}
           className={cn(
             "group relative flex min-w-0 flex-1 items-center gap-3 px-5 py-4 text-left transition-colors",
-            openPanel === "who" ? "bg-[#F7F7F7]" : "hover:bg-[#FAFAFA]"
+            openPanel === "who" && !isPopoverClosing ? "bg-[#F7F7F7]" : "hover:bg-[#FAFAFA]"
           )}
         >
           <Users className="h-5 w-5 shrink-0 text-[#6B6B6B]" strokeWidth={1.5} />
@@ -258,10 +295,10 @@ export default function BookingSearchBar({
         <button
           type="button"
           onClick={() => togglePanel("promo")}
-          aria-expanded={openPanel === "promo"}
+          aria-expanded={openPanel === "promo" && !isPopoverClosing}
           className={cn(
             "group relative flex min-w-0 flex-1 items-center gap-3 px-5 py-4 text-left transition-colors",
-            openPanel === "promo" ? "bg-[#F7F7F7]" : "hover:bg-[#FAFAFA]"
+            openPanel === "promo" && !isPopoverClosing ? "bg-[#F7F7F7]" : "hover:bg-[#FAFAFA]"
           )}
         >
           <Tag className="h-5 w-5 shrink-0 text-[#6B6B6B]" strokeWidth={1.5} />
@@ -292,15 +329,24 @@ export default function BookingSearchBar({
               !canSearch && "opacity-90"
             )}
           >
-            {t.search}
+            {submitLabel ?? t.search}
           </button>
         </div>
       </div>
 
       {/* When panel */}
       {openPanel === "when" && (
-        <div className="absolute left-0 right-0 top-[calc(100%+10px)] z-30 lg:left-0 lg:right-auto">
-          <div className="overflow-hidden rounded-2xl border border-[#E8E8E8] bg-white p-3 shadow-[0_20px_60px_rgba(0,0,0,0.16)]">
+        <div
+          className={cn(
+            "casa-zii-booking-popover absolute left-0 right-0 z-30 lg:left-0 lg:right-auto",
+            popoverAnchor,
+            popoverDirection === "up"
+              ? "casa-zii-booking-popover-up"
+              : "casa-zii-booking-popover-down",
+            isPopoverClosing && "casa-zii-booking-popover-exit pointer-events-none"
+          )}
+        >
+          <div className="overflow-hidden rounded-[28px] border border-[#E8E8E8] bg-white p-6 shadow-[0_20px_60px_rgba(0,0,0,0.16)] lg:p-8">
             <Calendar
               mode="range"
               numberOfMonths={calendarMonths}
@@ -309,12 +355,19 @@ export default function BookingSearchBar({
               disabled={{ before: new Date() }}
               defaultMonth={checkIn ?? new Date()}
               locale={language === "es" ? es : enUS}
-              className="[--cell-size:2.4rem] md:[--cell-size:2.75rem]"
+              className="mb-28 [--cell-size:3rem] lg:[--cell-size:3.25rem]"
+              classNames={{
+                months: "flex flex-col gap-8 md:flex-row lg:gap-14 rdp-months",
+                month: "flex w-full flex-col gap-7 lg:w-[22.75rem] lg:shrink-0 rdp-month",
+                table: "w-full border-collapse lg:w-[22.75rem] rdp-month_grid",
+                week: "mt-4 flex w-full rdp-week",
+                nav: "absolute top-[calc(var(--cell-size)/2+2rem)] left-24 right-24 flex w-auto items-center justify-between rdp-nav",
+              }}
             />
-            <div className="flex justify-end border-t border-[#EFEFEF] px-2 pt-3">
+            <div className="mt-8 flex min-h-[76px] items-center justify-end border-t border-[#EFEFEF] px-2 pt-5">
               <button
                 type="button"
-                onClick={() => setOpenPanel(null)}
+                onClick={requestPopoverClose}
                 disabled={!checkIn || !checkOut}
                 className="rounded-full bg-[#222] px-5 py-2 font-['Courier_Prime'] text-sm text-white disabled:opacity-40"
               >
@@ -327,7 +380,7 @@ export default function BookingSearchBar({
 
       {/* Who panel */}
       {openPanel === "who" && (
-        <div className="absolute left-0 right-0 top-[calc(100%+10px)] z-30 lg:left-[28%] lg:right-auto lg:w-[320px]">
+        <div className={cn("casa-zii-booking-popover absolute left-0 right-0 z-30 lg:left-[28%] lg:right-auto lg:w-[320px]", popoverAnchor, popoverDirection === "up" ? "casa-zii-booking-popover-up" : "casa-zii-booking-popover-down", isPopoverClosing && "casa-zii-booking-popover-exit pointer-events-none")}>
           <div className="rounded-2xl border border-[#E8E8E8] bg-white px-5 py-4 shadow-[0_20px_60px_rgba(0,0,0,0.16)]">
             <Stepper
               label={t.adults}
@@ -347,7 +400,7 @@ export default function BookingSearchBar({
             <div className="mt-3 flex justify-end">
               <button
                 type="button"
-                onClick={() => setOpenPanel(null)}
+                onClick={requestPopoverClose}
                 className="rounded-full bg-[#222] px-5 py-2 font-['Courier_Prime'] text-sm text-white"
               >
                 {t.apply}
@@ -359,7 +412,7 @@ export default function BookingSearchBar({
 
       {/* Promo panel */}
       {openPanel === "promo" && (
-        <div className="absolute left-0 right-0 top-[calc(100%+10px)] z-30 lg:left-auto lg:right-[160px] lg:w-[300px]">
+        <div className={cn("casa-zii-booking-popover absolute left-0 right-0 z-30 lg:left-auto lg:right-[160px] lg:w-[300px]", popoverAnchor, popoverDirection === "up" ? "casa-zii-booking-popover-up" : "casa-zii-booking-popover-down", isPopoverClosing && "casa-zii-booking-popover-exit pointer-events-none")}>
           <div className="rounded-2xl border border-[#E8E8E8] bg-white px-5 py-4 shadow-[0_20px_60px_rgba(0,0,0,0.16)]">
             <label
               htmlFor="promo-code"
@@ -379,7 +432,7 @@ export default function BookingSearchBar({
             <div className="mt-3 flex justify-end">
               <button
                 type="button"
-                onClick={() => setOpenPanel(null)}
+                onClick={requestPopoverClose}
                 className="rounded-full bg-[#222] px-5 py-2 font-['Courier_Prime'] text-sm text-white"
               >
                 {t.apply}

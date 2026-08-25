@@ -27,7 +27,7 @@ async function importFreshRuntime() {
 
 function createGoogleDouble() {
   const maps = [];
-  const markers = [];
+  const advancedMarkers = [];
   const idleListeners = [];
 
   class MapDouble {
@@ -38,17 +38,19 @@ function createGoogleDouble() {
     }
   }
 
-  class MarkerDouble {
+  class AdvancedMarkerElementDouble {
     constructor(options) {
       this.options = options;
-      markers.push(this);
+      advancedMarkers.push(this);
     }
   }
 
   const google = {
     maps: {
       Map: MapDouble,
-      Marker: MarkerDouble,
+      marker: {
+        AdvancedMarkerElement: AdvancedMarkerElementDouble,
+      },
       event: {
         addListenerOnce(map, eventName, handler) {
           assert.equal(eventName, "idle");
@@ -67,7 +69,7 @@ function createGoogleDouble() {
   return {
     google,
     maps,
-    markers,
+    advancedMarkers,
     triggerIdle() {
       for (const listener of idleListeners) {
         if (!listener.removed) {
@@ -85,6 +87,7 @@ function createBrowserHarness() {
     "document",
   );
   const previousApiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
+  const previousMapId = process.env.NEXT_PUBLIC_GOOGLE_MAPS_MAP_ID;
   const scripts = [];
   const browserWindow = {};
 
@@ -96,6 +99,10 @@ function createBrowserHarness() {
       },
     },
     createElement(tagName) {
+      if (tagName === "div") {
+        return { style: { cssText: "" }, textContent: "" };
+      }
+
       assert.equal(tagName, "script");
       const listeners = new Map();
       return {
@@ -137,6 +144,7 @@ function createBrowserHarness() {
     writable: true,
   });
   process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY = "test-restricted-key";
+  process.env.NEXT_PUBLIC_GOOGLE_MAPS_MAP_ID = "test-map-id";
 
   return {
     browserWindow,
@@ -158,6 +166,12 @@ function createBrowserHarness() {
         delete process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
       } else {
         process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY = previousApiKey;
+      }
+
+      if (previousMapId === undefined) {
+        delete process.env.NEXT_PUBLIC_GOOGLE_MAPS_MAP_ID;
+      } else {
+        process.env.NEXT_PUBLIC_GOOGLE_MAPS_MAP_ID = previousMapId;
       }
     },
   };
@@ -390,13 +404,13 @@ test("a disconnected element never creates a map", async () => {
       /container is no longer connected/,
     );
     assert.equal(googleDouble.maps.length, 0);
-    assert.equal(googleDouble.markers.length, 0);
+    assert.equal(googleDouble.advancedMarkers.length, 0);
   } finally {
     harness.restore();
   }
 });
 
-test("a ready map creates both exact Casa Zii markers", async () => {
+test("a ready map creates both exact Casa Zii advanced markers", async () => {
   const harness = createBrowserHarness();
   try {
     const googleDouble = createGoogleDouble();
@@ -411,8 +425,8 @@ test("a ready map creates both exact Casa Zii markers", async () => {
     await Promise.resolve();
     assert.equal(googleDouble.maps.length, 1);
     assert.deepEqual(
-      googleDouble.markers.map(({ options }) => ({
-        label: options.label.text,
+      googleDouble.advancedMarkers.map(({ options }) => ({
+        label: options.content.textContent,
         position: options.position,
         title: options.title,
       })),

@@ -15,7 +15,7 @@ const courierPrime = Courier_Prime({
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: "Casa Zii | Villas con alberca en La Punta, Zicatela",
+    default: "Casa Zii - Villas de Lujo en Zicatela",
     template: "%s",
   },
   description:

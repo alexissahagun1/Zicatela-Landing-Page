@@ -11,6 +11,7 @@ export type MapPin = {
 
 type GoogleMapOptions = {
   center: LatLng;
+  mapId: string;
   zoom: number;
   mapTypeControl: boolean;
   streetViewControl: boolean;
@@ -25,17 +26,11 @@ type GoogleMapsEventListener = {
   remove(): void;
 };
 
-type GoogleMarkerOptions = {
+type GoogleAdvancedMarkerOptions = {
   map: GoogleMapInstance;
   position: LatLng;
   title: string;
-  label: {
-    text: string;
-    color: string;
-    fontFamily: string;
-    fontSize: string;
-    fontWeight: string;
-  };
+  content: HTMLElement;
 };
 
 type GoogleMapsApi = {
@@ -44,7 +39,9 @@ type GoogleMapsApi = {
       element: HTMLElement,
       options: GoogleMapOptions,
     ) => GoogleMapInstance;
-    Marker: new (options: GoogleMarkerOptions) => object;
+    marker: {
+      AdvancedMarkerElement: new (options: GoogleAdvancedMarkerOptions) => object;
+    };
     event: {
       addListenerOnce: (
         map: GoogleMapInstance,
@@ -177,7 +174,7 @@ function loadGoogleMaps(): Promise<GoogleMapsApi> {
     rejectInFlightGoogleMapsLoad = rejectLoad;
     browserWindow.__casaZiiGoogleMapsReady = handleReady;
     script.dataset.casaZiiGoogleMaps = "true";
-    script.src = `https://maps.googleapis.com/maps/api/js?key=${encodeURIComponent(apiKey)}&v=weekly&loading=async&callback=__casaZiiGoogleMapsReady`;
+    script.src = `https://maps.googleapis.com/maps/api/js?key=${encodeURIComponent(apiKey)}&v=weekly&libraries=marker&loading=async&callback=__casaZiiGoogleMapsReady`;
     script.async = true;
     script.defer = true;
     script.addEventListener("error", handleScriptError, { once: true });
@@ -188,6 +185,23 @@ function loadGoogleMaps(): Promise<GoogleMapsApi> {
   });
 
   return googleMapsPromise;
+}
+
+function createAdvancedMarkerContent(label: string): HTMLElement {
+  const content = document.createElement("div");
+  content.textContent = label;
+  content.style.cssText = [
+    "border:1px solid rgba(34,34,34,0.18)",
+    "border-radius:999px",
+    "background:#ffffff",
+    "box-shadow:0 8px 22px rgba(0,0,0,0.18)",
+    "color:#222222",
+    "font:600 11px/1.1 'Courier Prime','Courier New',monospace",
+    "letter-spacing:0.02em",
+    "padding:8px 10px",
+    "white-space:nowrap",
+  ].join(";");
+  return content;
 }
 
 function waitForMapReady(
@@ -265,8 +279,14 @@ export async function renderGoogleMap(
     throw new Error("Google Maps container is no longer connected.");
   }
 
+  const mapId = process.env.NEXT_PUBLIC_GOOGLE_MAPS_MAP_ID;
+  if (!mapId) {
+    throw new Error("Google Maps Map ID is not configured.");
+  }
+
   const map = new google.maps.Map(element, {
     center,
+    mapId,
     zoom: 13,
     mapTypeControl: false,
     streetViewControl: false,
@@ -277,17 +297,11 @@ export async function renderGoogleMap(
   element.dataset.casaZiiMapConstructed = "true";
 
   pins.forEach((pin) => {
-    new google.maps.Marker({
+    new google.maps.marker.AdvancedMarkerElement({
       map,
       position: pin.position,
       title: pin.title,
-      label: {
-        text: pin.label,
-        color: "#222222",
-        fontFamily: "Courier New, monospace",
-        fontSize: "12px",
-        fontWeight: "600",
-      },
+      content: createAdvancedMarkerContent(pin.label),
     });
   });
 

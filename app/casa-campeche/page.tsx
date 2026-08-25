@@ -25,7 +25,6 @@ export default function CasaCampechePage() {
         terrace: "Terraza"
       },
       connectionNote: "*Opción de conectarse con Campeche II por el área de la alberca.",
-      buttonText: "Explorar fechas disponibles"
     },
     en: {
       title: "Casa Campeche I and II",
@@ -39,7 +38,6 @@ export default function CasaCampechePage() {
         terrace: "Terrace"
       },
       connectionNote: "*Option to connect to Campeche II through the pool area.",
-      buttonText: "Explore available dates"
     }
   };
 
@@ -89,12 +87,7 @@ export default function CasaCampechePage() {
               currentContent.features.terrace
             ]}
             connectionNote={currentContent.connectionNote}
-            buttonText={currentContent.buttonText}
             layout="image-left"
-            onButtonClick={() => {
-              // Handle button click - could navigate to booking page
-              console.log("Navigate to booking for Campeche I");
-            }}
           />
           
           {/* Casa Campeche II */}
@@ -116,12 +109,7 @@ export default function CasaCampechePage() {
               currentContent.features.terrace
             ]}
             connectionNote={currentContent.connectionNote}
-            buttonText={currentContent.buttonText}
             layout="image-right"
-            onButtonClick={() => {
-              // Handle button click - could navigate to booking page
-              console.log("Navigate to booking for Campeche II");
-            }}
           />
         </div>
         

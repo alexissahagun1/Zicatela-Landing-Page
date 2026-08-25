@@ -10,8 +10,6 @@ interface PropertyCarouselProps {
   imageAlts: string[];
   features: string[];
   connectionNote?: string;
-  buttonText: string;
-  onButtonClick?: () => void;
   layout?: "image-left" | "image-right";
 }
 
@@ -21,8 +19,6 @@ export default function PropertyCarousel({
   imageAlts,
   features,
   connectionNote,
-  buttonText,
-  onButtonClick,
   layout = "image-left"
 }: PropertyCarouselProps) {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -139,17 +135,6 @@ export default function PropertyCarousel({
               </p>
             )}
             
-            {/* Explore Button */}
-            <button
-              onClick={onButtonClick}
-              className="relative w-full max-w-[290px] h-12 border border-[#A14E39] bg-transparent hover:bg-[#A14E39] transition-colors group"
-            >
-              <span className="absolute inset-0 flex items-center justify-center">
-                <span className="text-[#A04E39] group-hover:text-white font-['Courier_Prime'] font-bold text-sm md:text-[15px] leading-[17px] transition-colors">
-                  {buttonText}
-                </span>
-              </span>
-            </button>
           </div>
         </div>
       </div>

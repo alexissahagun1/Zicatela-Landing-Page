@@ -36,9 +36,12 @@ test("map remains a single Google map with the two exact pins and no route", () 
   assert.doesNotMatch(map, /saddr|daddr/);
   assert.match(googleMapsRuntime, /NEXT_PUBLIC_GOOGLE_MAPS_API_KEY/);
   assert.match(googleMapsRuntime, /maps\.googleapis\.com\/maps\/api\/js/);
-  assert.doesNotMatch(googleMapsRuntime, /libraries=/);
+  assert.match(googleMapsRuntime, /libraries=marker/);
+  assert.match(googleMapsRuntime, /NEXT_PUBLIC_GOOGLE_MAPS_MAP_ID/);
+  assert.match(googleMapsRuntime, /mapId:/);
   assert.match(googleMapsRuntime, /new google\.maps\.Map/);
-  assert.match(googleMapsRuntime, /new google\.maps\.Marker/);
+  assert.match(googleMapsRuntime, /AdvancedMarkerElement/);
+  assert.doesNotMatch(googleMapsRuntime, /new google\.maps\.Marker/);
 });
 
 test("map section is a centered contemporary visual without location copy or links", () => {
@@ -92,12 +95,12 @@ test("Google Maps runtime listens once for the first map idle event", () => {
   assert.match(googleMapsRuntime, /idleListener\.remove\(\)/);
 });
 
-test("renderGoogleMap waits for authenticated map readiness after markers", () => {
+test("renderGoogleMap waits for authenticated map readiness after advanced markers", () => {
   const renderGoogleMapStart = googleMapsRuntime.indexOf(
     "export async function renderGoogleMap(",
   );
   const renderGoogleMapSource = googleMapsRuntime.slice(renderGoogleMapStart);
-  const markerIndex = renderGoogleMapSource.indexOf("new google.maps.Marker");
+  const markerIndex = renderGoogleMapSource.indexOf("new google.maps.marker.AdvancedMarkerElement");
   const readinessIndex = renderGoogleMapSource.indexOf(
     "await waitForMapReady(google, map);",
   );

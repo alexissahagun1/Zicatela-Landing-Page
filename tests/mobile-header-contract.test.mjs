@@ -10,5 +10,6 @@ test("mobile header has explicit compact logo, reserve button and tap-safe menu"
   assert.match(nav, /h-11 w-11/);
   assert.match(nav, /h-\[38px\] w-\[96px\]/);
   assert.match(logo, /h-\[42px\] w-\[88px\]/);
+  assert.match(logo, /LogoCasaZii@4x\.png/);
   assert.doesNotMatch(logo, /scale-75/);
 });

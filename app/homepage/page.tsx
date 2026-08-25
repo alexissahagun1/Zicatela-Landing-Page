@@ -1,7 +1,6 @@
 import NavigationBar from "../components/NavigationBar";
 import HeroSection from "../components/HeroSection";
 import MainContent from "../components/MainContent";
-import BookNowButton from "../components/BookNowButton";
 import InstagramGallery from "../components/InstagramGallery";
 import AccommodationSection from "../components/AccommodationSection";
 import ArchitecturalGallery from "../components/ArchitecturalGallery";
@@ -15,10 +14,6 @@ export default function Homepage() {
       <NavigationBar />
       <HeroSection />
       <MainContent />
-
-      <div className="flex justify-center bg-white py-8">
-        <BookNowButton variant="secondary" />
-      </div>
 
       <InstagramGallery />
 

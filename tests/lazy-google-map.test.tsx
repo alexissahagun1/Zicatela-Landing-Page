@@ -37,19 +37,32 @@ test("a failed observed load retries only after leaving and re-entering, then di
     IS_REACT_ACT_ENVIRONMENT?: boolean;
   };
   const previousWindow = Object.getOwnPropertyDescriptor(globalThis, "window");
+  const previousDocument = Object.getOwnPropertyDescriptor(globalThis, "document");
   const previousIntersectionObserver = Object.getOwnPropertyDescriptor(
     globalThis,
     "IntersectionObserver",
   );
   const previousApiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
+  const previousMapId = process.env.NEXT_PUBLIC_GOOGLE_MAPS_MAP_ID;
   const previousActEnvironment = actGlobal.IS_REACT_ACT_ENVIRONMENT;
   const observers: MockIntersectionObserver[] = [];
   const browserWindow: { google?: object } = {};
+  const documentDouble = {
+    createElement(tagName: string) {
+      assert.equal(tagName, "div");
+      return { style: { cssText: "" }, textContent: "" };
+    },
+  };
   let mapCreations = 0;
   actGlobal.IS_REACT_ACT_ENVIRONMENT = true;
   Object.defineProperty(globalThis, "window", {
     configurable: true,
     value: browserWindow,
+    writable: true,
+  });
+  Object.defineProperty(globalThis, "document", {
+    configurable: true,
+    value: documentDouble,
     writable: true,
   });
   Object.defineProperty(globalThis, "IntersectionObserver", {
@@ -58,6 +71,7 @@ test("a failed observed load retries only after leaving and re-entering, then di
     writable: true,
   });
   delete process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
+  process.env.NEXT_PUBLIC_GOOGLE_MAPS_MAP_ID = "test-map-id";
 
   try {
     MockIntersectionObserver.instances = observers;
@@ -101,7 +115,7 @@ test("a failed observed load retries only after leaving and re-entering, then di
             mapCreations += 1;
           }
         },
-        Marker: class {},
+        marker: { AdvancedMarkerElement: class {} },
         event: {
           addListenerOnce(_map: object, _eventName: string, handler: () => void) {
             const timeoutId = setTimeout(handler, 0);
@@ -141,6 +155,11 @@ test("a failed observed load retries only after leaving and re-entering, then di
     } else {
       Reflect.deleteProperty(globalThis, "window");
     }
+    if (previousDocument) {
+      Object.defineProperty(globalThis, "document", previousDocument);
+    } else {
+      Reflect.deleteProperty(globalThis, "document");
+    }
 
     if (previousIntersectionObserver) {
       Object.defineProperty(
@@ -157,6 +176,11 @@ test("a failed observed load retries only after leaving and re-entering, then di
     } else {
       process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY = previousApiKey;
     }
+    if (previousMapId === undefined) {
+      delete process.env.NEXT_PUBLIC_GOOGLE_MAPS_MAP_ID;
+    } else {
+      process.env.NEXT_PUBLIC_GOOGLE_MAPS_MAP_ID = previousMapId;
+    }
     actGlobal.IS_REACT_ACT_ENVIRONMENT = previousActEnvironment;
   }
 });
@@ -166,15 +190,23 @@ test("a first-idle timeout after map construction never creates a second map", {
     IS_REACT_ACT_ENVIRONMENT?: boolean;
   };
   const previousWindow = Object.getOwnPropertyDescriptor(globalThis, "window");
+  const previousDocument = Object.getOwnPropertyDescriptor(globalThis, "document");
   const previousIntersectionObserver = Object.getOwnPropertyDescriptor(
     globalThis,
     "IntersectionObserver",
   );
   const previousApiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
+  const previousMapId = process.env.NEXT_PUBLIC_GOOGLE_MAPS_MAP_ID;
   const previousSetTimeout = globalThis.setTimeout;
   const previousActEnvironment = actGlobal.IS_REACT_ACT_ENVIRONMENT;
   const observers: MockIntersectionObserver[] = [];
   const mapElement = { isConnected: true, dataset: {} as Record<string, string> };
+  const documentDouble = {
+    createElement(tagName: string) {
+      assert.equal(tagName, "div");
+      return { style: { cssText: "" }, textContent: "" };
+    },
+  };
   let mapCreations = 0;
   let idleTimeout: (() => void) | undefined;
   actGlobal.IS_REACT_ACT_ENVIRONMENT = true;
@@ -188,7 +220,7 @@ test("a first-idle timeout after map construction never creates a second map", {
               mapCreations += 1;
             }
           },
-          Marker: class {},
+          marker: { AdvancedMarkerElement: class {} },
           event: {
             addListenerOnce() {
               return { remove() {} };
@@ -204,7 +236,13 @@ test("a first-idle timeout after map construction never creates a second map", {
     value: MockIntersectionObserver,
     writable: true,
   });
+  Object.defineProperty(globalThis, "document", {
+    configurable: true,
+    value: documentDouble,
+    writable: true,
+  });
   process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY = "test-key";
+  process.env.NEXT_PUBLIC_GOOGLE_MAPS_MAP_ID = "test-map-id";
   globalThis.setTimeout = ((handler: () => void, timeout?: number) => {
     if (timeout === 15_000) {
       idleTimeout = handler;
@@ -264,6 +302,11 @@ test("a first-idle timeout after map construction never creates a second map", {
     } else {
       Reflect.deleteProperty(globalThis, "window");
     }
+    if (previousDocument) {
+      Object.defineProperty(globalThis, "document", previousDocument);
+    } else {
+      Reflect.deleteProperty(globalThis, "document");
+    }
 
     if (previousIntersectionObserver) {
       Object.defineProperty(
@@ -279,6 +322,11 @@ test("a first-idle timeout after map construction never creates a second map", {
       delete process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
     } else {
       process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY = previousApiKey;
+    }
+    if (previousMapId === undefined) {
+      delete process.env.NEXT_PUBLIC_GOOGLE_MAPS_MAP_ID;
+    } else {
+      process.env.NEXT_PUBLIC_GOOGLE_MAPS_MAP_ID = previousMapId;
     }
     actGlobal.IS_REACT_ACT_ENVIRONMENT = previousActEnvironment;
   }

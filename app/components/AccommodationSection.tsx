@@ -1,6 +1,5 @@
 "use client";
 
-import BookNowButton from './BookNowButton';
 import Image from 'next/image';
 import { useLanguage } from '../contexts/LanguageContext';
 
@@ -88,9 +87,6 @@ export default function AccommodationSection() {
               {currentContent.description}
             </p>
             
-             <div className="pt-4 flex justify-end">
-               <BookNowButton variant="secondary" />
-             </div>
           </div>
           
            {/* Right Content - Amenities */}
