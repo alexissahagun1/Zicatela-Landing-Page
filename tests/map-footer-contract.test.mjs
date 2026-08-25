@@ -20,9 +20,13 @@ const googleMapsRuntime = existsSync(googleMapsRuntimePath)
 const layout = readFileSync(resolve(root, "app/layout.tsx"), "utf8");
 
 test("footer follows the current Figma content and has no placeholder contact data", () => {
+  assert.match(footer, /bg-\[#F7F7F7\]/);
   assert.match(footer, /Casa Zii Palmas/);
   assert.match(footer, /Casa Zii Campeche/);
   assert.match(footer, /FAQs/);
+  assert.match(footer, /md:left-\[81\.86%\] md:top-\[111px\]/);
+  assert.match(footer, /w-\[172px\][^\n]*md:left-\[81\.86%\] md:top-\[192px\]/);
+  assert.doesNotMatch(footer, /md:right-\[4\.71%\]/);
   assert.doesNotMatch(footer, /\+52 00 0000 0000/);
   assert.doesNotMatch(footer, /reservaciones@casazii\.com/);
   assert.doesNotMatch(footer, /CENTRO DE RESERVACIONES/);

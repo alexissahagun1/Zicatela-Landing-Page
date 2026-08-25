@@ -60,8 +60,8 @@ in production.
 ### Env vars (configured in `.env.local`, gitignored)
 
 ```
-GUESTY_CLIENT_ID=0oaw7qk6yv1jw4Bk45d7
-GUESTY_CLIENT_SECRET=… (provided 2026-08-18)
+GUESTY_CLIENT_ID=<set-in-local-and-hosting-environment>
+GUESTY_CLIENT_SECRET=<set-in-local-and-hosting-environment>
 GUESTY_LISTING_CAMPECHE=69e264308acfe70014925284,69e2643427051200144b1197
 GUESTY_LISTING_PALMAS=69e26428794b420013556470,69e2642c0cc24200134a0257
 ```

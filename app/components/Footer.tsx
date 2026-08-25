@@ -22,7 +22,7 @@ export default function Footer() {
   const t = copy[language];
 
   return (
-    <footer className="w-full bg-[#F9F9F9]">
+    <footer className="w-full bg-[#F7F7F7]">
       <div className="relative mx-auto flex min-h-[372px] w-full max-w-[1280px] flex-col overflow-hidden px-6 pb-10 pt-4 text-black md:block md:h-[372px] md:min-h-0 md:px-0 md:pb-0 md:pt-0">
         <Link
           href="https://instagram.com/casazii"
@@ -57,11 +57,11 @@ export default function Footer() {
           <p className="m-0 text-[13px] leading-5">Puerto Escondido, Oaxaca.</p>
         </div>
 
-        <div className="mt-10 font-[family-name:var(--font-courier)] text-[13px] leading-5 text-black md:absolute md:right-[4.71%] md:top-[111px] md:mt-0">
+        <div className="mt-10 font-[family-name:var(--font-courier)] text-[13px] leading-5 text-black md:absolute md:left-[81.86%] md:top-[111px] md:mt-0">
           <span>FAQs</span>
         </div>
 
-        <div className="mt-6 font-[family-name:var(--font-courier)] text-[13px] leading-5 text-black md:absolute md:right-[4.71%] md:top-[192px] md:mt-0">
+        <div className="mt-6 w-[172px] font-[family-name:var(--font-courier)] text-[13px] leading-5 text-black md:absolute md:left-[81.86%] md:top-[192px] md:mt-0">
           <p className="m-0">{t.privacy}</p>
           <p className="m-0">{t.terms}</p>
         </div>
