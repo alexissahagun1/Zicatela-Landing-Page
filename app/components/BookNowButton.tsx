@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useLanguage } from '../contexts/LanguageContext';
 
 interface BookNowButtonProps {
@@ -18,10 +17,13 @@ export default function BookNowButton({ variant = 'primary', className = '' }: B
     : "w-[175.44px] h-[58.28px] bg-[#222222] text-[24px] leading-[27px]";
   
   const buttonText = language === 'es' ? 'Reservar' : 'Book Now';
+  const openDirectReservation = () => {
+    window.dispatchEvent(new Event("casa-zii:open-reservation"));
+  };
   
   return (
-    <Link href="/booking" className={`${baseClasses} ${variantClasses} ${className}`}>
+    <button type="button" onClick={openDirectReservation} className={`${baseClasses} ${variantClasses} ${className}`}>
       {buttonText}
-    </Link>
+    </button>
   );
 }

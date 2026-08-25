@@ -19,7 +19,6 @@ export type BookingSearchValues = {
   checkIn?: Date;
   checkOut?: Date;
   adults: number;
-  rooms: number;
   promoCode: string;
 };
 
@@ -41,10 +40,7 @@ const copy = {
     codePlaceholder: "Código",
     search: "Buscar",
     adults: "Adultos",
-    rooms: "Habitaciones",
     adultsShort: "adultos",
-    roomShort: "habitación",
-    roomsShort: "habitaciones",
     apply: "Listo",
   },
   en: {
@@ -55,10 +51,7 @@ const copy = {
     codePlaceholder: "Code",
     search: "Search",
     adults: "Adults",
-    rooms: "Rooms",
     adultsShort: "adults",
-    roomShort: "room",
-    roomsShort: "rooms",
     apply: "Done",
   },
 } as const;
@@ -135,7 +128,6 @@ export default function BookingSearchBar({
   const [isPopoverClosing, setIsPopoverClosing] = useState(false);
   const [dateRange, setDateRange] = useState<DateRange | undefined>();
   const [adults, setAdults] = useState(2);
-  const [rooms, setRooms] = useState(1);
   const [promoCode, setPromoCode] = useState("");
   const [calendarMonths, setCalendarMonths] = useState(1);
   const [calendarIsCompact, setCalendarIsCompact] = useState(false);
@@ -164,6 +156,20 @@ export default function BookingSearchBar({
   }, []);
 
   useEffect(() => {
+    function openDirectReservation() {
+      if (closeTimerRef.current) clearTimeout(closeTimerRef.current);
+      setOpenPanel("when");
+      setIsPopoverClosing(false);
+      requestAnimationFrame(() => {
+        rootRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+      });
+    }
+
+    window.addEventListener("casa-zii:open-reservation", openDirectReservation);
+    return () => window.removeEventListener("casa-zii:open-reservation", openDirectReservation);
+  }, []);
+
+  useEffect(() => {
     const twoMonthMedia = window.matchMedia(
       "(min-width: 1024px) and (min-height: 760px)"
     );
@@ -185,9 +191,7 @@ export default function BookingSearchBar({
   const checkOut = dateRange?.to;
   const canSearch = Boolean(checkIn && checkOut);
 
-  const whoSummary = `${adults} ${t.adultsShort} · ${rooms} ${
-    rooms === 1 ? t.roomShort : t.roomsShort
-  }`;
+  const whoSummary = `${adults} ${t.adultsShort}`;
 
   const dateSummary = formatDateRange(
     checkIn,
@@ -251,13 +255,12 @@ export default function BookingSearchBar({
       checkIn,
       checkOut,
       adults,
-      rooms,
       promoCode: promoCode.trim(),
     });
   }
 
   return (
-    <div ref={rootRef} className={cn("relative w-full", className)}>
+    <div ref={rootRef} data-casa-zii-booking-search className={cn("relative w-full", className)}>
       <div
         className={cn(
           "flex flex-col overflow-visible bg-white shadow-[0_18px_50px_rgba(0,0,0,0.18)]",
@@ -418,14 +421,6 @@ export default function BookingSearchBar({
               min={1}
               max={16}
               onChange={setAdults}
-            />
-            <div className="my-1 h-px bg-[#EFEFEF]" />
-            <Stepper
-              label={t.rooms}
-              value={rooms}
-              min={1}
-              max={4}
-              onChange={setRooms}
             />
             <div className="mt-3 flex justify-end">
               <button

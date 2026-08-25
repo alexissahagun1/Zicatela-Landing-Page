@@ -7,6 +7,7 @@ import BookingSearchBar, {
   type BookingSearchValues,
 } from "../components/BookingSearchBar";
 import BookingResults from "../components/BookingResults";
+import MapSection from "../components/MapSection";
 import { useLanguage } from "../contexts/LanguageContext";
 
 export default function BookingPage() {
@@ -17,7 +18,7 @@ export default function BookingPage() {
   const content = {
     es: {
       selectStayDays: "SELECCIONAR DÍAS DE ESTANCIA",
-      contact: "Contacto",
+      contact: "Ubicación",
       casaCampeche: "CASA CAMPECHE",
       casaPalmas: "CASA PALMAS",
       entryExitPolicies: "Políticas de entrada y salida",
@@ -122,64 +123,36 @@ export default function BookingPage() {
         </div>
       )}
 
-      {/* Contact and Map Section */}
-      <div className="bg-white py-8 sm:py-12 lg:py-16 px-4">
-        <div className="max-w-6xl mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-10 lg:gap-12">
-            {/* Contact Information */}
-            <div className="text-center sm:text-left">
-              <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-6 sm:mb-8 font-['Courier_Prime']">
-                {currentContent.contact}
-              </h2>
-              
-              <div className="space-y-4 sm:space-y-6">
-                {/* Casa Campeche */}
-                <div>
-                  <h3 className="font-regular text-base sm:text-lg text-gray-800 mb-2 font-['Courier_Prime']">
-                    {currentContent.casaCampeche}
-                  </h3>
-                  <p className="text-sm sm:text-base text-gray-700 font-['Courier_Prime']">
-                    Calle Campeche, sin Número<br />
-                    La Punta, Zicatela<br />
-                    Oaxaca MX 70900
-                  </p>
-                </div>
-
-                {/* Casa Palmas */}
-                <div>
-                  <h3 className="font-regular text-base sm:text-lg text-gray-800 mb-2 font-['Courier_Prime']">
-                    {currentContent.casaPalmas}
-                  </h3>
-                  <p className="text-sm sm:text-base text-gray-700 font-['Courier_Prime']">
-                    Calle PALMAS, sin Número<br />
-                    Brisas de Zicatela, Zicatela<br />
-                    Oaxaca MX 70900
-                  </p>
-                </div>
-
-                {/* Contact Details */}
-                <div className="pt-2 sm:pt-4">
-                  <p className="text-sm sm:text-base text-gray-700 font-['Courier_Prime']">
-                    +52 55 9999 9999<br />
-                    hola@casazii.com
-                  </p>
-                </div>
+      <section className="bg-white px-4 py-12 sm:py-16">
+        <div className="mx-auto max-w-6xl">
+          <h2 className="mb-8 text-center font-[family-name:var(--font-courier)] text-xl uppercase tracking-[0.12em] text-[#222]">
+            {currentContent.contact}
+          </h2>
+          <div className="grid grid-cols-1 gap-8 lg:grid-cols-2 lg:items-start lg:gap-12">
+            <div className="space-y-8 text-center lg:text-left">
+              <div>
+                <h3 className="mb-2 font-[family-name:var(--font-courier)] text-base text-[#222]">
+                  {currentContent.casaCampeche}
+                </h3>
+                <p className="font-[family-name:var(--font-courier)] text-sm leading-6 text-[#4B4B4B]">
+                  Calle Campeche S/N, frente a Pancho Villas Punta Zicatela<br />
+                  La Punta, Brisas de Zicatela, 70938 Puerto Escondido, Oaxaca, México
+                </p>
+              </div>
+              <div>
+                <h3 className="mb-2 font-[family-name:var(--font-courier)] text-base text-[#222]">
+                  {currentContent.casaPalmas}
+                </h3>
+                <p className="font-[family-name:var(--font-courier)] text-sm leading-6 text-[#4B4B4B]">
+                  Calle de la Paloma S/N, frente a Casa Paloma<br />
+                  La Punta, Brisas de Zicatela, 70938 Puerto Escondido, Oaxaca, México
+                </p>
               </div>
             </div>
-
-            {/* Map Section */}
-            <div>
-              <div className="relative w-full aspect-[1180/832] overflow-hidden shadow-lg">
-                <img
-                  src="/Mapa.png"
-                  alt="Mapa de Zicatela"
-                  className="w-full h-full object-cover"
-                />
-              </div>
-            </div>
+            <MapSection />
           </div>
         </div>
-      </div>
+      </section>
 
       {/* Entry and Exit Policies Section */}
       <div className="text-center sm:text-left bg-white py-8 sm:py-12 lg:py-16 px-4">

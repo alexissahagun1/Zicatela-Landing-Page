@@ -72,10 +72,6 @@ const copy = {
     nights: "noches",
     guests: "huéspedes",
     unitsAvailable: "unidades disponibles",
-    roomsNote: (requested: number, available: number) =>
-      `Buscaste ${requested} ${
-        requested === 1 ? "unidad" : "unidades"
-      }, pero solo hay ${available} disponible${available === 1 ? "" : "s"} para esas fechas.`,
     promoNote: (code: string) =>
       `El código "${code}" se aplicará al solicitar la cotización.`,
     perNight: "/noche",
@@ -119,10 +115,6 @@ const copy = {
     nights: "nights",
     guests: "guests",
     unitsAvailable: "units available",
-    roomsNote: (requested: number, available: number) =>
-      `You searched for ${requested} ${requested === 1 ? "unit" : "units"}, but only ${available} ${
-        available === 1 ? "is" : "are"
-      } available for those dates.`,
     promoNote: (code: string) =>
       `The code "${code}" will be applied when the quote is requested.`,
     perNight: "/night",
@@ -406,11 +398,6 @@ export default function BookingResults({ search }: BookingResultsProps) {
             <p className="mt-1 font-['Courier_Prime'] text-sm text-[#7A7A7C]">
               {dateLabel} · {search.adults} {t.guests} · {nights} {t.nights}
             </p>
-            {search.rooms > 1 && results.length < search.rooms && (
-              <p className="mt-1 font-['Courier_Prime'] text-xs text-[#8A6D3B]">
-                {t.roomsNote(search.rooms, results.length)}
-              </p>
-            )}
             {search.promoCode && (
               <p className="mt-1 font-['Courier_Prime'] text-xs text-[#7A7A7C]">
                 {t.promoNote(search.promoCode)}

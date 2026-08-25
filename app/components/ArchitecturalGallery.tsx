@@ -81,12 +81,10 @@ function CarouselNavigation() {
   }, [api])
 
   const handlePrev = () => {
-    console.log('Prev clicked, canScrollPrev:', canScrollPrev)
     scrollPrev()
   }
 
   const handleNext = () => {
-    console.log('Next clicked, canScrollNext:', canScrollNext)
     scrollNext()
   }
 
@@ -118,7 +116,7 @@ function CarouselNavigation() {
         disabled={!canScrollPrev}
         className="relative w-[39px] h-[18px] disabled:opacity-50 disabled:cursor-not-allowed transition-opacity"
       >
-        <span className="font-courier font-normal text-base leading-[18px] text-[#222222]">
+        <span className="font-[family-name:var(--font-courier)] text-base leading-[18px] text-[#222222]">
           {currentNavText.prev}
         </span>
       </button>
@@ -140,7 +138,7 @@ function CarouselNavigation() {
         disabled={!canScrollNext}
         className="relative w-[29px] h-[18px] disabled:opacity-50 disabled:cursor-not-allowed transition-opacity"
       >
-        <span className="font-courier font-normal text-base leading-[18px] text-black">
+        <span className="font-[family-name:var(--font-courier)] text-base leading-[18px] text-black">
           {currentNavText.next}
         </span>
       </button>
@@ -159,9 +157,9 @@ export default function ArchitecturalGallery() {
   const currentButtonText = buttonText[language]
 
   return (
-    <section className="py-16">
-      <div className="container mx-auto px-4">
-        <div className="max-w-6xl mx-auto">
+    <section className="py-12 md:py-14">
+      <div className="mx-auto max-w-[1308px] px-0">
+        <div className="w-full">
           <Carousel 
             className="w-full" 
             opts={{ 
@@ -173,10 +171,10 @@ export default function ArchitecturalGallery() {
               }
             }}
           >
-            <CarouselContent className="-ml-2 md:-ml-4">
+            <CarouselContent className="-ml-1">
               {galleryItems.map((item) => (
-                <CarouselItem key={item.id} className="pl-2 md:pl-4 basis-full md:basis-1/2">
-                  <div className="relative w-full h-[482px] overflow-hidden">
+                <CarouselItem key={item.id} className="basis-full pl-1 md:basis-1/2">
+                  <div className="relative h-[360px] w-full overflow-hidden md:h-[490px]">
                     <Image
                       src={item.image}
                       alt={item.title}
@@ -187,14 +185,14 @@ export default function ArchitecturalGallery() {
                     
                     {/* Title overlay */}
                     <div className="absolute left-[5.32%] bottom-[3.94%] text-white">
-                      <h3 className="font-courier font-normal text-base leading-[18px] text-white">
+                      <h3 className="font-[family-name:var(--font-courier)] text-base leading-[18px] text-white">
                         {item.title}
                       </h3>
                     </div>
                     
                     {/* Ver más button */}
                     <div className="absolute right-[8.25%] bottom-[4.77%]">
-                      <button className="font-courier font-normal text-base leading-[18px] text-white border border-white/20 bg-white/8 px-4 py-2 hover:bg-white/20 transition-colors">
+                      <button className="border border-white/80 bg-black/10 px-4 py-2 font-[family-name:var(--font-courier)] text-base leading-[18px] text-white transition-colors hover:bg-black/25">
                         {currentButtonText}
                       </button>
                     </div>

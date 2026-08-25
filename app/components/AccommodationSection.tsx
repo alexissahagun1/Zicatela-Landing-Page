@@ -68,12 +68,12 @@ export default function AccommodationSection() {
   const currentAmenities = amenities[language];
 
   return (
-    <div className="bg-white py-16 px-4">
-      <div className="max-w-6xl mx-auto">
-        <div className="flex flex-col lg:flex-row lg:gap-48 items-start">
+    <section className="bg-white px-4 py-12 md:py-14">
+      <div className="mx-auto max-w-[954px]">
+        <div className="flex flex-col items-start lg:flex-row lg:gap-[128px]">
           {/* Left Content */}
-          <div className="space-y-6 w-full lg:w-auto">
-            <h2 className="text-2xl md:text-4xl font-bold text-gray-800">
+          <div className="w-full space-y-5 lg:w-auto">
+            <h2 className="font-[family-name:var(--font-courier)] text-[24px] font-bold leading-[25px] text-[#222]">
               {currentContent.title}
             </h2>
             
@@ -90,9 +90,9 @@ export default function AccommodationSection() {
           </div>
           
            {/* Right Content - Amenities */}
-           <div className="mt-8 lg:mt-16 space-y-4 lg:space-y-6 w-full lg:w-auto">
-             {currentAmenities.map((amenity, index) => (
-               <div key={index} className="flex items-center space-x-4">
+           <div className="mt-8 w-full space-y-4 lg:mt-0 lg:w-auto lg:space-y-[18px]">
+             {currentAmenities.map((amenity) => (
+               <div key={amenity.text} className="flex items-center space-x-4">
                  <div className="flex-shrink-0">
                    <Image
                      src={amenity.icon}
@@ -102,7 +102,7 @@ export default function AccommodationSection() {
                      className="w-[22px] h-[16px]"
                    />
                  </div>
-                 <span className="text-base lg:text-lg uppercase" style={{ color: '#4C86A0' }}>
+                 <span className="font-[family-name:var(--font-courier)] text-[16px] leading-[22px]" style={{ color: '#4C86A0' }}>
                    {amenity.text}
                  </span>
                </div>
@@ -110,6 +110,6 @@ export default function AccommodationSection() {
            </div>
         </div>
       </div>
-    </div>
+    </section>
   );
 }

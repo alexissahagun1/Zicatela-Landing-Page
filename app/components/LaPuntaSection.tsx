@@ -26,12 +26,12 @@ export default function LaPuntaSection() {
   const currentContent = content[language];
 
   return (
-    <div className="py-16 px-4">
-      <div className="max-w-6xl mx-auto">
-        <div className="flex flex-col lg:flex-row items-start lg:gap-24">
+    <section className="px-4 py-12 md:py-14">
+      <div className="mx-auto max-w-[1073px]">
+        <div className="flex flex-col items-start lg:flex-row lg:gap-[99px]">
           {/* Left Content - Text */}
           <div className="flex-1 lg:max-w-[631px] w-full">
-            <h2 className="text-2xl md:text-4xl font-bold text-black mb-6">
+            <h2 className="mb-4 font-[family-name:var(--font-courier)] text-[18px] font-bold leading-[20px] text-[#222]">
               {currentContent.title}
             </h2>
             
@@ -46,7 +46,7 @@ export default function LaPuntaSection() {
                 {currentContent.paragraph1}
               </p>
               
-              <p className="text-left text-teal-600 font-regular text-base md:text-lg">
+              <p className="text-left font-[family-name:var(--font-courier)] text-[16px] text-[#4C86A0]">
                 {currentContent.highlight}
               </p>
               
@@ -75,6 +75,6 @@ export default function LaPuntaSection() {
           </div>
         </div>
       </div>
-    </div>
+    </section>
   );
 }

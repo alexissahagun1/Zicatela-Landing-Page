@@ -31,6 +31,10 @@ export default function NavigationBar() {
     language === "es" ? "Cambiar a inglés" : "Cambiar a español";
 
   const closeMobileMenu = () => setIsMobileMenuOpen(false);
+  const openDirectReservation = () => {
+    closeMobileMenu();
+    window.dispatchEvent(new Event("casa-zii:open-reservation"));
+  };
 
   useEffect(() => {
     document.body.style.overflow = isMobileMenuOpen ? "hidden" : "";
@@ -64,11 +68,15 @@ export default function NavigationBar() {
         </div>
 
         <div className="flex items-center justify-self-end gap-2 md:gap-4 lg:gap-6">
-          <Link href="/booking" className="order-1 md:order-none">
+          <button
+            type="button"
+            onClick={openDirectReservation}
+            className="order-1 md:order-none"
+          >
             <span className="flex h-[38px] w-[96px] items-center justify-center bg-[#A04E39] text-[14px] leading-[16px] text-white hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#A04E39] md:h-[37px] md:w-[133px] md:text-[20px] md:leading-[22px]">
               {currentNavText.book}
             </span>
-          </Link>
+          </button>
 
           <button
             type="button"
@@ -143,14 +151,14 @@ export default function NavigationBar() {
           <div className="flex flex-1 flex-col justify-start space-y-6 px-6 py-8">
             <Link
               href="/casa-campeche"
-              className="font-mono text-lg tracking-wide text-black hover:opacity-70"
+              className="font-[family-name:var(--font-courier)] text-lg tracking-wide text-black hover:opacity-70"
               onClick={closeMobileMenu}
             >
               CASA CAMPECHE
             </Link>
             <Link
               href="/casa-palmas"
-              className="font-mono text-lg tracking-wide text-black hover:opacity-70"
+              className="font-[family-name:var(--font-courier)] text-lg tracking-wide text-black hover:opacity-70"
               onClick={closeMobileMenu}
             >
               CASA PALMAS
@@ -170,7 +178,7 @@ export default function NavigationBar() {
                   height={22}
                   style={{ width: 16, height: "auto" }}
                 />
-                <span className="font-mono text-sm text-black">{alternateLanguage}</span>
+                <span className="font-[family-name:var(--font-courier)] text-sm text-black">{alternateLanguage}</span>
               </button>
             </div>
 
@@ -187,18 +195,20 @@ export default function NavigationBar() {
                   width={21}
                   height={22}
                 />
-                <span className="font-mono text-sm text-black">
+                <span className="font-[family-name:var(--font-courier)] text-sm text-black">
                   Instagram de Casa Zii
                 </span>
               </a>
             </div>
 
             <div className="flex justify-center pt-6">
-              <Link href="/booking" onClick={closeMobileMenu}>
-                <span className="bg-[#A04E39] px-8 py-4 font-mono text-md tracking-wide text-white hover:opacity-90">
-                  {currentNavText.book}
-                </span>
-              </Link>
+              <button
+                type="button"
+                onClick={openDirectReservation}
+                className="bg-[#A04E39] px-8 py-4 font-[family-name:var(--font-courier)] text-md tracking-wide text-white hover:opacity-90"
+              >
+                {currentNavText.book}
+              </button>
             </div>
           </div>
         </div>

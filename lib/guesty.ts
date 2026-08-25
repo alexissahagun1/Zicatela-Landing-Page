@@ -107,7 +107,7 @@ function tokenCacheFile(): string {
 
 async function readTokenCache(): Promise<TokenEntry | null> {
   try {
-    const raw = await fs.readFile(tokenCacheFile(), "utf8");
+    const raw = await fs.readFile(/* turbopackIgnore: true */ tokenCacheFile(), "utf8");
     const parsed = JSON.parse(raw) as Partial<TokenEntry>;
     if (typeof parsed.accessToken === "string" && typeof parsed.expiresAt === "number") {
       return { accessToken: parsed.accessToken, expiresAt: parsed.expiresAt };
@@ -121,7 +121,7 @@ async function readTokenCache(): Promise<TokenEntry | null> {
 async function writeTokenCache(entry: TokenEntry): Promise<void> {
   try {
     await fs.mkdir(path.dirname(tokenCacheFile()), { recursive: true });
-    await fs.writeFile(tokenCacheFile(), JSON.stringify(entry), { mode: 0o600 });
+    await fs.writeFile(/* turbopackIgnore: true */ tokenCacheFile(), JSON.stringify(entry), { mode: 0o600 });
   } catch {
     // File caching is best-effort; the in-memory cache still works.
   }
