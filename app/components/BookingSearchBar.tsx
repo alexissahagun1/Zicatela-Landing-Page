@@ -138,6 +138,7 @@ export default function BookingSearchBar({
   const [rooms, setRooms] = useState(1);
   const [promoCode, setPromoCode] = useState("");
   const [calendarMonths, setCalendarMonths] = useState(1);
+  const [calendarIsCompact, setCalendarIsCompact] = useState(false);
 
   useEffect(() => {
     function handlePointerDown(event: MouseEvent) {
@@ -163,11 +164,21 @@ export default function BookingSearchBar({
   }, []);
 
   useEffect(() => {
-    const media = window.matchMedia("(min-width: 1024px)");
-    const sync = () => setCalendarMonths(media.matches ? 2 : 1);
+    const twoMonthMedia = window.matchMedia(
+      "(min-width: 1024px) and (min-height: 760px)"
+    );
+    const compactMedia = window.matchMedia("(max-height: 699px)");
+    const sync = () => {
+      setCalendarMonths(twoMonthMedia.matches ? 2 : 1);
+      setCalendarIsCompact(compactMedia.matches);
+    };
     sync();
-    media.addEventListener("change", sync);
-    return () => media.removeEventListener("change", sync);
+    twoMonthMedia.addEventListener("change", sync);
+    compactMedia.addEventListener("change", sync);
+    return () => {
+      twoMonthMedia.removeEventListener("change", sync);
+      compactMedia.removeEventListener("change", sync);
+    };
   }, []);
 
   const checkIn = dateRange?.from;
@@ -188,6 +199,22 @@ export default function BookingSearchBar({
     popoverDirection === "up"
       ? "bottom-[calc(100%+10px)]"
       : "top-[calc(100%+10px)]";
+  const calendarClassName =
+    calendarMonths === 2
+      ? "p-0 [--cell-size:2.5rem] lg:[--cell-size:3rem]"
+      : calendarIsCompact
+        ? "p-0 [--cell-size:2rem]"
+        : "p-0 [--cell-size:2.25rem]";
+  const calendarMonthClassName =
+    calendarMonths === 2
+      ? "w-full lg:w-[22.75rem] lg:shrink-0 rdp-month"
+      : "w-[calc(var(--cell-size)*7)] rdp-month";
+  const calendarPopoverPaddingClassName =
+    calendarMonths === 2
+      ? "px-6 pt-6 lg:px-8 lg:pt-8"
+      : calendarIsCompact
+        ? "px-5 pt-5"
+        : "px-6 pt-6";
 
   function requestPopoverClose() {
     if (!openPanel || isPopoverClosing) return;
@@ -346,7 +373,12 @@ export default function BookingSearchBar({
             isPopoverClosing && "casa-zii-booking-popover-exit pointer-events-none"
           )}
         >
-          <div className="overflow-hidden rounded-[28px] border border-[#E8E8E8] bg-white p-6 shadow-[0_20px_60px_rgba(0,0,0,0.16)] lg:p-8">
+          <div
+            className={cn(
+              "grid grid-rows-[auto_auto] overflow-hidden rounded-[28px] border border-[#E8E8E8] bg-white shadow-[0_20px_60px_rgba(0,0,0,0.16)]",
+              calendarPopoverPaddingClassName
+            )}
+          >
             <Calendar
               mode="range"
               numberOfMonths={calendarMonths}
@@ -355,16 +387,14 @@ export default function BookingSearchBar({
               disabled={{ before: new Date() }}
               defaultMonth={checkIn ?? new Date()}
               locale={language === "es" ? es : enUS}
-              className="mb-28 [--cell-size:3rem] lg:[--cell-size:3.25rem]"
+              className={calendarClassName}
               classNames={{
-                months: "flex flex-col items-start gap-8 md:flex-row lg:gap-14 rdp-months",
-                month: "flex w-full self-start flex-col gap-7 lg:min-h-[34rem] lg:w-[22.75rem] lg:shrink-0 rdp-month",
-                table: "w-full border-collapse lg:w-[22.75rem] rdp-month_grid",
-                week: "mt-4 flex w-full rdp-week",
-                nav: "absolute top-[calc(var(--cell-size)/2+2rem)] left-24 right-24 z-10 flex w-auto items-center justify-between rdp-nav",
+                months: "relative flex flex-col gap-8 md:flex-row lg:gap-14 rdp-months",
+                month: calendarMonthClassName,
+                nav: "absolute inset-x-0 top-0 z-10 flex w-full items-center justify-between rdp-nav",
               }}
             />
-            <div className="mt-8 flex min-h-[76px] items-center justify-end border-t border-[#EFEFEF] px-2 pt-5">
+            <footer className="relative z-10 flex h-[60px] items-center justify-end border-t border-[#EFEFEF] bg-white px-2">
               <button
                 type="button"
                 onClick={requestPopoverClose}
@@ -373,7 +403,7 @@ export default function BookingSearchBar({
               >
                 {t.apply}
               </button>
-            </div>
+            </footer>
           </div>
         </div>
       )}
