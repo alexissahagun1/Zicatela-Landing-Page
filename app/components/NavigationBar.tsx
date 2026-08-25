@@ -41,7 +41,7 @@ export default function NavigationBar() {
 
   return (
     <>
-      <nav className="fixed top-0 left-0 z-40 grid h-16 w-full grid-cols-[1fr_auto_1fr] items-center bg-white px-4 md:h-[74px] md:px-8 lg:px-16 xl:px-24">
+      <nav className="fixed top-0 left-0 z-40 flex h-16 w-full items-center justify-between bg-white px-4 md:grid md:h-[74px] md:grid-cols-[1fr_auto_1fr] md:px-8 lg:px-16 xl:px-24">
         <div className="justify-self-start">
           <Link href="/homepage" onClick={closeMobileMenu}>
             <Logo />
@@ -63,24 +63,24 @@ export default function NavigationBar() {
           </Link>
         </div>
 
-        <div className="flex items-center justify-self-end gap-3 md:gap-4 lg:gap-6">
-          <button
-            type="button"
-            onClick={() => setIsMobileMenuOpen((open) => !open)}
-            className="flex flex-col space-y-1 p-2 md:hidden"
-            aria-expanded={isMobileMenuOpen}
-            aria-label={isMobileMenuOpen ? "Cerrar menú" : "Abrir menú"}
-          >
-            <span className="h-0.5 w-6 bg-black" />
-            <span className="h-0.5 w-6 bg-black" />
-            <span className="h-0.5 w-6 bg-black" />
-          </button>
-
-          <Link href="/booking">
-            <span className="flex h-[32px] w-[100px] items-center justify-center bg-[#A04E39] text-[14px] leading-[16px] text-white hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#A04E39] md:h-[37px] md:w-[133px] md:text-[20px] md:leading-[22px]">
+        <div className="flex items-center justify-self-end gap-2 md:gap-4 lg:gap-6">
+          <Link href="/booking" className="order-1 md:order-none">
+            <span className="flex h-[38px] w-[96px] items-center justify-center bg-[#A04E39] text-[14px] leading-[16px] text-white hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#A04E39] md:h-[37px] md:w-[133px] md:text-[20px] md:leading-[22px]">
               {currentNavText.book}
             </span>
           </Link>
+
+          <button
+            type="button"
+            onClick={() => setIsMobileMenuOpen((open) => !open)}
+            className="order-2 flex h-11 w-11 flex-col items-center justify-center gap-1.5 p-0 md:hidden"
+            aria-expanded={isMobileMenuOpen}
+            aria-label={isMobileMenuOpen ? "Cerrar menú" : "Abrir menú"}
+          >
+            <span className="h-px w-5 bg-black" />
+            <span className="h-px w-5 bg-black" />
+            <span className="h-px w-5 bg-black" />
+          </button>
 
           <a
             href="https://instagram.com/casazii"

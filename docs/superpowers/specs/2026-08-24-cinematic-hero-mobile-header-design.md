@@ -10,7 +10,7 @@ Make Casa Zii immediately recognizable on the first screen and make the iPhone h
 
 - Keep the existing Casa Zii Palmas video as the hero media.
 - Increase its visual prominence to a cinematic responsive height.
-- Overlay only the editorial title `Casa Zii`; omit location, subtitle, and descriptive copy.
+- Overlay only the editorial title `Casa Zii`; omit location, subtitle, and descriptive copy. It uses the existing Courier Prime family only; its scale and placement, not a second typeface, create hierarchy.
 - Use one ambient zoom animation and a restrained dark contrast veil. No other decorative motion competes with the video.
 - Respect `prefers-reduced-motion` by removing the CSS zoom while retaining the video poster and native controls-free playback.
 - Use a consistent 8/16/24/32/48/64/96 px spacing rhythm. The following content starts after 64 px on desktop and 32 px on mobile.

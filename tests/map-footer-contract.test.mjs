@@ -42,7 +42,7 @@ test("map remains a single Google map with the two exact pins and no route", () 
 });
 
 test("map section is a centered contemporary visual without location copy or links", () => {
-  assert.match(map, /mx-auto w-full max-w-\[1180px\]/);
+  assert.match(map, /mx-auto w-full max-w-\[640px\]/);
   assert.doesNotMatch(map, /Calle de la Paloma|Calle Campeche/);
   assert.doesNotMatch(map, /Abrir mapa|maps\.app\.goo\.gl|<a\b/);
 });
