@@ -48,7 +48,7 @@ export default function MainContent() {
     <section className="bg-white px-4 pb-8 pt-4 md:px-8 md:pb-16 md:pt-8">
       <div className="max-w-[755px] mx-auto">
         {/* Main Heading */}
-        <h1 className="text-2xl md:text-4xl lg:text-5xl font-bold text-black text-center mb-4 md:mb-6">
+        <h1 className="mx-auto mb-4 max-w-full text-center font-[family-name:var(--font-courier)] text-[22px] font-bold leading-[24px] text-black md:mb-6 md:text-[24px] md:leading-[26px]">
           {currentContent.title}
         </h1>
         

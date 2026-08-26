@@ -1,5 +1,7 @@
 # Cinematic Hero and Mobile Header Implementation Plan
 
+> **Superseded on 2026-08-26:** the hero video was removed for rights/usage reasons. The current implementation uses the original `public/beach-hero.png` photograph; the mobile-header decisions remain historical context.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Bring the Casa Zii title into the hero video and make the iPhone header fit and behave cleanly without changing desktop navigation.

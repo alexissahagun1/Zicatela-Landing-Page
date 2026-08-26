@@ -1,5 +1,7 @@
 # Cinematic Hero and Mobile Header Design
 
+> **Superseded on 2026-08-26:** the hero video was removed for rights/usage reasons. The current implementation uses the original `public/beach-hero.png` photograph; the mobile-header decisions remain historical context.
+
 **Status:** User-approved direction pending implementation plan review
 
 ## Goal

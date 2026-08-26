@@ -2,13 +2,13 @@
 
 ## Objective
 
-Bring the implemented Casa Zii routes back into parity with the real Figma pages while preserving the two approved exceptions: the cinematic hero video and the lazy-loaded interactive Google map with the two exact property pins.
+Bring the implemented Casa Zii routes back into parity with the real Figma pages while preserving the two approved exceptions: the original static beach photograph in the hero and the lazy-loaded interactive Google map with the two exact property pins.
 
 ## Reference and overrides
 
 - Figma file `2lNQfVwXyb9q3PlVs6yhgP` is the visual reference for Landing Page, Casa Campeche, Casa Palmas, Reservaciones, and the current light Footer frame `29:373`.
 - The black adults-only strip and `Prensa` are intentionally removed.
-- The hero stays video-led instead of reverting to the static Figma hero image.
+- The hero uses the original `beach-hero.png` photograph; no third-party video asset is used.
 - All maps use the existing interactive Google Maps component; the old static mock map is removed.
 - Casa Zii rents whole homes: the booking form collects dates, guests, and promo code, never a room count.
 
@@ -18,7 +18,7 @@ Bring the implemented Casa Zii routes back into parity with the real Figma pages
 2. Rebuild the booking route around that contract. It keeps the Figma hero framing, swaps the static map for `MapSection`, uses the verified property addresses, and removes placeholder contact data.
 3. Keep the light Figma footer as the canonical footer across all routes. Do not restore the obsolete grey/footer variants present elsewhere in the file.
 4. Align landing spacing and component widths to the sampled Figma sections: accommodation (954px), carousel (full 1308px reference), and La Punta (1073px block with a 343px image).
-5. Use only Courier Prime throughout all page chrome and mobile navigation. Property pages retain their distinct Figma content structure but use the current canonical nav, footer, reservation behaviour, and interactive map.
+5. Use only Courier Prime throughout all page chrome and mobile navigation. Keep the landing title as real text, sized to the Figma proportion instead of rasterizing it. Property pages retain their distinct Figma content structure but use the current canonical nav, footer, reservation behaviour, and interactive map.
 
 ## Validation
 

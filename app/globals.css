@@ -80,19 +80,6 @@
   }
 }
 
-@keyframes casaZiiHeroBreath {
-  from {
-    transform: scale(1);
-  }
-  to {
-    transform: scale(1.035);
-  }
-}
-
-.casa-zii-hero-video {
-  animation: casaZiiHeroBreath 18s cubic-bezier(0.33, 1, 0.68, 1) infinite alternate;
-}
-
 @keyframes casaZiiBookingPanelEnter {
   from {
     opacity: 0;
@@ -191,10 +178,6 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .casa-zii-hero-video {
-    animation: none;
-  }
-
   .casa-zii-booking-panel {
     animation: none;
   }
