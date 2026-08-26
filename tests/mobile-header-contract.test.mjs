@@ -12,4 +12,11 @@ test("mobile header has explicit compact logo, reserve button and tap-safe menu"
   assert.match(logo, /h-\[42px\] w-\[88px\]/);
   assert.match(logo, /LogoCasaZii@4x\.png/);
   assert.doesNotMatch(logo, /scale-75/);
+  assert.match(nav, /aria-hidden=\{!isMobileMenuOpen\}/);
+  assert.match(nav, /tabIndex=\{isMobileMenuOpen \? 0 : -1\}/);
+  assert.equal(
+    (nav.match(/onClick=\{openDirectReservation\}/g) ?? []).length,
+    1,
+    "only the header reserve control belongs in NavigationBar; the sticky bar owns the other one",
+  );
 });

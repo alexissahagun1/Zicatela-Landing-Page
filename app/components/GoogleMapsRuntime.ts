@@ -187,10 +187,20 @@ function loadGoogleMaps(): Promise<GoogleMapsApi> {
   return googleMapsPromise;
 }
 
-function createAdvancedMarkerContent(label: string): HTMLElement {
+function createAdvancedMarkerContent(label: string, index: number): HTMLElement {
   const content = document.createElement("div");
-  content.textContent = label;
   content.style.cssText = [
+    "display:flex",
+    "flex-direction:column",
+    "align-items:center",
+    "gap:4px",
+    "position:relative",
+    "white-space:nowrap",
+  ].join(";");
+
+  const badge = document.createElement("span");
+  badge.textContent = label;
+  badge.style.cssText = [
     "border:1px solid rgba(34,34,34,0.18)",
     "border-radius:999px",
     "background:#ffffff",
@@ -199,8 +209,21 @@ function createAdvancedMarkerContent(label: string): HTMLElement {
     "font:600 11px/1.1 'Courier Prime','Courier New',monospace",
     "letter-spacing:0.02em",
     "padding:8px 10px",
-    "white-space:nowrap",
+    `transform:translateX(${index === 0 ? "-64px" : "64px"})`,
   ].join(";");
+
+  const pin = document.createElement("span");
+  pin.style.cssText = [
+    "width:14px",
+    "height:14px",
+    "border:2px solid #ffffff",
+    "border-radius:50%",
+    `background:${index === 0 ? "#A04E39" : "#222222"}`,
+    "box-shadow:0 3px 10px rgba(0,0,0,0.25)",
+    "box-sizing:border-box",
+  ].join(";");
+
+  content.append(badge, pin);
   return content;
 }
 
@@ -296,12 +319,12 @@ export async function renderGoogleMap(
   });
   element.dataset.casaZiiMapConstructed = "true";
 
-  pins.forEach((pin) => {
+  pins.forEach((pin, index) => {
     new google.maps.marker.AdvancedMarkerElement({
       map,
       position: pin.position,
       title: pin.title,
-      content: createAdvancedMarkerContent(pin.label),
+      content: createAdvancedMarkerContent(pin.label, index),
     });
   });
 

@@ -99,8 +99,16 @@ function createBrowserHarness() {
       },
     },
     createElement(tagName) {
-      if (tagName === "div") {
-        return { style: { cssText: "" }, textContent: "" };
+      if (tagName === "div" || tagName === "span") {
+        return {
+          style: { cssText: "" },
+          textContent: "",
+          children: [],
+          append(...children) {
+            this.children.push(...children);
+            this.textContent = this.children.map((child) => child.textContent).join("");
+          },
+        };
       }
 
       assert.equal(tagName, "script");
@@ -429,12 +437,22 @@ test("a ready map creates both exact Casa Zii advanced markers", async () => {
         label: options.content.textContent,
         position: options.position,
         title: options.title,
+        childCount: options.content.children?.length ?? 0,
+        badgeLabel: options.content.children?.[0]?.textContent,
       })),
       exactPins.map((pin) => ({
         label: pin.label,
         position: pin.position,
         title: pin.title,
+        childCount: 2,
+        badgeLabel: pin.label,
       })),
+    );
+
+    assert.notEqual(
+      googleDouble.advancedMarkers[0].options.content.children[0].style.cssText,
+      googleDouble.advancedMarkers[1].options.content.children[0].style.cssText,
+      "nearby marker labels need separate visual offsets",
     );
 
     googleDouble.triggerIdle();

@@ -11,12 +11,15 @@ test("sticky booking bar reuses the reservation form and opens Guesty results in
   assert.match(sticky, /BookingSearchBar/);
   assert.match(sticky, /BookingResults/);
   assert.match(sticky, /popoverDirection="up"/);
+  assert.match(sticky, /mobileCompact/);
   assert.match(sticky, /role="dialog"/);
   assert.match(sticky, /data-state=\{isPanelClosing \? "closing" : "open"\}/);
   assert.match(sticky, /closeTimerRef/);
   assert.doesNotMatch(sticky, /href="\/booking"/);
   assert.match(search, /popoverDirection\?: "up" \| "down"/);
   assert.match(search, /submitLabel\?: string/);
+  assert.match(search, /mobileCompact\?: boolean/);
+  assert.match(search, /lg:hidden/);
   assert.match(search, /min-height: 760px/);
   assert.match(search, /casa-zii-booking-popover/);
   assert.match(search, /isPopoverClosing/);

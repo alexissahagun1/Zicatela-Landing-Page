@@ -17,6 +17,7 @@ const googleMapsRuntimePath = resolve(
 const googleMapsRuntime = existsSync(googleMapsRuntimePath)
   ? readFileSync(googleMapsRuntimePath, "utf8")
   : "";
+const nextConfig = readFileSync(resolve(root, "next.config.ts"), "utf8");
 const layout = readFileSync(resolve(root, "app/layout.tsx"), "utf8");
 
 test("footer follows the current Figma content and has no placeholder contact data", () => {
@@ -58,11 +59,18 @@ test("map waits for nearby scroll, then initializes only once without an overlay
   assert.match(lazyGoogleMap, /useEffect/);
   assert.match(lazyGoogleMap, /new IntersectionObserver/);
   assert.match(lazyGoogleMap, /rootMargin:\s*["']0px 0px 240px 0px["']/);
+  assert.match(lazyGoogleMap, /addEventListener\?\.\("scroll", syncViewport/);
+  assert.match(lazyGoogleMap, /getBoundingClientRect/);
   assert.match(lazyGoogleMap, /hasInitializedRef\.current/);
   assert.match(lazyGoogleMap, /import\("\.\/GoogleMapsRuntime"\)/);
   assert.doesNotMatch(lazyGoogleMap, /<button\b|Ver mapa interactivo/);
   assert.doesNotMatch(lazyGoogleMap, /El mapa interactivo es opcional/);
   assert.doesNotMatch(lazyGoogleMap, /Cargando mapa/);
+});
+
+test("the public map configuration is included in the client build", () => {
+  assert.match(nextConfig, /NEXT_PUBLIC_GOOGLE_MAPS_API_KEY/);
+  assert.match(nextConfig, /NEXT_PUBLIC_GOOGLE_MAPS_MAP_ID/);
 });
 
 test("Google Maps readiness uses the API callback", () => {
@@ -120,7 +128,7 @@ test("Google Maps is not constructed in a detached element", () => {
 test("nearby initialization only updates a connected captured element", () => {
   assert.match(
     lazyGoogleMap,
-    /mapElementRef\.current === mapElement && mapElement\.isConnected/,
+    /mapElementRef\.current === observedMapElement &&\s+observedMapElement\.isConnected/,
   );
 });
 

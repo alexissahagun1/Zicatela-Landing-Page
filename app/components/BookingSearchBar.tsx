@@ -29,6 +29,7 @@ type BookingSearchBarProps = {
   className?: string;
   popoverDirection?: "up" | "down";
   submitLabel?: string;
+  mobileCompact?: boolean;
 };
 
 const copy = {
@@ -118,6 +119,7 @@ export default function BookingSearchBar({
   className,
   popoverDirection = "down",
   submitLabel,
+  mobileCompact = false,
 }: BookingSearchBarProps) {
   const { language } = useLanguage();
   const t = copy[language];
@@ -261,9 +263,74 @@ export default function BookingSearchBar({
 
   return (
     <div ref={rootRef} data-casa-zii-booking-search className={cn("relative w-full", className)}>
+      {mobileCompact && (
+        <div className="flex min-h-[68px] items-stretch gap-1 rounded-2xl bg-white p-1 shadow-[0_18px_50px_rgba(0,0,0,0.18)] lg:hidden">
+          <button
+            type="button"
+            onClick={() => togglePanel("when")}
+            aria-expanded={openPanel === "when" && !isPopoverClosing}
+            className={cn(
+              "group flex min-w-0 flex-1 items-center gap-2 rounded-xl px-3 text-left transition-colors",
+              openPanel === "when" && !isPopoverClosing ? "bg-[#F7F7F7]" : "hover:bg-[#FAFAFA]",
+            )}
+          >
+            <CalendarIcon className="h-4 w-4 shrink-0 text-[#6B6B6B]" strokeWidth={1.5} />
+            <span className="min-w-0">
+              <span className="block font-['Courier_Prime'] text-[9px] uppercase tracking-[0.08em] text-[#8A8A8A]">
+                {t.when}
+              </span>
+              <span className="block truncate font-['Courier_Prime'] text-[13px] leading-tight text-[#222]">
+                {dateSummary}
+              </span>
+            </span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => togglePanel("who")}
+            aria-expanded={openPanel === "who" && !isPopoverClosing}
+            className={cn(
+              "flex w-[86px] shrink-0 items-center gap-1.5 rounded-xl px-2 text-left transition-colors",
+              openPanel === "who" && !isPopoverClosing ? "bg-[#F7F7F7]" : "hover:bg-[#FAFAFA]",
+            )}
+          >
+            <Users className="h-4 w-4 shrink-0 text-[#6B6B6B]" strokeWidth={1.5} />
+            <span className="min-w-0 truncate font-['Courier_Prime'] text-[12px] leading-tight text-[#222]">
+              {whoSummary}
+            </span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => togglePanel("promo")}
+            aria-expanded={openPanel === "promo" && !isPopoverClosing}
+            aria-label={`${t.promo}: ${promoCode || t.codePlaceholder}`}
+            title={`${t.promo}: ${promoCode || t.codePlaceholder}`}
+            className={cn(
+              "flex w-10 shrink-0 items-center justify-center rounded-xl transition-colors",
+              openPanel === "promo" && !isPopoverClosing ? "bg-[#F7F7F7]" : "hover:bg-[#FAFAFA]",
+            )}
+          >
+            <Tag className="h-4 w-4 text-[#6B6B6B]" strokeWidth={1.5} />
+          </button>
+
+          <button
+            type="button"
+            onClick={handleSearch}
+            className={cn(
+              "w-[92px] shrink-0 rounded-xl bg-[#7A7A7C] px-2 font-['Courier_Prime'] text-[12px] text-white transition-all hover:bg-[#5F5F61] active:scale-[0.99]",
+              !canSearch && "opacity-90",
+            )}
+          >
+            {submitLabel ?? t.search}
+          </button>
+        </div>
+      )}
+
       <div
         className={cn(
-          "flex flex-col overflow-visible bg-white shadow-[0_18px_50px_rgba(0,0,0,0.18)]",
+          mobileCompact ? "hidden lg:flex" : "flex",
+          "flex-col overflow-visible bg-white shadow-[0_18px_50px_rgba(0,0,0,0.18)]",
           "rounded-2xl lg:flex-row lg:items-stretch lg:rounded-full"
         )}
       >

@@ -29,45 +29,89 @@ export default function LazyGoogleMap({
       return;
     }
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const isIntersecting = entries.some((entry) => entry.isIntersecting);
+    const observedMapElement = mapElement;
 
-        if (!isIntersecting) {
-          isInViewportRef.current = false;
-          return;
-        }
+    const startLoading = () => {
+      if (isInViewportRef.current || hasInitializedRef.current) {
+        return;
+      }
 
-        if (isInViewportRef.current || hasInitializedRef.current) {
-          return;
-        }
+      isInViewportRef.current = true;
+      hasInitializedRef.current = true;
 
-        isInViewportRef.current = true;
-        hasInitializedRef.current = true;
+      void import("./GoogleMapsRuntime")
+        .then(({ renderGoogleMap }) => renderGoogleMap(observedMapElement, center, pins))
+        .then(() => {
+          if (
+            mapElementRef.current === observedMapElement &&
+            observedMapElement.isConnected
+          ) {
+            observer?.disconnect();
+            window.removeEventListener?.("scroll", syncViewport);
+            window.removeEventListener?.("resize", syncViewport);
+            setStatus("ready");
+          }
+        })
+        .catch(() => {
+          if (
+            mapElementRef.current === observedMapElement &&
+            observedMapElement.isConnected &&
+            observedMapElement.dataset.casaZiiMapConstructed !== "true"
+          ) {
+            isInViewportRef.current = false;
+            hasInitializedRef.current = false;
+          }
+        });
+    };
 
-        void import("./GoogleMapsRuntime")
-          .then(({ renderGoogleMap }) => renderGoogleMap(mapElement, center, pins))
-          .then(() => {
-            if (mapElementRef.current === mapElement && mapElement.isConnected) {
-              observer.disconnect();
-              setStatus("ready");
+    function syncViewport() {
+      const rect = observedMapElement.getBoundingClientRect?.();
+      if (!rect) {
+        return;
+      }
+
+      const viewportHeight =
+        window.innerHeight || document.documentElement?.clientHeight || 0;
+      if (!viewportHeight) {
+        return;
+      }
+      const isNearViewport =
+        rect.top < viewportHeight + 240 && rect.bottom > -240;
+
+      if (!isNearViewport) {
+        isInViewportRef.current = false;
+        return;
+      }
+
+      startLoading();
+    }
+
+    const observer = typeof IntersectionObserver === "function"
+      ? new IntersectionObserver(
+          (entries) => {
+            const isIntersecting = entries.some((entry) => entry.isIntersecting);
+
+            if (!isIntersecting) {
+              isInViewportRef.current = false;
+              return;
             }
-          })
-          .catch(() => {
-            if (
-              mapElementRef.current === mapElement &&
-              mapElement.isConnected &&
-              mapElement.dataset.casaZiiMapConstructed !== "true"
-            ) {
-              hasInitializedRef.current = false;
-            }
-          });
-      },
-      { rootMargin: "0px 0px 240px 0px" },
-    );
 
-    observer.observe(mapElement);
-    return () => observer.disconnect();
+            startLoading();
+          },
+          { rootMargin: "0px 0px 240px 0px" },
+        )
+      : null;
+
+    observer?.observe(observedMapElement);
+    window.addEventListener?.("scroll", syncViewport, { passive: true });
+    window.addEventListener?.("resize", syncViewport);
+    syncViewport();
+
+    return () => {
+      observer?.disconnect();
+      window.removeEventListener?.("scroll", syncViewport);
+      window.removeEventListener?.("resize", syncViewport);
+    };
   }, [center, pins]);
 
   return (

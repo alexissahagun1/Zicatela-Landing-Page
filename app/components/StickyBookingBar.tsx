@@ -82,6 +82,7 @@ export default function StickyBookingBar() {
             onSearch={handleSearch}
             popoverDirection="up"
             submitLabel={t.action}
+            mobileCompact
           />
         </div>
       </aside>

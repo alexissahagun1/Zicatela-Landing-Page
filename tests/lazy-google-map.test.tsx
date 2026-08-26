@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import test from "node:test";
+import { describe, test } from "node:test";
 import React from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { act, create } from "react-test-renderer";
@@ -21,6 +21,7 @@ const pins = [
   },
 ];
 
+describe("LazyGoogleMap", { concurrency: 1 }, () => {
 test("initial map markup is neutral and contains no Google request or CTA", () => {
   const html = renderToStaticMarkup(
     <LazyGoogleMap center={center} pins={pins} title="Casa Zii map" />,
@@ -49,8 +50,18 @@ test("a failed observed load retries only after leaving and re-entering, then di
   const browserWindow: { google?: object } = {};
   const documentDouble = {
     createElement(tagName: string) {
-      assert.equal(tagName, "div");
-      return { style: { cssText: "" }, textContent: "" };
+      assert.ok(tagName === "div" || tagName === "span");
+      return {
+        style: { cssText: "" },
+        textContent: "",
+        children: [] as Array<{ textContent: string }>,
+        append(...children: Array<{ textContent: string }>) {
+          this.children.push(...children);
+          this.textContent = this.children
+            .map((child) => child.textContent)
+            .join("");
+        },
+      };
     },
   };
   let mapCreations = 0;
@@ -203,8 +214,18 @@ test("a first-idle timeout after map construction never creates a second map", {
   const mapElement = { isConnected: true, dataset: {} as Record<string, string> };
   const documentDouble = {
     createElement(tagName: string) {
-      assert.equal(tagName, "div");
-      return { style: { cssText: "" }, textContent: "" };
+      assert.ok(tagName === "div" || tagName === "span");
+      return {
+        style: { cssText: "" },
+        textContent: "",
+        children: [] as Array<{ textContent: string }>,
+        append(...children: Array<{ textContent: string }>) {
+          this.children.push(...children);
+          this.textContent = this.children
+            .map((child) => child.textContent)
+            .join("");
+        },
+      };
     },
   };
   let mapCreations = 0;
@@ -331,9 +352,13 @@ test("a first-idle timeout after map construction never creates a second map", {
     actGlobal.IS_REACT_ACT_ENVIRONMENT = previousActEnvironment;
   }
 });
+});
 
-function waitForAsyncWork() {
-  return new Promise((resolve) => setTimeout(resolve, 10));
+async function waitForAsyncWork() {
+  for (let attempt = 0; attempt < 5; attempt += 1) {
+    await new Promise((flush) => setTimeout(flush, 10));
+    await new Promise<void>((flush) => setImmediate(flush));
+  }
 }
 
 class MockIntersectionObserver {

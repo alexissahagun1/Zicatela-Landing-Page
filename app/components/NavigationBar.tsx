@@ -124,6 +124,7 @@ export default function NavigationBar() {
       </nav>
 
       <div
+        aria-hidden={!isMobileMenuOpen}
         className={`fixed inset-0 z-50 bg-[#F5F5F5] transition-all duration-500 ease-in-out md:hidden ${
           isMobileMenuOpen
             ? "translate-x-0 opacity-100"
@@ -132,7 +133,11 @@ export default function NavigationBar() {
       >
         <div className="flex h-full flex-col">
           <div className="flex items-center justify-between border-b border-black p-4">
-            <Link href="/homepage" onClick={closeMobileMenu}>
+            <Link
+              href="/homepage"
+              onClick={closeMobileMenu}
+              tabIndex={isMobileMenuOpen ? 0 : -1}
+            >
               <Logo />
             </Link>
             <button
@@ -140,6 +145,7 @@ export default function NavigationBar() {
               onClick={closeMobileMenu}
               className="p-2"
               aria-label="Cerrar menú"
+              tabIndex={isMobileMenuOpen ? 0 : -1}
             >
               <div className="flex h-6 w-6 flex-col justify-center">
                 <div className="h-0.5 w-6 translate-y-0.5 rotate-45 bg-black" />
@@ -153,6 +159,7 @@ export default function NavigationBar() {
               href="/casa-campeche"
               className="font-[family-name:var(--font-courier)] text-lg tracking-wide text-black hover:opacity-70"
               onClick={closeMobileMenu}
+              tabIndex={isMobileMenuOpen ? 0 : -1}
             >
               CASA CAMPECHE
             </Link>
@@ -160,6 +167,7 @@ export default function NavigationBar() {
               href="/casa-palmas"
               className="font-[family-name:var(--font-courier)] text-lg tracking-wide text-black hover:opacity-70"
               onClick={closeMobileMenu}
+              tabIndex={isMobileMenuOpen ? 0 : -1}
             >
               CASA PALMAS
             </Link>
@@ -170,6 +178,7 @@ export default function NavigationBar() {
                 aria-label={languageAction}
                 title={languageAction}
                 className="flex cursor-pointer items-center space-x-2 hover:opacity-70"
+                tabIndex={isMobileMenuOpen ? 0 : -1}
               >
                 <Image
                   src={alternateFlag}
@@ -188,6 +197,7 @@ export default function NavigationBar() {
                 target="_blank"
                 rel="noreferrer"
                 className="flex items-center space-x-2 hover:opacity-70"
+                tabIndex={isMobileMenuOpen ? 0 : -1}
               >
                 <Image
                   src="/instagram-logo.png"
@@ -201,15 +211,6 @@ export default function NavigationBar() {
               </a>
             </div>
 
-            <div className="flex justify-center pt-6">
-              <button
-                type="button"
-                onClick={openDirectReservation}
-                className="bg-[#A04E39] px-8 py-4 font-[family-name:var(--font-courier)] text-md tracking-wide text-white hover:opacity-90"
-              >
-                {currentNavText.book}
-              </button>
-            </div>
           </div>
         </div>
       </div>

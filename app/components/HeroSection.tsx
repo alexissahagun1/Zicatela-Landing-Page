@@ -16,9 +16,9 @@ export default function HeroSection() {
           aria-hidden="true"
           className="absolute inset-0 bg-[linear-gradient(125deg,rgba(0,0,0,0.34),rgba(0,0,0,0.04)_58%,rgba(0,0,0,0.16))]"
         />
-        <h1 className="absolute bottom-6 left-6 m-0 font-[family-name:var(--font-courier)] text-[11px] font-normal uppercase tracking-[0.22em] text-white/90 md:bottom-10 md:left-12 md:text-[13px]">
+        <p className="absolute bottom-6 left-6 m-0 font-[family-name:var(--font-courier)] text-[11px] font-normal uppercase tracking-[0.22em] text-white/90 md:bottom-10 md:left-12 md:text-[13px]">
           Casa Palmas
-        </h1>
+        </p>
       </div>
     </section>
   );
