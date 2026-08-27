@@ -115,7 +115,7 @@ export default function LazyGoogleMap({
   }, [center, pins]);
 
   return (
-    <div className="aspect-[4/3] w-full bg-[#E8E1D7] md:aspect-[16/9]">
+    <div className="aspect-[4/3] w-full bg-white md:aspect-[16/9]">
       <div
         ref={mapElementRef}
         className="h-full w-full"

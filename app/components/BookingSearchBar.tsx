@@ -6,7 +6,6 @@ import { es, enUS } from "date-fns/locale";
 import type { DateRange } from "react-day-picker";
 import {
   Calendar as CalendarIcon,
-  Tag,
   Users,
   Minus,
   Plus,
@@ -19,10 +18,9 @@ export type BookingSearchValues = {
   checkIn?: Date;
   checkOut?: Date;
   adults: number;
-  promoCode: string;
 };
 
-type OpenPanel = "when" | "who" | "promo" | null;
+type OpenPanel = "when" | "who" | null;
 
 type BookingSearchBarProps = {
   onSearch?: (values: BookingSearchValues) => void;
@@ -36,9 +34,7 @@ const copy = {
   es: {
     when: "Cuándo",
     who: "Quién",
-    promo: "Promoción",
     datePlaceholder: "Entrada — Salida",
-    codePlaceholder: "Código",
     search: "Buscar",
     adults: "Adultos",
     adultsShort: "adultos",
@@ -47,9 +43,7 @@ const copy = {
   en: {
     when: "When",
     who: "Who",
-    promo: "Promotion",
     datePlaceholder: "Check-in — Check-out",
-    codePlaceholder: "Code",
     search: "Search",
     adults: "Adults",
     adultsShort: "adults",
@@ -130,7 +124,6 @@ export default function BookingSearchBar({
   const [isPopoverClosing, setIsPopoverClosing] = useState(false);
   const [dateRange, setDateRange] = useState<DateRange | undefined>();
   const [adults, setAdults] = useState(2);
-  const [promoCode, setPromoCode] = useState("");
   const [calendarMonths, setCalendarMonths] = useState(1);
   const [calendarIsCompact, setCalendarIsCompact] = useState(false);
 
@@ -257,7 +250,6 @@ export default function BookingSearchBar({
       checkIn,
       checkOut,
       adults,
-      promoCode: promoCode.trim(),
     });
   }
 
@@ -298,20 +290,6 @@ export default function BookingSearchBar({
             <span className="min-w-0 truncate font-['Courier_Prime'] text-[12px] leading-tight text-[#222]">
               {whoSummary}
             </span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => togglePanel("promo")}
-            aria-expanded={openPanel === "promo" && !isPopoverClosing}
-            aria-label={`${t.promo}: ${promoCode || t.codePlaceholder}`}
-            title={`${t.promo}: ${promoCode || t.codePlaceholder}`}
-            className={cn(
-              "flex w-10 shrink-0 items-center justify-center rounded-xl transition-colors",
-              openPanel === "promo" && !isPopoverClosing ? "bg-[#F7F7F7]" : "hover:bg-[#FAFAFA]",
-            )}
-          >
-            <Tag className="h-4 w-4 text-[#6B6B6B]" strokeWidth={1.5} />
           </button>
 
           <button
@@ -381,35 +359,6 @@ export default function BookingSearchBar({
             </span>
             <span className="block truncate font-['Courier_Prime'] text-[15px] leading-tight text-[#222]">
               {whoSummary}
-            </span>
-          </span>
-        </button>
-
-        <div className="hidden h-auto w-px self-stretch bg-[#E6E6E6] lg:block" />
-        <div className="h-px w-full bg-[#E6E6E6] lg:hidden" />
-
-        {/* Promo */}
-        <button
-          type="button"
-          onClick={() => togglePanel("promo")}
-          aria-expanded={openPanel === "promo" && !isPopoverClosing}
-          className={cn(
-            "group relative flex min-w-0 flex-1 items-center gap-3 px-5 py-4 text-left transition-colors",
-            openPanel === "promo" && !isPopoverClosing ? "bg-[#F7F7F7]" : "hover:bg-[#FAFAFA]"
-          )}
-        >
-          <Tag className="h-5 w-5 shrink-0 text-[#6B6B6B]" strokeWidth={1.5} />
-          <span className="min-w-0">
-            <span className="block font-['Courier_Prime'] text-[11px] uppercase tracking-[0.08em] text-[#8A8A8A]">
-              {t.promo}
-            </span>
-            <span
-              className={cn(
-                "block truncate font-['Courier_Prime'] text-[15px] leading-tight",
-                promoCode ? "text-[#222]" : "text-[#6B6B6B]"
-              )}
-            >
-              {promoCode || t.codePlaceholder}
             </span>
           </span>
         </button>
@@ -502,37 +451,6 @@ export default function BookingSearchBar({
         </div>
       )}
 
-      {/* Promo panel */}
-      {openPanel === "promo" && (
-        <div className={cn("casa-zii-booking-popover absolute left-0 right-0 z-30 lg:left-auto lg:right-[160px] lg:w-[300px]", popoverAnchor, popoverDirection === "up" ? "casa-zii-booking-popover-up" : "casa-zii-booking-popover-down", isPopoverClosing && "casa-zii-booking-popover-exit pointer-events-none")}>
-          <div className="rounded-2xl border border-[#E8E8E8] bg-white px-5 py-4 shadow-[0_20px_60px_rgba(0,0,0,0.16)]">
-            <label
-              htmlFor="promo-code"
-              className="mb-2 block font-['Courier_Prime'] text-[11px] uppercase tracking-[0.08em] text-[#8A8A8A]"
-            >
-              {t.promo}
-            </label>
-            <input
-              id="promo-code"
-              type="text"
-              autoFocus
-              value={promoCode}
-              onChange={(e) => setPromoCode(e.target.value.toUpperCase())}
-              placeholder={t.codePlaceholder}
-              className="w-full rounded-xl border border-[#E0E0E0] bg-[#FAFAFA] px-4 py-3 font-['Courier_Prime'] text-sm text-[#222] outline-none transition focus:border-[#98989A] focus:bg-white"
-            />
-            <div className="mt-3 flex justify-end">
-              <button
-                type="button"
-                onClick={requestPopoverClose}
-                className="rounded-full bg-[#222] px-5 py-2 font-['Courier_Prime'] text-sm text-white"
-              >
-                {t.apply}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

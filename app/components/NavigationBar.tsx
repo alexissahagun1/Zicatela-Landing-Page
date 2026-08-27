@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Logo from "./Logo";
 import Image from "next/image";
 import Link from "next/link";
@@ -8,6 +8,8 @@ import { useLanguage } from "../contexts/LanguageContext";
 
 export default function NavigationBar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isHeaderVisible, setIsHeaderVisible] = useState(true);
+  const lastScrollY = useRef(0);
   const { language, toggleLanguage } = useLanguage();
 
   const navigationText = {
@@ -43,9 +45,37 @@ export default function NavigationBar() {
     };
   }, [isMobileMenuOpen]);
 
+  useEffect(() => {
+    const scrollThreshold = 5;
+
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      const scrollDelta = currentScrollY - lastScrollY.current;
+
+      if (currentScrollY <= 0) {
+        setIsHeaderVisible(true);
+        lastScrollY.current = 0;
+        return;
+      }
+
+      if (Math.abs(scrollDelta) <= scrollThreshold) return;
+
+      setIsHeaderVisible(scrollDelta < 0);
+      lastScrollY.current = currentScrollY;
+    };
+
+    lastScrollY.current = window.scrollY;
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   return (
     <>
-      <nav className="fixed top-0 left-0 z-40 flex h-16 w-full items-center justify-between bg-white px-4 md:grid md:h-[74px] md:grid-cols-[1fr_auto_1fr] md:px-8 lg:px-16 xl:px-24">
+      <nav
+        className={`fixed left-0 top-0 z-40 flex h-16 w-full items-center justify-between bg-white px-4 transform-gpu transition-transform duration-[350ms] ease-[ease] will-change-transform md:grid md:h-[74px] md:grid-cols-[1fr_auto_1fr] md:px-8 lg:px-16 xl:px-24 ${
+          isHeaderVisible || isMobileMenuOpen ? "translate-y-0" : "-translate-y-full"
+        }`}
+      >
         <div className="justify-self-start">
           <Link href="/homepage" onClick={closeMobileMenu}>
             <Logo />

@@ -8,6 +8,7 @@ import {
   CarouselItem,
   useCarousel,
 } from "@/components/ui/carousel"
+import { ChevronLeft, ChevronRight } from "lucide-react"
 import { useLanguage } from '../contexts/LanguageContext'
 
 interface GalleryItem {
@@ -20,22 +21,12 @@ const galleryItems: GalleryItem[] = [
   {
     id: "1",
     title: "Casa Campeche I",
-    image: "/CasaCampecheI.png"
+    image: "/figma/landing/casa-campeche-i.jpg"
   },
   {
-    id: "2", 
+    id: "2",
     title: "Casa Campeche II",
-    image: "/CasaCampecheII.png"
-  },
-  {
-    id: "3",
-    title: "Casa Palmas I",
-    image: "/CasaPalmasI.png"
-  },
-  {
-    id: "4",
-    title: "Casa Palmas II",
-    image: "/CasaPalmasII.png"
+    image: "/figma/landing/casa-campeche-ii.jpg"
   }
 ]
 
@@ -44,20 +35,6 @@ function CarouselNavigation() {
   const { scrollPrev, scrollNext, canScrollPrev, canScrollNext, api } = useCarousel()
   const [current, setCurrent] = React.useState(0)
   const [isMobile, setIsMobile] = React.useState(false)
-  const { language } = useLanguage()
-
-  const navigationText = {
-    es: {
-      prev: "Prev",
-      next: "Sig"
-    },
-    en: {
-      prev: "Prev",
-      next: "Next"
-    }
-  }
-
-  const currentNavText = navigationText[language]
 
   React.useEffect(() => {
     const checkMobile = () => {
@@ -111,14 +88,14 @@ function CarouselNavigation() {
 
   return (
     <div className="flex justify-center items-center mt-8 space-x-4">
-      <button 
+      <button
+        type="button"
+        aria-label="Anterior"
         onClick={handlePrev}
         disabled={!canScrollPrev}
-        className="relative w-[39px] h-[18px] disabled:opacity-50 disabled:cursor-not-allowed transition-opacity"
+        className="flex h-10 w-10 items-center justify-center rounded-full border border-[#222222]/20 text-[#222222] transition-colors hover:border-[#222222] disabled:cursor-not-allowed disabled:opacity-35"
       >
-        <span className="font-[family-name:var(--font-courier)] text-base leading-[18px] text-[#222222]">
-          {currentNavText.prev}
-        </span>
+        <ChevronLeft className="h-4 w-4" strokeWidth={1.5} />
       </button>
       
       {/* Navigation dots */}
@@ -133,14 +110,14 @@ function CarouselNavigation() {
         ))}
       </div>
       
-      <button 
+      <button
+        type="button"
+        aria-label="Siguiente"
         onClick={handleNext}
         disabled={!canScrollNext}
-        className="relative w-[29px] h-[18px] disabled:opacity-50 disabled:cursor-not-allowed transition-opacity"
+        className="flex h-10 w-10 items-center justify-center rounded-full border border-[#222222]/20 text-[#222222] transition-colors hover:border-[#222222] disabled:cursor-not-allowed disabled:opacity-35"
       >
-        <span className="font-[family-name:var(--font-courier)] text-base leading-[18px] text-black">
-          {currentNavText.next}
-        </span>
+        <ChevronRight className="h-4 w-4" strokeWidth={1.5} />
       </button>
     </div>
   )

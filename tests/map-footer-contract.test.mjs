@@ -21,9 +21,12 @@ const nextConfig = readFileSync(resolve(root, "next.config.ts"), "utf8");
 const layout = readFileSync(resolve(root, "app/layout.tsx"), "utf8");
 
 test("footer follows the current Figma content and has no placeholder contact data", () => {
-  assert.match(footer, /bg-\[#F7F7F7\]/);
+  assert.match(footer, /bg-white/);
   assert.match(footer, /Casa Zii Palmas/);
   assert.match(footer, /Casa Zii Campeche/);
+  assert.match(footer, /<span>Casa Zii<\/span>/);
+  assert.doesNotMatch(footer, /<span>CASA ZII<\/span>/);
+  assert.match(footer, /text-\[15px\]/);
   assert.match(footer, /FAQs/);
   assert.match(footer, /md:left-\[81\.86%\] md:top-\[111px\]/);
   assert.match(footer, /w-\[172px\][^\n]*md:left-\[81\.86%\] md:top-\[192px\]/);
@@ -51,6 +54,8 @@ test("map remains a single Google map with the two exact pins and no route", () 
 
 test("map section is a centered contemporary visual without location copy or links", () => {
   assert.match(map, /mx-auto w-full max-w-\[640px\]/);
+  assert.match(map, /section className="bg-white/);
+  assert.doesNotMatch(map, /F4EFE6|E8E1D7/);
   assert.doesNotMatch(map, /Calle de la Paloma|Calle Campeche/);
   assert.doesNotMatch(map, /Abrir mapa|maps\.app\.goo\.gl|<a\b/);
 });
@@ -66,6 +71,7 @@ test("map waits for nearby scroll, then initializes only once without an overlay
   assert.doesNotMatch(lazyGoogleMap, /<button\b|Ver mapa interactivo/);
   assert.doesNotMatch(lazyGoogleMap, /El mapa interactivo es opcional/);
   assert.doesNotMatch(lazyGoogleMap, /Cargando mapa/);
+  assert.doesNotMatch(lazyGoogleMap, /E8E1D7|F4EFE6/);
 });
 
 test("the public map configuration is included in the client build", () => {

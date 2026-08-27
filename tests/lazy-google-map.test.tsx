@@ -27,7 +27,8 @@ test("initial map markup is neutral and contains no Google request or CTA", () =
     <LazyGoogleMap center={center} pins={pins} title="Casa Zii map" />,
   );
 
-  assert.match(html, /bg-\[#E8E1D7\]/);
+  assert.match(html, /bg-white/);
+  assert.doesNotMatch(html, /bg-\[#E8E1D7\]/);
   assert.match(html, /aria-hidden="true"/);
   assert.doesNotMatch(html, /maps\.googleapis\.com\/maps\/api\/js/);
   assert.doesNotMatch(html, /<button|Ver mapa interactivo|opcional|Cargando mapa/);

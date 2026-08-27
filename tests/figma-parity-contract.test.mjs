@@ -12,6 +12,7 @@ const laPunta = read("app/components/LaPuntaSection.tsx");
 const mainContent = read("app/components/MainContent.tsx");
 const campeche = read("app/casa-campeche/page.tsx");
 const palmas = read("app/casa-palmas/page.tsx");
+const sideGallery = read("app/components/CasaCampecheSideGallery.tsx");
 
 test("landing sections preserve their measured Figma desktop geometry", () => {
   assert.match(accommodation, /max-w-\[954px\]/);
@@ -28,6 +29,12 @@ test("shared chrome uses Courier Prime and removes obsolete navigation", () => {
   assert.doesNotMatch(navigation, /font-mono|Prensa|Solo para adultos/);
   assert.match(navigation, /font-\[family-name:var\(--font-courier\)\]/);
   assert.doesNotMatch(gallery, /console\.log/);
+  assert.doesNotMatch(gallery, />\s*(Prev|Sig|Next)\s*</);
+  assert.match(gallery, /\/figma\/landing\/casa-campeche-i\.jpg/);
+  assert.match(gallery, /\/figma\/landing\/casa-campeche-ii\.jpg/);
+  assert.doesNotMatch(gallery, /\/figma\/casa-campeche\/right-03-pool\.png/);
+  assert.match(gallery, /ChevronLeft/);
+  assert.match(gallery, /ChevronRight/);
 });
 
 test("property routes keep the canonical interactive map and footer", () => {
@@ -36,4 +43,14 @@ test("property routes keep the canonical interactive map and footer", () => {
     assert.match(page, /<Footer \/>/);
     assert.doesNotMatch(page, /Prensa|Solo para adultos/);
   }
+});
+
+test("Casa Campeche uses the direct Figma photographs and static side galleries", () => {
+  assert.match(campeche, /\/figma\/casa-campeche\/hero\.jpg/);
+  assert.match(campeche, /CasaCampecheSideGallery/);
+  assert.doesNotMatch(campeche, /\/CasaCampecheI\.png|\/CasaCampecheII\.png/);
+  assert.match(sideGallery, /aria-label="Galería lateral de Casa Campeche"/);
+  assert.match(sideGallery, /pointer-events-none/);
+  assert.match(sideGallery, /hidden .*2xl:flex/);
+  assert.doesNotMatch(sideGallery, /Carousel|Prev|Sig/);
 });

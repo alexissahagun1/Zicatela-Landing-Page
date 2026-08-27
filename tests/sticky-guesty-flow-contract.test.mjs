@@ -16,6 +16,7 @@ test("sticky booking bar reuses the reservation form and opens Guesty results in
   assert.match(sticky, /data-state=\{isPanelClosing \? "closing" : "open"\}/);
   assert.match(sticky, /closeTimerRef/);
   assert.doesNotMatch(sticky, /href="\/booking"/);
+  assert.doesNotMatch(search, /promoCode|<Tag|togglePanel\("promo"/);
   assert.match(search, /popoverDirection\?: "up" \| "down"/);
   assert.match(search, /submitLabel\?: string/);
   assert.match(search, /mobileCompact\?: boolean/);

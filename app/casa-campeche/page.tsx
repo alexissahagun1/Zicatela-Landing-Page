@@ -7,6 +7,7 @@ import AmenitiesSection from "../components/AmenitiesSection";
 import PropertyGallery from "../components/PropertyGallery";
 import PropertyCarousel from "../components/PropertyCarousel";
 import MapSection from "../components/MapSection";
+import CasaCampecheSideGallery from "../components/CasaCampecheSideGallery";
 import { useLanguage } from '../contexts/LanguageContext';
 
 export default function CasaCampechePage() {
@@ -44,15 +45,16 @@ export default function CasaCampechePage() {
   const currentContent = content[language];
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="relative min-h-screen overflow-x-clip bg-white">
       <NavigationBar />
+      <CasaCampecheSideGallery />
       
       {/* Casa Campeche Content */}
-      <div className="relative max-w-7xl mx-auto text-center md:text-left pt-16 md:pt-[74px]">
+      <div className="relative z-10 mx-auto max-w-7xl text-center md:text-left pt-16 md:pt-[74px]">
         {/* Property Gallery */}
         <PropertyGallery
-          exteriorImage="/CasaCampecheI.png"
-          interiorImage="/CasaCampecheII.png"
+          exteriorImage="/figma/casa-campeche/hero.jpg"
+          interiorImage="/figma/casa-campeche/campeche-i.png"
           exteriorAlt="Casa Campeche Exterior"
           interiorAlt="Casa Campeche Interior"
         />
@@ -72,12 +74,14 @@ export default function CasaCampechePage() {
           <PropertyCarousel
             title="CAMPECHE I"
             images={[
-              "/CasaCampecheI.png",
-              "/CasaCampecheII.png"
+              "/figma/casa-campeche/campeche-i.png",
+              "/figma/casa-campeche/right-03-pool.png",
+              "/figma/casa-campeche/right-05-portal.png",
             ]}
             imageAlts={[
-              "Casa Campeche I Interior",
-              "Casa Campeche I Exterior"
+              "Habitación de Casa Campeche I",
+              "Alberca privada de Casa Campeche I",
+              "Portal circular de Casa Campeche I",
             ]}
             features={[
               currentContent.features.guests,
@@ -94,12 +98,14 @@ export default function CasaCampechePage() {
           <PropertyCarousel
             title="CAMPECHE II"
             images={[
-              "/CasaCampecheII.png",
-              "/CasaCampecheI.png"
+              "/figma/casa-campeche/campeche-ii.jpg",
+              "/figma/casa-campeche/right-02-bedroom.png",
+              "/figma/casa-campeche/right-07-kitchen.png",
             ]}
             imageAlts={[
-              "Casa Campeche II Exterior",
-              "Casa Campeche II Interior"
+              "Habitación de Casa Campeche II",
+              "Interior de Casa Campeche II",
+              "Cocina de Casa Campeche II",
             ]}
             features={[
               currentContent.features.guests,

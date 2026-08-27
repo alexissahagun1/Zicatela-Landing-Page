@@ -13,9 +13,10 @@ test("reservation entry points use the direct embedded Guesty flow", () => {
   assert.doesNotMatch(navigation, /href="\/booking"/);
 });
 
-test("whole-home reservations collect dates, guests, and promo code only", () => {
+test("whole-home reservations collect dates and guests only", () => {
   assert.doesNotMatch(searchBar, /\brooms\b/i);
   assert.doesNotMatch(results, /roomsNote|search\.rooms/);
   assert.match(searchBar, /adults/);
-  assert.match(searchBar, /promoCode/);
+  assert.doesNotMatch(searchBar, /promoCode|Promoción|Promotion|<Tag/);
+  assert.doesNotMatch(results, /search\.promoCode|promoCode/);
 });

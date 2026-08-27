@@ -19,4 +19,12 @@ test("mobile header has explicit compact logo, reserve button and tap-safe menu"
     1,
     "only the header reserve control belongs in NavigationBar; the sticky bar owns the other one",
   );
+  assert.match(nav, /lastScrollY/);
+  assert.match(nav, /scrollDirection|isHeaderVisible/);
+  assert.match(nav, /transition-transform/);
+  assert.match(nav, /scrollThreshold = 5/);
+  assert.match(nav, /currentScrollY <= 0/);
+  assert.match(nav, /duration-\[350ms\]/);
+  assert.match(nav, /ease-\[ease\]/);
+  assert.match(nav, /-translate-y-full/);
 });

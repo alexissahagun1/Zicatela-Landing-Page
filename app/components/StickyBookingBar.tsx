@@ -75,9 +75,9 @@ export default function StickyBookingBar() {
     <>
       <aside
         aria-label={t.panel}
-        className="pointer-events-none fixed inset-x-0 bottom-0 z-30 px-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] md:px-6"
+        className="pointer-events-none fixed inset-x-0 bottom-3 z-30 px-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] md:bottom-5 md:px-6"
       >
-        <div className="pointer-events-auto mx-auto w-full max-w-5xl">
+        <div className="pointer-events-auto mx-auto w-full max-w-4xl">
           <BookingSearchBar
             onSearch={handleSearch}
             popoverDirection="up"

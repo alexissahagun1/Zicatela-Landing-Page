@@ -72,8 +72,6 @@ const copy = {
     nights: "noches",
     guests: "huéspedes",
     unitsAvailable: "unidades disponibles",
-    promoNote: (code: string) =>
-      `El código "${code}" se aplicará al solicitar la cotización.`,
     perNight: "/noche",
     from: "Desde",
     plusCleaning: (amount: string) => `+ limpieza ${amount}`,
@@ -115,8 +113,6 @@ const copy = {
     nights: "nights",
     guests: "guests",
     unitsAvailable: "units available",
-    promoNote: (code: string) =>
-      `The code "${code}" will be applied when the quote is requested.`,
     perNight: "/night",
     from: "From",
     plusCleaning: (amount: string) => `+ cleaning ${amount}`,
@@ -274,7 +270,6 @@ export default function BookingResults({ search }: BookingResultsProps) {
           checkIn: toDateInput(checkInDate),
           checkOut: toDateInput(checkOutDate),
           adults: search.adults,
-          promoCode: search.promoCode || undefined,
         }),
       });
       const data = await res.json().catch(() => null);
@@ -398,11 +393,6 @@ export default function BookingResults({ search }: BookingResultsProps) {
             <p className="mt-1 font-['Courier_Prime'] text-sm text-[#7A7A7C]">
               {dateLabel} · {search.adults} {t.guests} · {nights} {t.nights}
             </p>
-            {search.promoCode && (
-              <p className="mt-1 font-['Courier_Prime'] text-xs text-[#7A7A7C]">
-                {t.promoNote(search.promoCode)}
-              </p>
-            )}
           </div>
 
           {results.length === 0 ? (
