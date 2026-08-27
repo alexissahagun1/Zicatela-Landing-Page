@@ -8,11 +8,11 @@ const read = (file) => readFileSync(resolve(root, file), "utf8");
 const navigation = read("app/components/NavigationBar.tsx");
 const accommodation = read("app/components/AccommodationSection.tsx");
 const gallery = read("app/components/ArchitecturalGallery.tsx");
+const propertyCarousel = read("app/components/PropertyCarousel.tsx");
 const laPunta = read("app/components/LaPuntaSection.tsx");
 const mainContent = read("app/components/MainContent.tsx");
 const campeche = read("app/casa-campeche/page.tsx");
 const palmas = read("app/casa-palmas/page.tsx");
-const sideGallery = read("app/components/CasaCampecheSideGallery.tsx");
 
 test("landing sections preserve their measured Figma desktop geometry", () => {
   assert.match(accommodation, /max-w-\[954px\]/);
@@ -45,12 +45,35 @@ test("property routes keep the canonical interactive map and footer", () => {
   }
 });
 
-test("Casa Campeche uses the direct Figma photographs and static side galleries", () => {
+test("Casa Campeche keeps every Figma photograph inside static property carousels", () => {
   assert.match(campeche, /\/figma\/casa-campeche\/hero\.jpg/);
-  assert.match(campeche, /CasaCampecheSideGallery/);
   assert.doesNotMatch(campeche, /\/CasaCampecheI\.png|\/CasaCampecheII\.png/);
-  assert.match(sideGallery, /aria-label="Galería lateral de Casa Campeche"/);
-  assert.match(sideGallery, /pointer-events-none/);
-  assert.match(sideGallery, /hidden .*2xl:flex/);
-  assert.doesNotMatch(sideGallery, /Carousel|Prev|Sig/);
+  assert.doesNotMatch(campeche, /CasaCampecheSideGallery|Galería lateral/);
+  assert.match(propertyCarousel, /currentImageIndex/);
+  assert.doesNotMatch(propertyCarousel, /setInterval|autoplay|autoPlay/);
+
+  const carouselPhotographs = [
+    "\/figma\/casa-campeche\/campeche-i\\.png",
+    "\/figma\/casa-campeche\/campeche-ii\\.jpg",
+    "\/figma\/casa-campeche\/left-01-kitchen\\.png",
+    "\/figma\/casa-campeche\/left-02-lounge\\.png",
+    "\/figma\/casa-campeche\/left-03-bathroom\\.png",
+    "\/figma\/casa-campeche\/left-04-bedroom\\.png",
+    "\/figma\/casa-campeche\/left-05-interior\\.jpg",
+    "\/figma\/casa-campeche\/left-06-interior\\.jpg",
+    "\/figma\/casa-campeche\/left-07-interior\\.jpg",
+    "\/figma\/casa-campeche\/left-08-vertical\\.jpg",
+    "\/figma\/casa-campeche\/right-01-shower\\.png",
+    "\/figma\/casa-campeche\/right-02-bedroom\\.png",
+    "\/figma\/casa-campeche\/right-03-pool\\.png",
+    "\/figma\/casa-campeche\/right-04-lounge\\.png",
+    "\/figma\/casa-campeche\/right-05-portal\\.png",
+    "\/figma\/casa-campeche\/right-06-dining\\.png",
+    "\/figma\/casa-campeche\/right-07-kitchen\\.png",
+    "\/figma\/casa-campeche\/right-08-bathroom\\.png",
+  ];
+
+  for (const photograph of carouselPhotographs) {
+    assert.match(campeche, new RegExp(photograph), `Missing carousel photograph: ${photograph}`);
+  }
 });
