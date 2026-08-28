@@ -337,7 +337,11 @@ export default function PropertyCarousel({
       </div>
 
       <div className="mt-5 hidden lg:flex">
-        <div className={`w-1/2 ${isImageLeft ? "" : "order-2"}`}>
+        <div
+          className={`w-full lg:w-[calc((100%_-_3rem)_/_2)] ${
+            isImageLeft ? "" : "ml-auto"
+          }`}
+        >
           <CarouselControls
             count={images.length}
             currentIndex={displayImageIndex}

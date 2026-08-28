@@ -28,6 +28,11 @@ test("property carousel labels its controls through a valid group role", () => {
   assert.match(carousel, /aria-label=\{language === "es"/);
 });
 
+test("property carousel aligns reversed desktop controls beneath the image", () => {
+  assert.match(carousel, /isImageLeft \? "" : "ml-auto"/);
+  assert.match(carousel, /lg:w-\[calc\(\(100%_-_3rem\)_\/_2\)\]/);
+});
+
 test("property carousel skips visual motion for reduced-motion users", () => {
   assert.match(carousel, /prefers-reduced-motion/);
   assert.match(carousel, /finishTransition\(imageIndex\)/);
