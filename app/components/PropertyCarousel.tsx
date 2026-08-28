@@ -1,9 +1,18 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useLanguage } from "../contexts/LanguageContext";
+
+const CAROUSEL_TRANSITION_MS = 650;
+
+interface CarouselTransition {
+  from: number;
+  to: number;
+  incomingImageReady: boolean;
+  isAnimating: boolean;
+}
 
 interface PropertyCarouselProps {
   title: string;
@@ -42,6 +51,7 @@ function CarouselControls({
 
       <div
         className="flex items-center gap-2"
+        role="group"
         aria-label={language === "es" ? "Seleccionar imagen" : "Select image"}
       >
         {Array.from({ length: count }).map((_, index) => (
@@ -79,20 +89,165 @@ export default function PropertyCarousel({
   layout = "image-left",
 }: PropertyCarouselProps) {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [transition, setTransition] = useState<CarouselTransition | null>(null);
+  const currentImageIndexRef = useRef(0);
+  const transitionRef = useRef<CarouselTransition | null>(null);
+  const queuedImageIndexRef = useRef<number | null>(null);
   const { language } = useLanguage();
   const isImageLeft = layout === "image-left";
 
+  const startTransition = useCallback((from: number, to: number) => {
+    const nextTransition: CarouselTransition = {
+      from,
+      to,
+      incomingImageReady: false,
+      isAnimating: false,
+    };
+
+    transitionRef.current = nextTransition;
+    setTransition(nextTransition);
+  }, []);
+
+  const finishTransition = useCallback((expectedTarget: number) => {
+    const activeTransition = transitionRef.current;
+
+    if (!activeTransition || activeTransition.to !== expectedTarget) {
+      return;
+    }
+
+    const queuedImageIndex = queuedImageIndexRef.current;
+    queuedImageIndexRef.current = null;
+    currentImageIndexRef.current = activeTransition.to;
+
+    if (queuedImageIndex !== null && queuedImageIndex !== activeTransition.to) {
+      const nextTransition: CarouselTransition = {
+        from: activeTransition.to,
+        to: queuedImageIndex,
+        incomingImageReady: false,
+        isAnimating: false,
+      };
+
+      transitionRef.current = nextTransition;
+      setCurrentImageIndex(activeTransition.to);
+      setTransition(nextTransition);
+      return;
+    }
+
+    transitionRef.current = null;
+    setCurrentImageIndex(activeTransition.to);
+    setTransition(null);
+  }, []);
+
+  const requestImage = useCallback(
+    (nextImageIndex: number) => {
+      if (nextImageIndex === currentImageIndexRef.current && !transitionRef.current) {
+        return;
+      }
+
+      if (transitionRef.current) {
+        queuedImageIndexRef.current = nextImageIndex;
+        return;
+      }
+
+      startTransition(currentImageIndexRef.current, nextImageIndex);
+    },
+    [startTransition],
+  );
+
+  const getQueuedNavigationIndex = useCallback(
+    (direction: -1 | 1) => {
+      const baseIndex =
+        queuedImageIndexRef.current ??
+        transitionRef.current?.to ??
+        currentImageIndexRef.current;
+      const nextIndex = baseIndex + direction;
+
+      if (nextIndex < 0) {
+        return images.length - 1;
+      }
+
+      if (nextIndex >= images.length) {
+        return 0;
+      }
+
+      return nextIndex;
+    },
+    [images.length],
+  );
+
   const goToPrevious = () => {
-    setCurrentImageIndex((previous) =>
-      previous === 0 ? images.length - 1 : previous - 1,
-    );
+    requestImage(getQueuedNavigationIndex(-1));
   };
 
   const goToNext = () => {
-    setCurrentImageIndex((previous) =>
-      previous === images.length - 1 ? 0 : previous + 1,
-    );
+    requestImage(getQueuedNavigationIndex(1));
   };
+
+  const markIncomingImageReady = (imageIndex: number) => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      finishTransition(imageIndex);
+      return;
+    }
+
+    setTransition((activeTransition) => {
+      if (!activeTransition || activeTransition.to !== imageIndex) {
+        return activeTransition;
+      }
+
+      return { ...activeTransition, incomingImageReady: true };
+    });
+  };
+
+  useEffect(() => {
+    if (!transition?.incomingImageReady || transition.isAnimating) {
+      return;
+    }
+
+    let firstFrame = 0;
+    let secondFrame = 0;
+
+    firstFrame = window.requestAnimationFrame(() => {
+      secondFrame = window.requestAnimationFrame(() => {
+        setTransition((activeTransition) => {
+          if (
+            !activeTransition ||
+            activeTransition.to !== transition.to ||
+            !activeTransition.incomingImageReady
+          ) {
+            return activeTransition;
+          }
+
+          return { ...activeTransition, isAnimating: true };
+        });
+      });
+    });
+
+    return () => {
+      window.cancelAnimationFrame(firstFrame);
+      window.cancelAnimationFrame(secondFrame);
+    };
+  }, [transition]);
+
+  useEffect(() => {
+    if (!transition?.isAnimating) {
+      return;
+    }
+
+    const timeoutId = window.setTimeout(() => {
+      finishTransition(transition.to);
+    }, CAROUSEL_TRANSITION_MS + 100);
+
+    return () => window.clearTimeout(timeoutId);
+  }, [finishTransition, transition]);
+
+  useEffect(() => {
+    return () => {
+      transitionRef.current = null;
+      queuedImageIndexRef.current = null;
+    };
+  }, []);
+
+  const displayImageIndex = transition?.to ?? currentImageIndex;
 
   return (
     <div className="relative mx-auto w-full max-w-[1080px]">
@@ -102,23 +257,54 @@ export default function PropertyCarousel({
         }`}
       >
         <div className="relative w-full lg:w-1/2">
-          <div className="relative aspect-[4/3] w-full overflow-hidden lg:aspect-[1.55/1]">
+          <div className="relative isolate aspect-[4/3] w-full overflow-hidden bg-[#F5F5F5] lg:aspect-[1.55/1]">
+            {transition && (
+              <Image
+                key={`outgoing-${transition.from}`}
+                src={images[transition.from]}
+                alt=""
+                fill
+                aria-hidden="true"
+                className={`casa-zii-carousel-image pointer-events-none absolute inset-0 z-0 object-cover transition-opacity duration-[650ms] ease-[cubic-bezier(0.16,1,0.3,1)] motion-reduce:transition-none ${
+                  transition.isAnimating ? "opacity-0" : "opacity-100"
+                }`}
+                sizes="(max-width: 1023px) 100vw, 50vw"
+              />
+            )}
             <Image
-              src={images[currentImageIndex]}
-              alt={imageAlts[currentImageIndex]}
+              key={`current-${displayImageIndex}`}
+              src={images[displayImageIndex]}
+              alt={imageAlts[displayImageIndex]}
               fill
-              className="object-cover"
+              className={`casa-zii-carousel-image pointer-events-none absolute inset-0 z-10 object-cover transition-opacity duration-[650ms] ease-[cubic-bezier(0.16,1,0.3,1)] motion-reduce:transition-none ${
+                transition && !transition.isAnimating ? "opacity-0" : "opacity-100"
+              }`}
               sizes="(max-width: 1023px) 100vw, 50vw"
-              priority
+              priority={!transition && displayImageIndex === 0}
+              onLoad={
+                transition
+                  ? () => markIncomingImageReady(displayImageIndex)
+                  : undefined
+              }
+              onError={
+                transition
+                  ? () => markIncomingImageReady(displayImageIndex)
+                  : undefined
+              }
+              onTransitionEnd={(event) => {
+                if (event.propertyName === "opacity" && transition?.isAnimating) {
+                  finishTransition(displayImageIndex);
+                }
+              }}
             />
           </div>
           <div className="mt-5 lg:hidden">
             <CarouselControls
               count={images.length}
-              currentIndex={currentImageIndex}
+              currentIndex={displayImageIndex}
               onPrevious={goToPrevious}
               onNext={goToNext}
-              onSelect={setCurrentImageIndex}
+              onSelect={requestImage}
               language={language}
             />
           </div>
@@ -154,10 +340,10 @@ export default function PropertyCarousel({
         <div className={`w-1/2 ${isImageLeft ? "" : "order-2"}`}>
           <CarouselControls
             count={images.length}
-            currentIndex={currentImageIndex}
+            currentIndex={displayImageIndex}
             onPrevious={goToPrevious}
             onNext={goToNext}
-            onSelect={setCurrentImageIndex}
+            onSelect={requestImage}
             language={language}
           />
         </div>
