@@ -21,13 +21,23 @@ const galleryItems: GalleryItem[] = [
   {
     id: "1",
     title: "Casa Campeche I",
-    image: "/figma/casa-campeche/right-03-pool.png"
+    image: "/figma/casa-campeche/right-03-pool.png",
   },
   {
     id: "2",
     title: "Casa Campeche II",
-    image: "/figma/casa-campeche/left-02-lounge.png"
-  }
+    image: "/figma/casa-campeche/left-02-lounge.png",
+  },
+  {
+    id: "3",
+    title: "Casa Palmas I",
+    image: "/figma/casa-palmas/palmas-i-07.jpg",
+  },
+  {
+    id: "4",
+    title: "Casa Palmas II",
+    image: "/figma/casa-palmas/palmas-ii-06.jpg",
+  },
 ]
 
 // Navigation controls component that uses the carousel context

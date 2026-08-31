@@ -21,6 +21,8 @@ test("active media surfaces use real property photographs instead of legacy rend
     "/figma/casa-campeche/right-03-pool.png",
     "/figma/casa-campeche/left-02-lounge.png",
     "/figma/casa-campeche/hero.jpg",
+    "/figma/casa-palmas/palmas-i-07.jpg",
+    "/figma/casa-palmas/palmas-ii-06.jpg",
   ]) {
     assert.match(
       `${press}\n${architecturalGallery}\n${campecheLayout}`,

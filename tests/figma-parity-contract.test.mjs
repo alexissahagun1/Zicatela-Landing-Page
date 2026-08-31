@@ -32,6 +32,11 @@ test("shared chrome uses Courier Prime and removes obsolete navigation", () => {
   assert.doesNotMatch(gallery, />\s*(Prev|Sig|Next)\s*</);
   assert.match(gallery, /\/figma\/casa-campeche\/right-03-pool\.png/);
   assert.match(gallery, /\/figma\/casa-campeche\/left-02-lounge\.png/);
+  assert.match(gallery, /\/figma\/casa-palmas\/palmas-i-07\.jpg/);
+  assert.match(gallery, /\/figma\/casa-palmas\/palmas-ii-06\.jpg/);
+  assert.match(gallery, /Casa Palmas I/);
+  assert.match(gallery, /Casa Palmas II/);
+  assert.doesNotMatch(gallery, /\/CasaPalmas(?:I|II)\.png/);
   assert.doesNotMatch(gallery, /\/figma\/landing\/casa-campeche-(?:i|ii)\.jpg/);
   assert.match(gallery, /ChevronLeft/);
   assert.match(gallery, /ChevronRight/);
