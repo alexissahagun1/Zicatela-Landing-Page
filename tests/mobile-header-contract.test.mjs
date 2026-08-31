@@ -6,7 +6,8 @@ test("mobile header has explicit compact logo, reserve button and tap-safe menu"
   const nav = await readFile("app/components/NavigationBar.tsx", "utf8");
   const logo = await readFile("app/components/Logo.tsx", "utf8");
 
-  assert.match(nav, /h-16/);
+  assert.match(nav, /h-20/);
+  assert.match(nav, /md:h-\[96px\]/);
   assert.match(nav, /h-11 w-11/);
   assert.match(nav, /h-\[38px\] w-\[96px\]/);
   assert.match(logo, /h-\[42px\] w-\[88px\]/);

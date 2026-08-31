@@ -49,6 +49,9 @@ test("sticky booking bar reuses the reservation form and opens Guesty results in
   assert.doesNotMatch(calendar, /week: cn\("flex/);
   assert.match(styles, /casaZiiBookingPanelEnter/);
   assert.match(styles, /transform-origin: center bottom/);
+  const panelExit = styles.match(/@keyframes casaZiiBookingPanelExit\s*\{([\s\S]*?)\n\}\n\n\.casa-zii-booking-panel/);
+  assert.ok(panelExit, "the booking-panel exit animation should remain defined");
+  assert.doesNotMatch(panelExit[1], /border-radius/);
   assert.match(styles, /casaZiiBookingScrimEnter/);
   assert.match(styles, /casaZiiBookingPopoverEnter/);
   assert.match(styles, /casaZiiBookingPopoverExitUp/);

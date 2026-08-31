@@ -72,7 +72,7 @@ export default function NavigationBar() {
   return (
     <>
       <nav
-        className={`fixed left-0 top-0 z-40 flex h-16 w-full items-center justify-between bg-white px-4 transform-gpu transition-transform duration-[350ms] ease-[ease] will-change-transform md:grid md:h-[74px] md:grid-cols-[1fr_auto_1fr] md:px-8 lg:px-16 xl:px-24 ${
+        className={`fixed left-0 top-0 z-40 flex h-20 w-full items-center justify-between bg-white px-4 transform-gpu transition-transform duration-[350ms] ease-[ease] will-change-transform md:grid md:h-[96px] md:grid-cols-[1fr_auto_1fr] md:px-8 lg:px-16 xl:px-24 ${
           isHeaderVisible || isMobileMenuOpen ? "translate-y-0" : "-translate-y-full"
         }`}
       >
