@@ -81,15 +81,15 @@ export default function CasaPalmasPage() {
               "/figma/casa-palmas/palmas-i-09.jpg"
             ]}
             imageAlts={[
-              "Interior de concreto de Casa Palmas I",
-              "Alberca de Casa Palmas I",
-              "Regadera de Casa Palmas I",
+              "Habitación de Casa Palmas I",
+              "Habitación de Casa Palmas I",
               "Espejo y regadera de Casa Palmas I",
-              "Patio de Casa Palmas I",
-              "Baño de Casa Palmas I",
-              "Sala de Casa Palmas I",
               "Sala con ventana circular de Casa Palmas I",
-              "Baño de Casa Palmas I"
+              "Cocina de Casa Palmas I",
+              "Terraza junto a la alberca de Casa Palmas I",
+              "Alberca privada de Casa Palmas I",
+              "Comedor y cocina de Casa Palmas I",
+              "Regadera exterior de Casa Palmas I"
             ]}
             features={[
               currentContent.features.guests,
@@ -117,15 +117,15 @@ export default function CasaPalmasPage() {
               "/figma/casa-palmas/palmas-ii-09.jpg"
             ]}
             imageAlts={[
-              "Lavabo de Casa Palmas II",
+              "Habitación de Casa Palmas II",
+              "Habitación de Casa Palmas II",
+              "Regadera exterior de Casa Palmas II",
+              "Baño de Casa Palmas II",
+              "Sala con ventana circular de Casa Palmas II",
+              "Sala comedor y cocina de Casa Palmas II",
+              "Sala con arte de Casa Palmas II",
               "Comedor de Casa Palmas II",
-              "Lavabo de Casa Palmas II",
-              "Regadera de Casa Palmas II",
-              "Espejo y baño de Casa Palmas II",
-              "Cocina de Casa Palmas II",
-              "Terraza junto a la alberca de Casa Palmas II",
-              "Cocina de Casa Palmas II",
-              "Sala de Casa Palmas II"
+              "Alberca privada de Casa Palmas II"
             ]}
             features={[
               currentContent.features.guests,
