@@ -30,9 +30,9 @@ test("shared chrome uses Courier Prime and removes obsolete navigation", () => {
   assert.match(navigation, /font-\[family-name:var\(--font-courier\)\]/);
   assert.doesNotMatch(gallery, /console\.log/);
   assert.doesNotMatch(gallery, />\s*(Prev|Sig|Next)\s*</);
-  assert.match(gallery, /\/figma\/landing\/casa-campeche-i\.jpg/);
-  assert.match(gallery, /\/figma\/landing\/casa-campeche-ii\.jpg/);
-  assert.doesNotMatch(gallery, /\/figma\/casa-campeche\/right-03-pool\.png/);
+  assert.match(gallery, /\/figma\/casa-campeche\/right-03-pool\.png/);
+  assert.match(gallery, /\/figma\/casa-campeche\/left-02-lounge\.png/);
+  assert.doesNotMatch(gallery, /\/figma\/landing\/casa-campeche-(?:i|ii)\.jpg/);
   assert.match(gallery, /ChevronLeft/);
   assert.match(gallery, /ChevronRight/);
 });
@@ -49,7 +49,10 @@ test("Casa Campeche keeps every Figma photograph inside static property carousel
   assert.match(campeche, /\/figma\/casa-campeche\/hero\.jpg/);
   assert.doesNotMatch(campeche, /\/CasaCampecheI\.png|\/CasaCampecheII\.png/);
   assert.doesNotMatch(campeche, /CasaCampecheSideGallery|Galería lateral/);
-  assert.match(propertyCarousel, /currentImageIndex/);
+  assert.match(propertyCarousel, /<Carousel\b/);
+  assert.match(propertyCarousel, /<CarouselContent\b/);
+  assert.match(propertyCarousel, /<CarouselItem\b/);
+  assert.doesNotMatch(propertyCarousel, /key=\{`outgoing-/);
   assert.doesNotMatch(propertyCarousel, /setInterval|autoplay|autoPlay/);
 
   const carouselPhotographs = [

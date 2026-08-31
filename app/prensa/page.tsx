@@ -9,21 +9,20 @@ import { useLanguage } from '../contexts/LanguageContext';
 export default function PrensaPage() {
   const { language } = useLanguage();
   
-  // Array of your Rectangle images
+  // Real property photographs reused from the verified Figma exports.
   const collageImages = [
-    '/Rectangle.png',
-    '/Rectangle-1.png',
-    '/Rectangle-2.png',
-    '/Rectangle-3.png',
-    '/Rectangle-4.png',
-    '/Rectangle-5.png',
-    '/Rectangle-6.png',
-    '/Rectangle-7.png',
-    '/Rectangle-8.png',
-    '/Rectangle-9.png',
-    '/Rectangle-10.png',
-    '/Rectangle-11.png',
-    '/Rectangle-12.png',
+    '/figma/casa-campeche/hero.jpg',
+    '/figma/casa-campeche/campeche-i.png',
+    '/figma/casa-campeche/campeche-ii.jpg',
+    '/figma/casa-campeche/right-01-shower.png',
+    '/figma/casa-campeche/right-02-bedroom.png',
+    '/figma/casa-campeche/right-03-pool.png',
+    '/figma/casa-campeche/right-04-lounge.png',
+    '/figma/casa-campeche/right-05-portal.png',
+    '/figma/casa-campeche/right-06-dining.png',
+    '/figma/casa-campeche/right-07-kitchen.png',
+    '/figma/casa-campeche/right-08-bathroom.png',
+    '/figma/casa-campeche/left-01-kitchen.png',
   ];
 
   const content = {

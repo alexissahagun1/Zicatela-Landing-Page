@@ -49,8 +49,8 @@ export default function CasaPalmasPage() {
       <div className="relative max-w-7xl mx-auto text-center md:text-left pt-16 md:pt-[74px]">
         {/* Property Gallery */}
         <PropertyGallery
-          exteriorImage="/CasaPalmasI.png"
-          interiorImage="/CasaPalmasII.png"
+          exteriorImage="/figma/casa-palmas/hero.jpg"
+          interiorImage="/figma/casa-palmas/palmas-i-01.jpg"
           exteriorAlt="Casa Palmas Exterior"
           interiorAlt="Casa Palmas Interior"
         />
@@ -70,12 +70,26 @@ export default function CasaPalmasPage() {
           <PropertyCarousel
             title="PALMAS I"
             images={[
-              "/CasaPalmasI.png",
-              "/CasaPalmasII.png"
+              "/figma/casa-palmas/palmas-i-01.jpg",
+              "/figma/casa-palmas/palmas-i-02.jpg",
+              "/figma/casa-palmas/palmas-i-03.jpg",
+              "/figma/casa-palmas/palmas-i-04.jpg",
+              "/figma/casa-palmas/palmas-i-05.jpg",
+              "/figma/casa-palmas/palmas-i-06.jpg",
+              "/figma/casa-palmas/palmas-i-07.jpg",
+              "/figma/casa-palmas/palmas-i-08.jpg",
+              "/figma/casa-palmas/palmas-i-09.jpg"
             ]}
             imageAlts={[
-              "Casa Palmas I Interior",
-              "Casa Palmas I Exterior"
+              "Interior de concreto de Casa Palmas I",
+              "Alberca de Casa Palmas I",
+              "Regadera de Casa Palmas I",
+              "Espejo y regadera de Casa Palmas I",
+              "Patio de Casa Palmas I",
+              "Baño de Casa Palmas I",
+              "Sala de Casa Palmas I",
+              "Sala con ventana circular de Casa Palmas I",
+              "Baño de Casa Palmas I"
             ]}
             features={[
               currentContent.features.guests,
@@ -92,12 +106,26 @@ export default function CasaPalmasPage() {
           <PropertyCarousel
             title="PALMAS II"
             images={[
-              "/CasaPalmasII.png",
-              "/CasaPalmasI.png"
+              "/figma/casa-palmas/palmas-ii-01.jpg",
+              "/figma/casa-palmas/palmas-ii-02.jpg",
+              "/figma/casa-palmas/palmas-ii-03.jpg",
+              "/figma/casa-palmas/palmas-ii-04.jpg",
+              "/figma/casa-palmas/palmas-ii-05.jpg",
+              "/figma/casa-palmas/palmas-ii-06.jpg",
+              "/figma/casa-palmas/palmas-ii-07.jpg",
+              "/figma/casa-palmas/palmas-ii-08.jpg",
+              "/figma/casa-palmas/palmas-ii-09.jpg"
             ]}
             imageAlts={[
-              "Casa Palmas II Exterior",
-              "Casa Palmas II Interior"
+              "Lavabo de Casa Palmas II",
+              "Comedor de Casa Palmas II",
+              "Lavabo de Casa Palmas II",
+              "Regadera de Casa Palmas II",
+              "Espejo y baño de Casa Palmas II",
+              "Cocina de Casa Palmas II",
+              "Terraza junto a la alberca de Casa Palmas II",
+              "Cocina de Casa Palmas II",
+              "Sala de Casa Palmas II"
             ]}
             features={[
               currentContent.features.guests,

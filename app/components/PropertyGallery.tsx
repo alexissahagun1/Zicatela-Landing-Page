@@ -5,13 +5,15 @@ interface PropertyGalleryProps {
   interiorImage: string;
   exteriorAlt: string;
   interiorAlt: string;
+  objectPosition?: string;
 }
 
 export default function PropertyGallery({ 
   exteriorImage, 
   interiorImage, 
   exteriorAlt, 
-  interiorAlt 
+  interiorAlt,
+  objectPosition = "center",
 }: PropertyGalleryProps) {
   return (
     <>
@@ -22,6 +24,7 @@ export default function PropertyGallery({
           alt={exteriorAlt}
           fill
           className="object-cover"
+          style={{ objectPosition }}
           priority
         />
       </div>

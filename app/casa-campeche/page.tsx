@@ -55,6 +55,7 @@ export default function CasaCampechePage() {
           interiorImage="/figma/casa-campeche/campeche-i.png"
           exteriorAlt="Casa Campeche Exterior"
           interiorAlt="Casa Campeche Interior"
+          objectPosition="center 90%"
         />
         
         {/* Property Header */}

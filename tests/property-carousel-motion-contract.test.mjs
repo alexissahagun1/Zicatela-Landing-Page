@@ -9,18 +9,15 @@ const carousel = readFileSync(
   "utf8",
 );
 
-test("property carousel crossfades between loaded image layers", () => {
-  assert.match(carousel, /const \[transition, setTransition\]/);
-  assert.match(carousel, /transition-opacity/);
-  assert.match(carousel, /duration-\[650ms\]/);
-  assert.match(carousel, /ease-\[cubic-bezier\(0\.16,1,0\.3,1\)\]/);
-  assert.match(carousel, /onTransitionEnd/);
-  assert.match(carousel, /onLoad=.*markIncomingImageReady|markIncomingImageReady/);
-});
-
-test("property carousel queues a target while a transition is active", () => {
-  assert.match(carousel, /queuedImageIndexRef/);
-  assert.match(carousel, /transitionRef/);
+test("property carousel keeps its image slides mounted through Embla", () => {
+  assert.match(carousel, /from "@\/components\/ui\/carousel"/);
+  assert.match(carousel, /<Carousel\b/);
+  assert.match(carousel, /<CarouselContent\b/);
+  assert.match(carousel, /<CarouselItem\b/);
+  assert.match(carousel, /duration: prefersReducedMotion \? 0 : 35/);
+  assert.match(carousel, /loading="eager"/);
+  assert.doesNotMatch(carousel, /key=\{`outgoing-/);
+  assert.doesNotMatch(carousel, /transition-opacity/);
 });
 
 test("property carousel labels its controls through a valid group role", () => {
@@ -35,5 +32,6 @@ test("property carousel aligns reversed desktop controls beneath the image", () 
 
 test("property carousel skips visual motion for reduced-motion users", () => {
   assert.match(carousel, /prefers-reduced-motion/);
-  assert.match(carousel, /finishTransition\(imageIndex\)/);
+  assert.match(carousel, /duration: prefersReducedMotion \? 0 : 35/);
+  assert.match(carousel, /mediaQuery\.addEventListener\("change"/);
 });

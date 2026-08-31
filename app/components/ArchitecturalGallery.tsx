@@ -21,12 +21,12 @@ const galleryItems: GalleryItem[] = [
   {
     id: "1",
     title: "Casa Campeche I",
-    image: "/figma/landing/casa-campeche-i.jpg"
+    image: "/figma/casa-campeche/right-03-pool.png"
   },
   {
     id: "2",
     title: "Casa Campeche II",
-    image: "/figma/landing/casa-campeche-ii.jpg"
+    image: "/figma/casa-campeche/left-02-lounge.png"
   }
 ]
 

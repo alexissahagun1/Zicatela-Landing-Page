@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     title: "Casa Campeche | Villa con alberca privada en La Punta",
     description:
       "Dúplex de diseño con alberca privada en La Punta de Zicatela. Dos unidades independientes y conectables, solo adultos.",
-    images: ["/CasaCampecheI.png"],
+    images: ["/figma/casa-campeche/hero.jpg"],
   },
 };
 
@@ -25,7 +25,7 @@ const vacationRentalSchema = {
   "@context": "https://schema.org",
   "@type": "VacationRental",
   name: "Casa Campeche — Casa Zii",
-  image: `${SITE_URL}/CasaCampecheI.png`,
+  image: `${SITE_URL}/figma/casa-campeche/hero.jpg`,
   description:
     "Dúplex de diseño con alberca privada en La Punta de Zicatela. Dos unidades independientes y conectables.",
   address: {
