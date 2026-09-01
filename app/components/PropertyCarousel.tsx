@@ -14,6 +14,7 @@ import { useLanguage } from "../contexts/LanguageContext";
 
 interface PropertyCarouselProps {
   title: string;
+  sectionId?: string;
   images: string[];
   imageAlts: string[];
   features: string[];
@@ -117,6 +118,7 @@ function CarouselControls({
 
 export default function PropertyCarousel({
   title,
+  sectionId,
   images,
   imageAlts,
   features,
@@ -128,7 +130,7 @@ export default function PropertyCarousel({
   const prefersReducedMotion = usePrefersReducedMotion();
 
   return (
-    <div className="relative mx-auto w-full max-w-[1080px]">
+    <div id={sectionId} className="relative mx-auto w-full max-w-[1080px] scroll-mt-24">
       <Carousel
         aria-label={title}
         className="w-full"

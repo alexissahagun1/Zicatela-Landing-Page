@@ -71,6 +71,7 @@ export default function CasaCampechePage() {
         <div className="py-6 px-4 space-y-20">
           {/* Casa Campeche I */}
           <PropertyCarousel
+            sectionId="campeche-i"
             title="CAMPECHE I"
             images={[
               "/figma/casa-campeche/campeche-i.png",
@@ -107,6 +108,7 @@ export default function CasaCampechePage() {
           
           {/* Casa Campeche II */}
           <PropertyCarousel
+            sectionId="campeche-ii"
             title="CAMPECHE II"
             images={[
               "/figma/casa-campeche/campeche-ii.jpg",

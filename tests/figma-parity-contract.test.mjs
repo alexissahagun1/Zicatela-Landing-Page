@@ -40,6 +40,9 @@ test("shared chrome uses Courier Prime and removes obsolete navigation", () => {
   assert.doesNotMatch(gallery, /\/figma\/landing\/casa-campeche-(?:i|ii)\.jpg/);
   assert.match(gallery, /ChevronLeft/);
   assert.match(gallery, /ChevronRight/);
+  assert.match(gallery, /\/casa-campeche#campeche-i/);
+  assert.match(gallery, /\/casa-palmas#palmas-ii/);
+  assert.match(gallery, /aria-current=\{index === activePage/);
 });
 
 test("property routes keep the canonical interactive map and footer", () => {

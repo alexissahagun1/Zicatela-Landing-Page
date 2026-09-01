@@ -2,6 +2,7 @@
 
 import * as React from "react"
 import Image from "next/image"
+import Link from "next/link"
 import {
   Carousel,
   CarouselContent,
@@ -15,6 +16,7 @@ interface GalleryItem {
   id: string
   title: string
   image: string
+  href: string
 }
 
 const galleryItems: GalleryItem[] = [
@@ -22,25 +24,30 @@ const galleryItems: GalleryItem[] = [
     id: "1",
     title: "Casa Campeche I",
     image: "/figma/casa-campeche/right-03-pool.png",
+    href: "/casa-campeche#campeche-i",
   },
   {
     id: "2",
     title: "Casa Campeche II",
     image: "/figma/casa-campeche/left-02-lounge.png",
+    href: "/casa-campeche#campeche-ii",
   },
   {
     id: "3",
     title: "Casa Palmas I",
     image: "/figma/casa-palmas/palmas-i-07.jpg",
+    href: "/casa-palmas#palmas-i",
   },
   {
     id: "4",
     title: "Casa Palmas II",
     image: "/figma/casa-palmas/palmas-ii-06.jpg",
+    href: "/casa-palmas#palmas-ii",
   },
 ]
 
-// Navigation controls component that uses the carousel context
+const DESKTOP_SLIDES_PER_PAGE = 2
+
 function CarouselNavigation() {
   const { scrollPrev, scrollNext, canScrollPrev, canScrollNext, api } = useCarousel()
   const [current, setCurrent] = React.useState(0)
@@ -50,82 +57,108 @@ function CarouselNavigation() {
     const checkMobile = () => {
       setIsMobile(window.innerWidth < 768)
     }
-    
+
     checkMobile()
-    window.addEventListener('resize', checkMobile)
-    
-    return () => window.removeEventListener('resize', checkMobile)
+    window.addEventListener("resize", checkMobile)
+
+    return () => window.removeEventListener("resize", checkMobile)
   }, [])
 
   React.useEffect(() => {
     if (!api) return
 
-    setCurrent(api.selectedScrollSnap())
-
-    api.on("select", () => {
+    const updateCurrent = () => {
       setCurrent(api.selectedScrollSnap())
-    })
+    }
+
+    updateCurrent()
+    api.on("select", updateCurrent)
+    api.on("reInit", updateCurrent)
+
+    return () => {
+      api.off("select", updateCurrent)
+      api.off("reInit", updateCurrent)
+    }
   }, [api])
 
+  const totalPages = isMobile
+    ? galleryItems.length
+    : Math.ceil(galleryItems.length / DESKTOP_SLIDES_PER_PAGE)
+
+  const activePage = isMobile
+    ? current
+    : Math.min(Math.floor(current / DESKTOP_SLIDES_PER_PAGE), totalPages - 1)
+
+  const goToPage = (page: number) => {
+    if (!api) return
+    api.scrollTo(isMobile ? page : page * DESKTOP_SLIDES_PER_PAGE)
+  }
+
   const handlePrev = () => {
-    scrollPrev()
+    if (isMobile) {
+      scrollPrev()
+      return
+    }
+
+    if (current >= DESKTOP_SLIDES_PER_PAGE) {
+      api?.scrollTo(0)
+    }
   }
 
   const handleNext = () => {
-    scrollNext()
-  }
-
-  // Calculate which dot should be active based on screen size
-  const getActiveDot = () => {
     if (isMobile) {
-      // On mobile, each image is a separate slide
-      return current
-    } else {
-      // On desktop, each slide shows 2 images, so divide by 2
-      return Math.floor(current / 2)
+      scrollNext()
+      return
+    }
+
+    if (current < DESKTOP_SLIDES_PER_PAGE) {
+      api?.scrollTo(DESKTOP_SLIDES_PER_PAGE)
     }
   }
 
-  const getTotalDots = () => {
-    if (isMobile) {
-      // On mobile, show dots for each image
-      return galleryItems.length
-    } else {
-      // On desktop, show dots for each slide (2 images per slide)
-      return Math.ceil(galleryItems.length / 2)
-    }
-  }
+  const canGoPrev = isMobile ? canScrollPrev : current > 0
+  const canGoNext = isMobile
+    ? canScrollNext
+    : current < galleryItems.length - DESKTOP_SLIDES_PER_PAGE
 
   return (
-    <div className="flex justify-center items-center mt-8 space-x-4">
+    <div className="mt-8 flex items-center justify-center space-x-4">
       <button
         type="button"
         aria-label="Anterior"
         onClick={handlePrev}
-        disabled={!canScrollPrev}
-        className="flex h-10 w-10 items-center justify-center rounded-full border border-[#222222]/20 text-[#222222] transition-colors hover:border-[#222222] disabled:cursor-not-allowed disabled:opacity-35"
+        disabled={!canGoPrev}
+        className="flex h-10 w-10 items-center justify-center rounded-full border border-[#222222]/20 text-[#222222] transition-colors hover:border-[#222222] disabled:cursor-not-allowed disabled:opacity-35 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#222222]"
       >
         <ChevronLeft className="h-4 w-4" strokeWidth={1.5} />
       </button>
-      
-      {/* Navigation dots */}
-      <div className="flex space-x-2">
-        {Array.from({ length: getTotalDots() }).map((_, index) => (
-          <div 
+
+      <div
+        className="flex space-x-2"
+        role="group"
+        aria-label="Seleccionar vista de la galería"
+      >
+        {Array.from({ length: totalPages }).map((_, index) => (
+          <button
             key={index}
-            className={`w-[10px] h-[10px] rounded-full border border-[#222222] ${
-              index === getActiveDot() ? 'bg-[#98989A]' : 'bg-transparent'
+            type="button"
+            aria-label={`Ir a la vista ${index + 1}`}
+            aria-current={index === activePage ? "true" : undefined}
+            onClick={() => goToPage(index)}
+            disabled={!api}
+            className={`h-2.5 w-2.5 rounded-full border border-[#222222] transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#222222] disabled:cursor-not-allowed ${
+              index === activePage ? "bg-[#98989A]" : "bg-transparent"
             }`}
           />
         ))}
       </div>
-      
+
       <button
         type="button"
         aria-label="Siguiente"
         onClick={handleNext}
-        disabled={!canScrollNext}
-        className="flex h-10 w-10 items-center justify-center rounded-full border border-[#222222]/20 text-[#222222] transition-colors hover:border-[#222222] disabled:cursor-not-allowed disabled:opacity-35"
+        disabled={!canGoNext}
+        className="flex h-10 w-10 items-center justify-center rounded-full border border-[#222222]/20 text-[#222222] transition-colors hover:border-[#222222] disabled:cursor-not-allowed disabled:opacity-35 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#222222]"
       >
         <ChevronRight className="h-4 w-4" strokeWidth={1.5} />
       </button>
@@ -138,8 +171,8 @@ export default function ArchitecturalGallery() {
 
   const buttonText = {
     es: "Ver más",
-    en: "Discover"
-  }
+    en: "Discover",
+  } as const
 
   const currentButtonText = buttonText[language]
 
@@ -147,15 +180,15 @@ export default function ArchitecturalGallery() {
     <section className="py-12 md:py-14">
       <div className="mx-auto max-w-[1308px] px-0">
         <div className="w-full">
-          <Carousel 
-            className="w-full" 
-            opts={{ 
-              align: "start", 
-              loop: false, 
+          <Carousel
+            className="w-full"
+            opts={{
+              align: "start",
+              loop: false,
               slidesToScroll: 1,
               breakpoints: {
-                '(min-width: 768px)': { slidesToScroll: 2 }
-              }
+                "(min-width: 768px)": { slidesToScroll: DESKTOP_SLIDES_PER_PAGE },
+              },
             }}
           >
             <CarouselContent className="-ml-1">
@@ -169,25 +202,26 @@ export default function ArchitecturalGallery() {
                       className="object-cover"
                       sizes="(max-width: 768px) 100vw, 50vw"
                     />
-                    
-                    {/* Title overlay */}
+
                     <div className="absolute left-[5.32%] bottom-[3.94%] text-white">
                       <h3 className="font-[family-name:var(--font-courier)] text-base leading-[18px] text-white">
                         {item.title}
                       </h3>
                     </div>
-                    
-                    {/* Ver más button */}
+
                     <div className="absolute right-[8.25%] bottom-[4.77%]">
-                      <button className="border border-white/80 bg-black/10 px-4 py-2 font-[family-name:var(--font-courier)] text-base leading-[18px] text-white transition-colors hover:bg-black/25">
+                      <Link
+                        href={item.href}
+                        className="inline-block border border-white/80 bg-black/10 px-4 py-2 font-[family-name:var(--font-courier)] text-base leading-[18px] text-white transition-colors hover:bg-black/25 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+                      >
                         {currentButtonText}
-                      </button>
+                      </Link>
                     </div>
                   </div>
                 </CarouselItem>
               ))}
             </CarouselContent>
-            
+
             <CarouselNavigation />
           </Carousel>
         </div>

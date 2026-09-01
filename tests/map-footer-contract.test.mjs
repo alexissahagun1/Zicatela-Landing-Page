@@ -28,8 +28,9 @@ test("footer follows the current Figma content and has no placeholder contact da
   assert.doesNotMatch(footer, /<span>CASA ZII<\/span>/);
   assert.match(footer, /text-\[15px\]/);
   assert.match(footer, /FAQs/);
-  assert.match(footer, /md:left-\[81\.86%\] md:top-\[111px\]/);
-  assert.match(footer, /w-\[172px\][^\n]*md:left-\[81\.86%\] md:top-\[192px\]/);
+  assert.match(footer, /md:left-\[78\.5%\] md:top-\[111px\]/);
+  assert.match(footer, /md:left-\[78\.5%\] md:top-\[192px\]/);
+  assert.match(footer, /whitespace-nowrap/);
   assert.doesNotMatch(footer, /md:right-\[4\.71%\]/);
   assert.doesNotMatch(footer, /\+52 00 0000 0000/);
   assert.doesNotMatch(footer, /reservaciones@casazii\.com/);

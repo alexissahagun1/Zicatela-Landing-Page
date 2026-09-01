@@ -57,13 +57,13 @@ export default function Footer() {
           <p className="m-0 text-[15px] leading-6">Puerto Escondido, Oaxaca.</p>
         </div>
 
-        <div className="mt-10 font-[family-name:var(--font-courier)] text-[15px] leading-6 text-black md:absolute md:left-[81.86%] md:top-[111px] md:mt-0">
+        <div className="mt-10 font-[family-name:var(--font-courier)] text-[15px] leading-6 text-black md:absolute md:left-[78.5%] md:top-[111px] md:mt-0">
           <span>FAQs</span>
         </div>
 
-        <div className="mt-6 w-[172px] font-[family-name:var(--font-courier)] text-[15px] leading-6 text-black md:absolute md:left-[81.86%] md:top-[192px] md:mt-0">
-          <p className="m-0">{t.privacy}</p>
-          <p className="m-0">{t.terms}</p>
+        <div className="mt-6 font-[family-name:var(--font-courier)] text-[15px] leading-6 text-black md:absolute md:left-[78.5%] md:top-[192px] md:mt-0">
+          <p className="m-0 whitespace-nowrap">{t.privacy}</p>
+          <p className="m-0 whitespace-nowrap">{t.terms}</p>
         </div>
       </div>
     </footer>
