@@ -62,6 +62,17 @@ export function getListingPhoto(
   return null;
 }
 
+/** Ensure the booking/listing hero photo leads each property carousel. */
+export function withListingPhoto(unit: keyof typeof LISTING_PHOTOS, images: string[]): string[] {
+  const photo = LISTING_PHOTOS[unit].src;
+  const rest = images.filter((image) => image !== photo);
+  return [photo, ...rest];
+}
+
+export function listingPhotoAlt(unit: keyof typeof LISTING_PHOTOS, language: "es" | "en"): string {
+  return LISTING_PHOTOS[unit].alt[language];
+}
+
 /** Warm the browser cache for photos that will appear in the results list. */
 export function preloadListingPhotos(sources: string[]): void {
   if (typeof window === "undefined") return;

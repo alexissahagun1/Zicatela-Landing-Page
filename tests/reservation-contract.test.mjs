@@ -31,7 +31,11 @@ test("booking result cards show a photo for each Guesty unit", () => {
 
 test("listing photos use optimized booking-card sources", async () => {
   const photos = await readFile("lib/listing-photos.ts", "utf8");
+  const campeche = await readFile("app/casa-campeche/page.tsx", "utf8");
+  const palmas = await readFile("app/casa-palmas/page.tsx", "utf8");
   assert.match(photos, /\/figma\/landing\/casa-campeche-i\.jpg/);
   assert.match(photos, /\/figma\/landing\/casa-campeche-ii\.jpg/);
-  assert.match(photos, /preloadListingPhotos/);
+  assert.match(photos, /withListingPhoto/);
+  assert.match(campeche, /withListingPhoto\("Campeche I"/);
+  assert.match(palmas, /withListingPhoto\("Palmas II"/);
 });

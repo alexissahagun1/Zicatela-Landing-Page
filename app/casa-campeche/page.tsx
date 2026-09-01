@@ -7,6 +7,7 @@ import AmenitiesSection from "../components/AmenitiesSection";
 import PropertyGallery from "../components/PropertyGallery";
 import PropertyCarousel from "../components/PropertyCarousel";
 import MapSection from "../components/MapSection";
+import { listingPhotoAlt, withListingPhoto } from "@/lib/listing-photos";
 import { useLanguage } from '../contexts/LanguageContext';
 
 export default function CasaCampechePage() {
@@ -73,7 +74,7 @@ export default function CasaCampechePage() {
           <PropertyCarousel
             sectionId="campeche-i"
             title="CAMPECHE I"
-            images={[
+            images={withListingPhoto("Campeche I", [
               "/figma/casa-campeche/campeche-i.png",
               "/figma/casa-campeche/right-01-shower.png",
               "/figma/casa-campeche/right-02-bedroom.png",
@@ -83,8 +84,9 @@ export default function CasaCampechePage() {
               "/figma/casa-campeche/right-06-dining.png",
               "/figma/casa-campeche/right-07-kitchen.png",
               "/figma/casa-campeche/right-08-bathroom.png",
-            ]}
+            ])}
             imageAlts={[
+              listingPhotoAlt("Campeche I", language),
               "Habitación de Casa Campeche I",
               "Regadera de concreto de Casa Campeche I",
               "Habitación con arte de Casa Campeche I",
@@ -110,7 +112,7 @@ export default function CasaCampechePage() {
           <PropertyCarousel
             sectionId="campeche-ii"
             title="CAMPECHE II"
-            images={[
+            images={withListingPhoto("Campeche II", [
               "/figma/casa-campeche/campeche-ii.jpg",
               "/figma/casa-campeche/left-01-kitchen.png",
               "/figma/casa-campeche/left-02-lounge.png",
@@ -120,8 +122,9 @@ export default function CasaCampechePage() {
               "/figma/casa-campeche/left-06-interior.jpg",
               "/figma/casa-campeche/left-07-interior.jpg",
               "/figma/casa-campeche/left-08-vertical.jpg",
-            ]}
+            ])}
             imageAlts={[
+              listingPhotoAlt("Campeche II", language),
               "Habitación de Casa Campeche II",
               "Cocina y comedor de Casa Campeche II",
               "Sala abierta de Casa Campeche II",

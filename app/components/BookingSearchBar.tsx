@@ -168,7 +168,7 @@ export default function BookingSearchBar({
     const twoMonthMedia = window.matchMedia(
       "(min-width: 1024px) and (min-height: 760px)"
     );
-    const compactMedia = window.matchMedia("(max-height: 699px)");
+    const compactMedia = window.matchMedia("(max-width: 767px), (max-height: 699px)");
     const sync = () => {
       setCalendarMonths(twoMonthMedia.matches ? 2 : 1);
       setCalendarIsCompact(compactMedia.matches);
@@ -187,6 +187,7 @@ export default function BookingSearchBar({
   const canSearch = Boolean(checkIn && checkOut);
 
   const whoSummary = `${adults} ${t.adultsShort}`;
+  const fontCourier = "font-[family-name:var(--font-courier)]";
 
   const dateSummary = formatDateRange(
     checkIn,
@@ -202,18 +203,16 @@ export default function BookingSearchBar({
     calendarMonths === 2
       ? "p-0 [--cell-size:2.5rem] lg:[--cell-size:3rem]"
       : calendarIsCompact
-        ? "p-0 [--cell-size:2rem]"
+        ? "p-0 [--cell-size:2.125rem]"
         : "p-0 [--cell-size:2.25rem]";
   const calendarMonthClassName =
     calendarMonths === 2
       ? "w-full lg:w-[22.75rem] lg:shrink-0 rdp-month"
-      : "w-[calc(var(--cell-size)*7)] rdp-month";
+      : "mx-auto w-[min(100%,calc(var(--cell-size)*7))] rdp-month";
   const calendarPopoverPaddingClassName =
     calendarMonths === 2
       ? "px-6 pt-6 lg:px-8 lg:pt-8"
-      : calendarIsCompact
-        ? "px-5 pt-5"
-        : "px-6 pt-6";
+      : "px-4 pt-4 max-lg:px-4 max-lg:pt-4 lg:px-6 lg:pt-6";
 
   function requestPopoverClose() {
     if (!openPanel || isPopoverClosing) return;
@@ -281,14 +280,15 @@ export default function BookingSearchBar({
             type="button"
             onClick={() => togglePanel("who")}
             aria-expanded={openPanel === "who" && !isPopoverClosing}
+            aria-label={`${t.who}: ${whoSummary}`}
             className={cn(
-              "flex w-[86px] shrink-0 items-center gap-1.5 rounded-xl px-2 text-left transition-colors",
+              "flex w-[52px] shrink-0 flex-col items-center justify-center gap-0.5 rounded-xl px-1.5 transition-colors",
               openPanel === "who" && !isPopoverClosing ? "bg-[#F7F7F7]" : "hover:bg-[#FAFAFA]",
             )}
           >
             <Users className="h-4 w-4 shrink-0 text-[#6B6B6B]" strokeWidth={1.5} />
-            <span className="min-w-0 truncate font-['Courier_Prime'] text-[12px] leading-tight text-[#222]">
-              {whoSummary}
+            <span className={`${fontCourier} text-[13px] tabular-nums leading-none text-[#222]`}>
+              {adults}
             </span>
           </button>
 
@@ -395,30 +395,40 @@ export default function BookingSearchBar({
           <div
             className={cn(
               "grid grid-rows-[auto_auto] overflow-hidden rounded-[28px] border border-[#E8E8E8] bg-white shadow-[0_20px_60px_rgba(0,0,0,0.16)]",
+              "max-lg:max-h-[min(calc(100dvh-10rem),34rem)]",
               calendarPopoverPaddingClassName
             )}
           >
-            <Calendar
-              mode="range"
-              numberOfMonths={calendarMonths}
-              selected={dateRange}
-              onSelect={setDateRange}
-              disabled={{ before: new Date() }}
-              defaultMonth={checkIn ?? new Date()}
-              locale={language === "es" ? es : enUS}
-              className={calendarClassName}
-              classNames={{
-                months: "relative flex flex-col gap-8 md:flex-row lg:gap-14 rdp-months",
-                month: calendarMonthClassName,
-                nav: "absolute inset-x-0 top-0 z-10 flex w-full items-center justify-between rdp-nav",
-              }}
-            />
-            <footer className="relative z-10 flex h-[60px] items-center justify-end border-t border-[#EFEFEF] bg-white px-2">
+            <div className="max-lg:overflow-y-auto max-lg:overscroll-contain">
+              <Calendar
+                mode="range"
+                numberOfMonths={calendarMonths}
+                selected={dateRange}
+                onSelect={setDateRange}
+                disabled={{ before: new Date() }}
+                defaultMonth={checkIn ?? new Date()}
+                locale={language === "es" ? es : enUS}
+                className={calendarClassName}
+                classNames={{
+                  months:
+                    "relative flex flex-col gap-8 md:flex-row lg:gap-14 max-lg:gap-3 rdp-months",
+                  month: calendarMonthClassName,
+                  nav: "absolute inset-x-0 top-0 z-10 flex w-full items-center justify-between rdp-nav",
+                  month_caption:
+                    "mb-4 flex h-(--cell-size) w-full items-center justify-center px-(--cell-size) max-lg:mb-2",
+                  month_grid:
+                    "w-full table-fixed border-separate border-spacing-y-4 max-lg:border-spacing-y-1",
+                  caption_label: `${fontCourier} text-sm font-normal capitalize text-[#222]`,
+                  weekday: `${fontCourier} text-[0.7rem] font-normal uppercase tracking-[0.06em] text-[#8A8A8A]`,
+                }}
+              />
+            </div>
+            <footer className="relative z-10 flex min-h-[52px] items-center justify-end border-t border-[#EFEFEF] bg-white px-4 py-3 max-lg:pb-[max(0.75rem,env(safe-area-inset-bottom))]">
               <button
                 type="button"
                 onClick={requestPopoverClose}
                 disabled={!checkIn || !checkOut}
-                className="rounded-full bg-[#222] px-5 py-2 font-['Courier_Prime'] text-sm text-white disabled:opacity-40"
+                className={`rounded-full bg-[#222] px-5 py-2.5 ${fontCourier} text-sm text-white disabled:opacity-40`}
               >
                 {t.apply}
               </button>

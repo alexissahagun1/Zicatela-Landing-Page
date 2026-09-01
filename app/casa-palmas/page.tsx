@@ -7,6 +7,7 @@ import AmenitiesSection from "../components/AmenitiesSection";
 import PropertyGallery from "../components/PropertyGallery";
 import PropertyCarousel from "../components/PropertyCarousel";
 import MapSection from "../components/MapSection";
+import { listingPhotoAlt, withListingPhoto } from "@/lib/listing-photos";
 import { useLanguage } from '../contexts/LanguageContext';
 
 export default function CasaPalmasPage() {
@@ -70,7 +71,7 @@ export default function CasaPalmasPage() {
           <PropertyCarousel
             sectionId="palmas-i"
             title="PALMAS I"
-            images={[
+            images={withListingPhoto("Palmas I", [
               "/figma/casa-palmas/palmas-i-01.jpg",
               "/figma/casa-palmas/palmas-i-02.jpg",
               "/figma/casa-palmas/palmas-i-03.jpg",
@@ -80,9 +81,9 @@ export default function CasaPalmasPage() {
               "/figma/casa-palmas/palmas-i-07.jpg",
               "/figma/casa-palmas/palmas-i-08.jpg",
               "/figma/casa-palmas/palmas-i-09.jpg"
-            ]}
+            ])}
             imageAlts={[
-              "Habitación de Casa Palmas I",
+              listingPhotoAlt("Palmas I", language),
               "Habitación de Casa Palmas I",
               "Espejo y regadera de Casa Palmas I",
               "Sala con ventana circular de Casa Palmas I",
@@ -107,7 +108,7 @@ export default function CasaPalmasPage() {
           <PropertyCarousel
             sectionId="palmas-ii"
             title="PALMAS II"
-            images={[
+            images={withListingPhoto("Palmas II", [
               "/figma/casa-palmas/palmas-ii-01.jpg",
               "/figma/casa-palmas/palmas-ii-02.jpg",
               "/figma/casa-palmas/palmas-ii-03.jpg",
@@ -117,9 +118,9 @@ export default function CasaPalmasPage() {
               "/figma/casa-palmas/palmas-ii-07.jpg",
               "/figma/casa-palmas/palmas-ii-08.jpg",
               "/figma/casa-palmas/palmas-ii-09.jpg"
-            ]}
+            ])}
             imageAlts={[
-              "Habitación de Casa Palmas II",
+              listingPhotoAlt("Palmas II", language),
               "Habitación de Casa Palmas II",
               "Regadera exterior de Casa Palmas II",
               "Baño de Casa Palmas II",

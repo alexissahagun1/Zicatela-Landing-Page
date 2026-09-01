@@ -9,9 +9,9 @@ Marketing site for **Casa Zii** (La Punta, Zicatela) built with Next.js 15 App R
 The homepage hero uses the licensed Ludwig Godefroy press video
 (`255_LG_CASA-ZII_H264_HD.mp4` from Dropbox), transcoded locally to
 `public/casa-zii-hero-loop.mp4` (~1 MB, 12 s loop, 1280×720, no audio) with
-`public/casa-zii-hero-poster.jpg` as the poster. The original
-`public/beach-hero.png` remains in the repo as a fallback asset but is no
-longer used in the hero.
+`public/casa-zii-hero-poster.jpg` as the poster. The hero shows video only, with
+no title overlay. The same unit photos power booking cards and lead each
+property carousel via `withListingPhoto` in `lib/listing-photos.ts`.
 
 
 Replaced the previous stub date inputs on `/booking` with a hotel-style search bar matching the product mock:
