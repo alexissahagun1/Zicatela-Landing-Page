@@ -241,15 +241,15 @@ export default function BookingResults({ search }: BookingResultsProps) {
         const data = await res.json().catch(() => null);
         if (cancelled) return;
         if (!res.ok) throw new Error(data?.error ?? "GUESTY_ERROR");
-        const nextResults = Array.isArray(data?.results) ? data.results : [];
+        const nextResults: AvailableListing[] = Array.isArray(data?.results)
+          ? (data.results as AvailableListing[])
+          : [];
         setResults(nextResults);
         setNights(Number(data?.nights) || 0);
         setPhase("ready");
         const photoSources = nextResults
-          .map((listing: AvailableListing) =>
-            getListingPhoto(listing.unit, listing.house, language)?.src
-          )
-          .filter((src: string | undefined): src is string => Boolean(src));
+          .map((listing) => getListingPhoto(listing.unit, listing.house, language)?.src)
+          .filter((src): src is string => Boolean(src));
         preloadListingPhotos([...new Set(photoSources)]);
       } catch (err) {
         if (cancelled) return;
