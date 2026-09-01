@@ -28,7 +28,7 @@ export const metadata: Metadata = {
     siteName: SITE_NAME,
     type: "website",
     locale: "es_MX",
-    images: ["/beach-hero.png"],
+    images: ["/casa-zii-hero-poster.jpg"],
   },
 };
 

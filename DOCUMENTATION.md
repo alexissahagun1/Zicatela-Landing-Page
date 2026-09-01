@@ -4,7 +4,15 @@
 
 Marketing site for **Casa Zii** (La Punta, Zicatela) built with Next.js 15 App Router, React 19, Tailwind CSS, and shadcn/ui primitives. Bilingual ES/EN via `LanguageContext`.
 
-## Current booking UI (2026-07-26)
+## Hero media (2026-09-01)
+
+The homepage hero uses the licensed Ludwig Godefroy press video
+(`255_LG_CASA-ZII_H264_HD.mp4` from Dropbox), transcoded locally to
+`public/casa-zii-hero-loop.mp4` (~1 MB, 12 s loop, 1280×720, no audio) with
+`public/casa-zii-hero-poster.jpg` as the poster. The original
+`public/beach-hero.png` remains in the repo as a fallback asset but is no
+longer used in the hero.
+
 
 Replaced the previous stub date inputs on `/booking` with a hotel-style search bar matching the product mock:
 

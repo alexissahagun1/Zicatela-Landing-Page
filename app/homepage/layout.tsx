@@ -16,7 +16,7 @@ export const metadata: Metadata = {
     title: "Casa Zii - Villas de Lujo en Zicatela",
     description:
       "Villas de diseño solo para adultos con alberca privada en La Punta, Zicatela, Puerto Escondido.",
-    images: ["/beach-hero.png"],
+    images: ["/casa-zii-hero-poster.jpg"],
   },
 };
 
