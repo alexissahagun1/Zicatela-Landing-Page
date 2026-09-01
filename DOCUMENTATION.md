@@ -19,6 +19,10 @@ Component: `app/components/BookingSearchBar.tsx`
 Page wiring: `app/booking/page.tsx`  
 Results + quote + booking-request UI: `app/components/BookingResults.tsx`
 
+Each availability card shows the unit photograph from `lib/listing-photos.ts`
+(landing exports for Campeche, property heroes for Palmas) with responsive
+thumbnails on mobile, skeleton loading, and Next.js image optimization.
+
 ## Guesty integration (2026-08-23)
 
 Credentials are for the **Guesty Open API** (the client key pair was rejected by the

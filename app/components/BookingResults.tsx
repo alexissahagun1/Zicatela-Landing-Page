@@ -4,6 +4,9 @@ import { useEffect, useState } from "react";
 import { AlertCircle, CheckCircle2, Loader2 } from "lucide-react";
 import { useLanguage } from "../contexts/LanguageContext";
 import type { BookingSearchValues } from "./BookingSearchBar";
+import BookingListingPhoto from "./BookingListingPhoto";
+import BookingResultsSkeleton from "./BookingResultsSkeleton";
+import { getListingPhoto, preloadListingPhotos } from "@/lib/listing-photos";
 
 type AvailableListing = {
   id: string;
@@ -82,6 +85,7 @@ const copy = {
     noRatePlan: "Guesty no devolvió una tarifa reservable para estas fechas.",
     ratePlan: "Tarifa",
     nightsBreakdown: "noches",
+    minNights: (count: number) => `mín. ${count}`,
     subtotal: "Subtotal",
     cleaningFee: "Limpieza",
     total: "Total",
@@ -123,6 +127,7 @@ const copy = {
     noRatePlan: "Guesty did not return a bookable rate for these dates.",
     ratePlan: "Rate plan",
     nightsBreakdown: "nights",
+    minNights: (count: number) => `min. ${count}`,
     subtotal: "Subtotal",
     cleaningFee: "Cleaning",
     total: "Total",
@@ -182,11 +187,13 @@ function createIdempotencyKey(): string {
   return `casa-zii-${Date.now()}-${Math.random().toString(36).slice(2)}`;
 }
 
+const fontCourier = "font-[family-name:var(--font-courier)]";
+
 const inputClass =
-  "w-full rounded-lg border border-[#E6E6E6] bg-white px-3 py-2 font-['Courier_Prime'] text-sm text-[#222] outline-none transition-colors placeholder:text-[#B0B0B0] focus:border-[#7A7A7C]";
+  `w-full rounded-lg border border-[#E6E6E6] bg-white px-3 py-2 ${fontCourier} text-sm text-[#222] outline-none transition-colors placeholder:text-[#B0B0B0] focus:border-[#7A7A7C] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#222]`;
 
 const ctaClass =
-  "inline-flex items-center justify-center gap-2 rounded-full bg-[#7A7A7C] px-6 py-2.5 font-['Courier_Prime'] text-xs uppercase tracking-[0.12em] text-white transition-colors hover:bg-[#5F5F61] disabled:cursor-not-allowed disabled:opacity-50";
+  `inline-flex items-center justify-center gap-2 rounded-full bg-[#7A7A7C] px-6 py-2.5 ${fontCourier} text-xs uppercase tracking-[0.12em] text-white transition-colors hover:bg-[#5F5F61] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#222] disabled:cursor-not-allowed disabled:opacity-50`;
 
 export default function BookingResults({ search }: BookingResultsProps) {
   const { language } = useLanguage();
@@ -234,9 +241,16 @@ export default function BookingResults({ search }: BookingResultsProps) {
         const data = await res.json().catch(() => null);
         if (cancelled) return;
         if (!res.ok) throw new Error(data?.error ?? "GUESTY_ERROR");
-        setResults(Array.isArray(data?.results) ? data.results : []);
+        const nextResults = Array.isArray(data?.results) ? data.results : [];
+        setResults(nextResults);
         setNights(Number(data?.nights) || 0);
         setPhase("ready");
+        const photoSources = nextResults
+          .map((listing: AvailableListing) =>
+            getListingPhoto(listing.unit, listing.house, language)?.src
+          )
+          .filter((src: string | undefined): src is string => Boolean(src));
+        preloadListingPhotos([...new Set(photoSources)]);
       } catch (err) {
         if (cancelled) return;
         setError(err instanceof Error ? err.message : "GUESTY_ERROR");
@@ -248,7 +262,7 @@ export default function BookingResults({ search }: BookingResultsProps) {
     return () => {
       cancelled = true;
     };
-  }, [checkIn, checkOut, search.adults]);
+  }, [checkIn, checkOut, search.adults, language]);
 
   if (!checkIn || !checkOut) return null;
   const checkInDate: Date = checkIn;
@@ -366,66 +380,80 @@ export default function BookingResults({ search }: BookingResultsProps) {
   return (
     <section className="mx-auto w-full max-w-6xl">
       {phase === "loading" && (
-        <div className="flex items-center justify-center gap-3 py-16 text-[#7A7A7C]">
-          <Loader2 className="h-5 w-5 animate-spin" />
-          <span className="font-['Courier_Prime'] text-sm uppercase tracking-[0.12em]">
-            {t.loading}
-          </span>
+        <div role="status" aria-live="polite" aria-busy="true">
+          <div className="mb-6 flex items-center gap-3 border-b border-[#E6E6E6] pb-4">
+            <Loader2 className="h-4 w-4 animate-spin text-[#7A7A7C]" />
+            <span className={`${fontCourier} text-xs uppercase tracking-[0.12em] text-[#7A7A7C]`}>
+              {t.loading}
+            </span>
+          </div>
+          <BookingResultsSkeleton />
         </div>
       )}
 
       {phase === "error" && (
         <div className="mx-auto max-w-xl py-16 text-center">
           <AlertCircle className="mx-auto mb-4 h-8 w-8 text-[#C0392B]" />
-          <h3 className="mb-2 font-['Courier_Prime'] text-lg uppercase tracking-[0.12em] text-[#222]">
+          <h3 className={`mb-2 ${fontCourier} text-lg uppercase tracking-[0.12em] text-[#222]`}>
             {t.errorTitle}
           </h3>
-          <p className="font-['Courier_Prime'] text-sm text-[#7A7A7C]">{error}</p>
+          <p className={`${fontCourier} text-sm text-[#7A7A7C]`}>{error}</p>
         </div>
       )}
 
       {phase === "ready" && (
         <>
           <div className="mb-6 border-b border-[#E6E6E6] pb-4">
-            <h2 className="font-['Courier_Prime'] text-xl uppercase tracking-[0.12em] text-[#222]">
+            <h2 className={`${fontCourier} text-xl uppercase tracking-[0.12em] text-[#222]`}>
               {t.availability}
             </h2>
-            <p className="mt-1 font-['Courier_Prime'] text-sm text-[#7A7A7C]">
+            <p className={`mt-1 ${fontCourier} text-sm text-[#7A7A7C]`}>
               {dateLabel} · {search.adults} {t.guests} · {nights} {t.nights}
             </p>
           </div>
 
           {results.length === 0 ? (
             <div className="py-16 text-center">
-              <p className="font-['Courier_Prime'] text-base text-[#222]">{t.noResults}</p>
-              <p className="mt-1 font-['Courier_Prime'] text-sm text-[#7A7A7C]">
+              <p className={`${fontCourier} text-base text-[#222]`}>{t.noResults}</p>
+              <p className={`mt-1 ${fontCourier} text-sm text-[#7A7A7C]`}>
                 {t.noResultsHint}
               </p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
-              {results.map((listing) => {
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-5">
+              {results.map((listing, index) => {
                 const quote = quotes[listing.id];
                 const booking = bookings[listing.id] ?? { status: "idle" as const };
+                const photo = getListingPhoto(listing.unit, listing.house, language);
                 return (
                   <article
                     key={listing.id}
-                    className="rounded-xl border border-[#E6E6E6] bg-white p-6 shadow-sm"
+                    className="casa-zii-booking-card overflow-hidden rounded-xl border border-[#E6E6E6] bg-white shadow-sm transition-shadow hover:shadow-md motion-reduce:transition-none"
+                    style={{ animationDelay: `${index * 60}ms` }}
                   >
-                    <p className="font-['Courier_Prime'] text-[11px] uppercase tracking-[0.16em] text-[#8A8A8A]">
-                      {listing.unit ?? listing.nickname ?? listing.house ?? ""}
-                    </p>
-                    <h3 className="mt-1 font-['Courier_Prime'] text-lg text-[#222]">
-                      {listing.title ?? listing.nickname ?? "—"}
-                    </h3>
-                    <p className="mt-1 font-['Courier_Prime'] text-xs text-[#7A7A7C]">
-                      {listing.accommodates} {t.guests}
-                      {listing.minNights ? ` · ${t.nightsBreakdown} mín. ${listing.minNights}` : ""}
-                    </p>
+                    <div className="flex gap-4 p-4 md:block md:p-0">
+                      {photo && (
+                        <BookingListingPhoto
+                          src={photo.src}
+                          alt={photo.alt}
+                          priority={index < 2}
+                        />
+                      )}
+                      <div className="min-w-0 flex-1 md:p-6">
+                        <p className={`${fontCourier} text-[11px] uppercase tracking-[0.16em] text-[#8A8A8A]`}>
+                          {listing.unit ?? listing.nickname ?? listing.house ?? ""}
+                        </p>
+                        <h3 className={`mt-1 ${fontCourier} text-base leading-snug text-[#222] md:text-lg`}>
+                          {listing.title ?? listing.nickname ?? "—"}
+                        </h3>
+                        <p className={`mt-1 ${fontCourier} text-xs text-[#7A7A7C]`}>
+                          {listing.accommodates} {t.guests}
+                          {listing.minNights ? ` · ${t.minNights(listing.minNights)}` : ""}
+                        </p>
 
                     {!quote && booking.status === "idle" && (
-                      <div className="mt-5">
-                        <p className="font-['Courier_Prime'] text-sm text-[#222]">
+                      <div className="mt-4 md:mt-5">
+                        <p className={`${fontCourier} text-sm text-[#222]`}>
                           {listing.basePrice != null && listing.currency ? (
                             <>
                               {t.from}{" "}
@@ -456,7 +484,7 @@ export default function BookingResults({ search }: BookingResultsProps) {
                     {quote?.status === "loading" && (
                       <div className="mt-5 flex items-center gap-2 text-[#7A7A7C]">
                         <Loader2 className="h-4 w-4 animate-spin" />
-                        <span className="font-['Courier_Prime'] text-xs uppercase tracking-[0.12em]">
+                        <span className={`${fontCourier} text-xs uppercase tracking-[0.12em]`}>
                           {t.quoteLoading}
                         </span>
                       </div>
@@ -464,7 +492,7 @@ export default function BookingResults({ search }: BookingResultsProps) {
 
                     {quote?.status === "error" && booking.status === "idle" && (
                       <div className="mt-5">
-                        <p className="font-['Courier_Prime'] text-xs text-[#C0392B]">
+                        <p className={`${fontCourier} text-xs text-[#C0392B]`}>
                           {quote.message}
                         </p>
                         <button
@@ -479,16 +507,16 @@ export default function BookingResults({ search }: BookingResultsProps) {
 
                     {quote?.status === "ready" && (
                       <div className="mt-5 border-t border-[#F0F0F0] pt-4">
-                        <p className="font-['Courier_Prime'] text-[11px] uppercase tracking-[0.16em] text-[#8A8A8A]">
+                        <p className={`${fontCourier} text-[11px] uppercase tracking-[0.16em] text-[#8A8A8A]`}>
                           {t.quoteTitle}
                         </p>
                         {quote.quote.ratePlans.map((plan) => (
                           <div key={plan.id || plan.name} className="mt-3">
                             <div className="flex items-baseline justify-between gap-4">
-                              <span className="font-['Courier_Prime'] text-sm text-[#222]">
+                              <span className={`${fontCourier} text-sm text-[#222]`}>
                                 {plan.name} · {quote.quote.nights} {t.nightsBreakdown}
                               </span>
-                              <span className="font-['Courier_Prime'] text-sm tabular-nums text-[#222]">
+                              <span className={`${fontCourier} text-sm tabular-nums text-[#222]`}>
                                 {formatMoney(plan.total, plan.currency, language)}
                               </span>
                             </div>
@@ -496,7 +524,7 @@ export default function BookingResults({ search }: BookingResultsProps) {
                               {plan.days.map((day) => (
                                 <div
                                   key={day.date}
-                                  className="flex justify-between font-['Courier_Prime'] text-xs text-[#7A7A7C]"
+                                  className={`flex justify-between ${fontCourier} text-xs text-[#7A7A7C]`}
                                 >
                                   <span>{formatDateLabel(day.date, language)}</span>
                                   <span className="tabular-nums">
@@ -505,7 +533,7 @@ export default function BookingResults({ search }: BookingResultsProps) {
                                 </div>
                               ))}
                             </div>
-                            <div className="mt-3 space-y-1 border-t border-[#F0F0F0] pt-2 font-['Courier_Prime'] text-xs text-[#7A7A7C]">
+                            <div className={`mt-3 space-y-1 border-t border-[#F0F0F0] pt-2 ${fontCourier} text-xs text-[#7A7A7C]`}>
                               <div className="flex justify-between">
                                 <span>{t.subtotal}</span>
                                 <span className="tabular-nums">
@@ -526,7 +554,7 @@ export default function BookingResults({ search }: BookingResultsProps) {
                               </div>
                             </div>
                             {quote.quote.expiresAt && (
-                              <p className="mt-2 font-['Courier_Prime'] text-[11px] text-[#8A8A8A]">
+                              <p className={`mt-2 ${fontCourier} text-[11px] text-[#8A8A8A]`}>
                                 {t.validUntil}{" "}
                                 {new Date(quote.quote.expiresAt).toLocaleString(
                                   language === "es" ? "es-MX" : "en-US",
@@ -551,7 +579,7 @@ export default function BookingResults({ search }: BookingResultsProps) {
                             >
                               {t.requestCta}
                             </button>
-                            <p className="mt-2 font-['Courier_Prime'] text-[11px] text-[#8A8A8A]">
+                            <p className={`mt-2 ${fontCourier} text-[11px] text-[#8A8A8A]`}>
                               {t.requestInfo}
                             </p>
                           </div>
@@ -560,7 +588,7 @@ export default function BookingResults({ search }: BookingResultsProps) {
                         {booking.status === "form" && (
                           <div className="mt-4 space-y-3">
                             {formErrors[listing.id] && (
-                              <p className="font-['Courier_Prime'] text-xs text-[#C0392B]">
+                              <p className={`${fontCourier} text-xs text-[#C0392B]`}>
                                 {formErrors[listing.id]}
                               </p>
                             )}
@@ -611,7 +639,7 @@ export default function BookingResults({ search }: BookingResultsProps) {
                                     [listing.id]: { status: "idle" },
                                   }))
                                 }
-                                className="inline-flex items-center rounded-full border border-[#D0D0D0] px-5 py-2.5 font-['Courier_Prime'] text-xs uppercase tracking-[0.12em] text-[#7A7A7C] transition-colors hover:bg-[#FAFAFA]"
+                                className={`inline-flex items-center rounded-full border border-[#D0D0D0] px-5 py-2.5 ${fontCourier} text-xs uppercase tracking-[0.12em] text-[#7A7A7C] transition-colors hover:bg-[#FAFAFA] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#222]`}
                               >
                                 {t.back}
                               </button>
@@ -622,7 +650,7 @@ export default function BookingResults({ search }: BookingResultsProps) {
                         {booking.status === "submitting" && (
                           <div className="mt-4 flex items-center gap-2 text-[#7A7A7C]">
                             <Loader2 className="h-4 w-4 animate-spin" />
-                            <span className="font-['Courier_Prime'] text-xs uppercase tracking-[0.12em]">
+                            <span className={`${fontCourier} text-xs uppercase tracking-[0.12em]`}>
                               {t.submitting}
                             </span>
                           </div>
@@ -630,7 +658,7 @@ export default function BookingResults({ search }: BookingResultsProps) {
 
                         {booking.status === "error" && (
                           <div className="mt-4">
-                            <p className="font-['Courier_Prime'] text-xs text-[#C0392B]">
+                            <p className={`${fontCourier} text-xs text-[#C0392B]`}>
                               {booking.message}
                             </p>
                             <button
@@ -652,15 +680,15 @@ export default function BookingResults({ search }: BookingResultsProps) {
                           <div className="mt-4 rounded-lg bg-[#F4F8F4] p-4">
                             <div className="flex items-center gap-2">
                               <CheckCircle2 className="h-4 w-4 text-[#2E7D32]" />
-                              <p className="font-['Courier_Prime'] text-sm font-semibold text-[#222]">
+                              <p className={`${fontCourier} text-sm font-semibold text-[#222]`}>
                                 {t.bookingDone}
                               </p>
                             </div>
-                            <p className="mt-1 font-['Courier_Prime'] text-xs text-[#7A7A7C]">
+                            <p className={`mt-1 ${fontCourier} text-xs text-[#7A7A7C]`}>
                               {t.bookingDoneInfo}
                             </p>
                             {booking.confirmationCode && (
-                              <p className="mt-2 font-['Courier_Prime'] text-xs text-[#7A7A7C]">
+                              <p className={`mt-2 ${fontCourier} text-xs text-[#7A7A7C]`}>
                                 {t.confirmationCode}:{" "}
                                 <span className="font-semibold text-[#222]">
                                   {booking.confirmationCode}
@@ -671,6 +699,8 @@ export default function BookingResults({ search }: BookingResultsProps) {
                         )}
                       </div>
                     )}
+                      </div>
+                    </div>
                   </article>
                 );
               })}
