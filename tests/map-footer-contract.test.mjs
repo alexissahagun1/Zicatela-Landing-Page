@@ -157,3 +157,19 @@ test("empty map container is hidden until it is ready", () => {
 test("the floating reservation bar remains mounted globally", () => {
   assert.match(layout, /<StickyBookingBar \/>/);
 });
+
+test("newsletter follows the Figma promotion block and uses Brevo server-side", () => {
+  const newsletter = readFileSync(resolve(root, "app/components/NewsletterForm.tsx"), "utf8");
+  const route = readFileSync(resolve(root, "app/api/newsletter/route.ts"), "utf8");
+  const homepage = readFileSync(resolve(root, "app/homepage/page.tsx"), "utf8");
+  assert.match(homepage, /<NewsletterForm \/>/);
+  assert.ok(homepage.indexOf("<MapSection />") < homepage.indexOf("<NewsletterForm />"));
+  assert.ok(homepage.indexOf("<NewsletterForm />") < homepage.indexOf("<Footer />"));
+  assert.match(newsletter, /From time to time, receive Casa Zii news/);
+  assert.match(newsletter, /type="email"/);
+  assert.match(newsletter, /type="checkbox"/);
+  assert.match(route, /BREVO_API_KEY/);
+  assert.match(route, /BREVO_LIST_ID/);
+  assert.match(route, /https:\/\/api\.brevo\.com\/v3\/contacts/);
+  assert.doesNotMatch(route, /NEXT_PUBLIC_BREVO/);
+});

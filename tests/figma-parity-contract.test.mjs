@@ -21,7 +21,7 @@ test("landing sections preserve their measured Figma desktop geometry", () => {
   assert.match(laPunta, /lg:w-\[343px\].*lg:h-\[457px\]/);
   assert.match(mainContent, /font-\[family-name:var\(--font-courier\)\]/);
   assert.match(mainContent, /text-\[24px\]/);
-  assert.match(mainContent, /<h1[^>]*>\s*\{currentContent\.title\}\s*<\/h1>/);
+  assert.match(mainContent, /<h1[^>]*>\s*\{currentContent\.title\}\s*<br \/>\s*\{currentContent\.titleLine2\}\s*<\/h1>/);
   assert.doesNotMatch(mainContent, /lg:text-5xl/);
 });
 

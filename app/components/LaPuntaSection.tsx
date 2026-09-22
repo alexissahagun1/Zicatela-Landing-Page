@@ -15,7 +15,7 @@ export default function LaPuntaSection() {
       paragraph3: "Desde Casa Zii, todo está al alcance: la tranquilidad del entorno tropical, el diseño contemporáneo en armonía con la naturaleza y la energía única de una comunidad que vive intensamente, al ritmo del sol y las olas."
     },
     en: {
-      title: "Discover La Punta",
+      title: "La Punta",
       paragraph1: "In La Punta de Zicatela, life moves to the rhythm of the ocean. This laid-back corner of Puerto Escondido preserves the soul of a surf town, where golden beaches, artisan cafés, and palm-lined dirt roads set the tone for slow, intentional living. Here, every sunset is a spectacle, and each day is an invitation to reconnect with nature.",
       highlight: "LIVE LA PUNTA LIKE A LOCAL",
       paragraph2: "The main beach is perfect for those learning to surf or simply enjoying the sea. As night falls, La Punta comes alive with vibrant bars, live music, and an eclectic mix of restaurants. Local markets and shops, bursting with color, flavor, and tradition, offer a true taste of Oaxacan culture.",

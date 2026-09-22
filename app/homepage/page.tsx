@@ -1,11 +1,10 @@
 import NavigationBar from "../components/NavigationBar";
 import HeroSection from "../components/HeroSection";
 import MainContent from "../components/MainContent";
-import InstagramGallery from "../components/InstagramGallery";
-import AccommodationSection from "../components/AccommodationSection";
-import ArchitecturalGallery from "../components/ArchitecturalGallery";
-import LaPuntaSection from "../components/LaPuntaSection";
+import FigmaPropertyMosaic from "../components/FigmaPropertyMosaic";
+import ExperienceSection from "../components/ExperienceSection";
 import MapSection from "../components/MapSection";
+import NewsletterForm from "../components/NewsletterForm";
 import Footer from "../components/Footer";
 
 export default function Homepage() {
@@ -13,17 +12,19 @@ export default function Homepage() {
     <div className="min-h-screen">
       <NavigationBar />
       <HeroSection />
-      <MainContent />
+      <div className="pt-[32px] lg:pt-[72px]">
+        <MainContent />
+      </div>
 
-      <InstagramGallery />
+      <FigmaPropertyMosaic />
 
-      <AccommodationSection />
-
-      <ArchitecturalGallery />
-
-      <LaPuntaSection />
+      <ExperienceSection />
 
       <MapSection />
+
+      <div className="pb-[60px] lg:pb-[120px]">
+        <NewsletterForm />
+      </div>
 
       <Footer />
     </div>
