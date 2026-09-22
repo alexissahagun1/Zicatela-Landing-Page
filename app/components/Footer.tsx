@@ -10,8 +10,8 @@ const copy = {
     terms: "TÉRMINOS Y CONDICIONES",
   },
   en: {
-    privacy: "PRIVACY POLICY",
-    terms: "TERMS AND CONDITIONS",
+    privacy: "PRIVACY NOTICE",
+    terms: "TERMS & CONDITIONS",
   },
 } as const;
 
@@ -58,12 +58,14 @@ export default function Footer() {
         </div>
 
         <div className="mt-10 font-[family-name:var(--font-courier)] text-[15px] leading-6 text-black md:absolute md:left-[78.5%] md:top-[111px] md:mt-0">
-          <span>FAQs</span>
+          <Link href="/faq" className="hover:opacity-70">FAQs</Link>
         </div>
 
         <div className="mt-6 font-[family-name:var(--font-courier)] text-[15px] leading-6 text-black md:absolute md:left-[78.5%] md:top-[192px] md:mt-0">
           <p className="m-0 whitespace-nowrap">{t.privacy}</p>
-          <p className="m-0 whitespace-nowrap">{t.terms}</p>
+          <p className="m-0 whitespace-nowrap">
+            <Link href="/terminos" className="hover:opacity-70">{t.terms}</Link>
+          </p>
         </div>
       </div>
     </footer>

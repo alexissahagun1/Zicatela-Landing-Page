@@ -7,38 +7,16 @@ export default function MainContent() {
 
   const content = {
     es: {
-      title: "Bienvenidos a Casa Zii",
-      slogan: "DONDE EL DISEÑO SE FUNDE CON LA NATURALEZA EN EL CORAZÓN DE LA PUNTA",
-      subtitle: "Dos espléndidas casas duplex de estilo brutalista.",
-      casaCampeche: "● Casa Campeche",
-      casaPalmas: "▲ Casa Palmas",
-      description: `Diseñadas por el reconocido arquitecto Ludwig Godefroy, ofrecen una experiencia arquitectónica única, sensorial y profundamente conectada con la naturaleza. <br />
-            <br />
-
-            En Casa Zii, el diseño se funde con el entorno tropical de la costa oaxaqueña para invitarte a reconectar con lo esencial. Las casas integran de manera perfecta espacios interiores y exteriores, brindando una sensación de libertad y fluidez que transforma cada momento.  <br />
-            <br />
-
-            Disfruta de amenidades premium, internet de alta velocidad con Starlink, y todo lo mejor de Zicatela a tan solo unos pasos. Ubicadas en La Punta, se encuentran a minutos caminando de la playa, restaurantes, bares y cafeterías. <br />
-            <br />
-            
-            Casa Zii es el refugio ideal para olvidar la ciudad, reconectar con la naturaleza y vivir intensamente cada instante.`
+      title: "Una forma única de alojarse",
+      titleLine2: "en La Punta",
+      subtitle: "Dos espléndidas casas dúplex de estilo brutalista, donde el diseño se funde",
+      subtitleLine2: "con la naturaleza en el corazón de La Punta."
     },
     en: {
-      title: "Welcome to Casa Zii",
-      slogan: "WHERE DESIGN MEETS NATURE IN THE HEART OF LA PUNTA",
-      subtitle: "Two stunning brutalist-style duplex homes.",
-      casaCampeche: "● Casa Campeche",
-      casaPalmas: "▲ Casa Palmas",
-      description: `Designed by renowned architect Ludwig Godefroy, Casa Zii offers a unique, sensory architectural experience deeply connected to nature. <br />
-            <br />
-
-            At Casa Zii, design merges with the tropical landscape of Oaxaca's coast, inviting you to reconnect with what truly matters. The homes seamlessly blend indoor and outdoor spaces, creating a sense of freedom and flow that transforms every moment. <br />
-            <br />
-
-            Enjoy premium amenities, high-speed Starlink internet, and the best of Zicatela just steps away. Located in La Punta, you're only minutes from the beach, restaurants, bars, and cafés. <br />
-            <br />
-            
-            Casa Zii is the ideal escape to forget the city, reconnect with nature, and live each moment to the fullest.`
+      title: "A unique way to stay",
+      titleLine2: "in La Punta",
+      subtitle: "Two stunning brutalist-style duplex homes, where design blends seamlessly",
+      subtitleLine2: "with nature in the heart of La Punta."
     }
   };
 
@@ -50,33 +28,19 @@ export default function MainContent() {
         {/* Main Heading */}
         <h1 className="mx-auto mb-4 max-w-full text-center font-[family-name:var(--font-courier)] text-[22px] font-bold leading-[24px] text-black md:mb-6 md:text-[24px] md:leading-[26px]">
           {currentContent.title}
+          <br />
+          {currentContent.titleLine2}
         </h1>
         
         {/* Slogan and introductory text */}
-        <div className="w-full md:w-[666px] md:h-[116px] mx-auto">
-          <p className="text-[12px] md:text-[16px] leading-[14px] md:leading-[18px] text-[#4C86A0] text-center mb-3 md:mb-4">
-            {currentContent.slogan}
-          </p>
+        <div className="w-full md:w-[821px] mx-auto">
           <p className="text-[12px] md:text-[16px] leading-[14px] md:leading-[18px] text-[#222222] text-center mb-2">
             {currentContent.subtitle}
+            <br className="hidden md:block" />
+            {currentContent.subtitleLine2}
           </p>
-          <div className="flex flex-col md:flex-row justify-center items-center space-y-4 md:space-y-0 md:space-x-8">
-            <span className="text-[12px] md:text-[16px] leading-[14px] md:leading-[18px] text-[#222222]">
-              {currentContent.casaCampeche}
-            </span>
-            <span className="text-[12px] md:text-[16px] leading-[14px] md:leading-[18px] text-[#222222]">
-              {currentContent.casaPalmas}
-            </span>
-          </div>
         </div>
         
-        {/* Descriptive paragraphs */}
-        <div className="w-full mx-auto sm:mt-0 mt-6">
-          <p 
-            className="text-[12px] md:text-[15px] leading-[14px] md:leading-[17px] text-[#222222] text-left md:text-justify"
-            dangerouslySetInnerHTML={{ __html: currentContent.description }}
-          />
-        </div>
       </div>
     </section>
   );

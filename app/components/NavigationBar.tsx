@@ -101,7 +101,7 @@ export default function NavigationBar() {
           <button
             type="button"
             onClick={openDirectReservation}
-            className="order-1 md:order-none"
+            className="order-1 md:hidden"
           >
             <span className="flex h-[38px] w-[96px] items-center justify-center bg-[#A04E39] text-[14px] leading-[16px] text-white hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#A04E39] md:h-[37px] md:w-[133px] md:text-[20px] md:leading-[22px]">
               {currentNavText.book}

@@ -14,10 +14,6 @@ export default function HeroSection() {
         >
           <source src="/casa-zii-hero-loop.mp4" type="video/mp4" />
         </video>
-        <div
-          aria-hidden="true"
-          className="absolute inset-0 bg-[linear-gradient(125deg,rgba(0,0,0,0.34),rgba(0,0,0,0.04)_58%,rgba(0,0,0,0.16))]"
-        />
       </div>
     </section>
   );

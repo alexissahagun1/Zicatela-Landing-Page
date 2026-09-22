@@ -139,3 +139,18 @@ Shipped against Figma + spec annotations only:
 - `MapSection` uses one Google Maps JavaScript map with the two real locations and no route; both supplied destination links remain visible beside it. The Google Cloud project `zicatela` has a granted `250` map-loads-per-day quota, at most `7,750` loads in a 31-day calendar month, and the browser key is restricted to the approved local and Casa Zii domains. This prevents `zicatela` from processing its own 10,001st monthly Dynamic Maps load. It does not guarantee `$0` for billing account `012C70-4D8CB5-F1B87D`: the account is shared with `gen-lang-client-0908147005`, whose Maps JavaScript daily quota was unlimited when verified on 2026-08-24. Google aggregates monthly usage across projects linked to the billing account, and multiple Maps-related billing accounts are prohibited, so the compliant remaining control is to hard-cap aggregate usage for every Maps project and billable SKU on the existing account. Metrics from 2026-08-01 through 2026-08-24 showed zero requests in both projects, but that does not guarantee future usage. Budgets and alerts are not hard caps. Maps Embed remains free but does not meet the approved two-custom-pin design without Google My Maps, so Maps JavaScript is retained. See Google's [billing-account policy](https://developers.google.com/maps/billing-account-violation), [usage aggregation rules](https://developers.google.com/maps/billing-and-pricing/pay-as-you-go), and [billing overview](https://developers.google.com/maps/billing-and-pricing/billing-overview).
 - `LazyGoogleMap` owns the activation panel and click/loading/error UI. Only after a visitor presses `Ver mapa interactivo` does it dynamically import `GoogleMapsRuntime`, which owns the singleton Google loader, auth readiness, and creation of one map with two markers. No Google script or map request occurs on page load, hydration, scrolling, or viewport intersection. The runtime requests no optional Places, Geocoding, Routes, Static Maps, or Street View services or libraries.
 - Gallery tiles use the six exact Instagram post URLs matched to the Figma exports; they do not fall back to the profile.
+
+## Newsletter with Brevo (2026-09-21)
+
+Figma node `2053:712` (Promociones) is rendered by `NewsletterForm` between the map and the footer on the homepage. Brevo is the campaign portal so the team manages contacts, lists, templates and campaigns without editing the site; the site only exposes `POST /api/newsletter` and the API key never reaches the browser.
+
+1. In Brevo, create a contact list for Casa Zii and note its numeric list ID.
+2. Create an API key with permission to create contacts.
+3. Add these server-side variables to `.env.local` and to Vercel:
+
+```text
+BREVO_API_KEY=<server-only-brevo-api-key>
+BREVO_LIST_ID=<numeric-brevo-list-id>
+```
+
+The form requires explicit consent and sends only the email to that list. Until the variables exist the route answers `503 not_configured` and the form shows a "not connected yet" message.
