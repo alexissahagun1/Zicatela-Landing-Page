@@ -19,6 +19,7 @@ interface PropertyCarouselProps {
   images: GalleryPhoto[];
   features: string[];
   connectionNote?: string;
+  layout?: "image-left" | "image-right";
 }
 
 function usePrefersReducedMotion() {
@@ -121,8 +122,10 @@ export default function PropertyCarousel({
   images,
   features,
   connectionNote,
+  layout = "image-left",
 }: PropertyCarouselProps) {
   const { language } = useLanguage();
+  const isImageLeft = layout === "image-left";
   const prefersReducedMotion = usePrefersReducedMotion();
   const [api, setApi] = useState<CarouselApi>();
   // null until the visitor hovers, focuses or touches this carousel: before that, native lazy loading only fetches what scrolls into view.
@@ -146,28 +149,16 @@ export default function PropertyCarousel({
     return distance <= 3 || distance === images.length - 1;
   };
 
+  const loadNeighbours = () => setSelected((current) => current ?? api?.selectedScrollSnap() ?? 0);
+
+  // Figma 1:2 (Casa Campeche): 688×446 photo beside a 281px text column, controls under the photo.
   return (
     <div
       id={sectionId}
-      className="relative w-full scroll-mt-24"
-      onPointerEnter={() => setSelected((current) => current ?? api?.selectedScrollSnap() ?? 0)}
-      onFocus={() => setSelected((current) => current ?? api?.selectedScrollSnap() ?? 0)}
+      className="relative mx-auto w-full max-w-[1080px] scroll-mt-24"
+      onPointerEnter={loadNeighbours}
+      onFocus={loadNeighbours}
     >
-      {/* Small type, big photos: the gallery is meant to show off the house. */}
-      <div className="mb-4 flex flex-col gap-1 md:mb-5 md:flex-row md:flex-wrap md:items-baseline md:gap-x-6">
-        <h2 className="font-[family-name:var(--font-courier)] text-lg font-bold uppercase tracking-wide text-[#000000] md:text-xl">
-          {title}
-        </h2>
-        <p className="m-0 font-[family-name:var(--font-courier)] text-[12px] leading-[16px] text-[#000000] md:text-[13px]">
-          {features.join(" · ")}
-        </p>
-        {connectionNote && (
-          <p className="m-0 font-[family-name:var(--font-courier)] text-[12px] italic leading-[16px] text-[#000000] md:text-[13px]">
-            {connectionNote}
-          </p>
-        )}
-      </div>
-
       <Carousel
         setApi={setApi}
         aria-label={title}
@@ -178,29 +169,60 @@ export default function PropertyCarousel({
           loop: images.length > 1,
         }}
       >
-        <CarouselContent className="-ml-2 will-change-transform md:-ml-3">
-          {images.map((image, index) => (
-            <CarouselItem
-              key={image.src}
-              className="basis-auto pl-2 md:pl-3 [backface-visibility:hidden]"
-            >
-              {/* Fixed height, natural width: every photo shows whole. Height leaves room for nav, title, controls and the fixed booking bar; the 3:2 cap keeps wide photos inside tablets. */}
-              <Image
-                src={image.src}
-                alt={`${title} — ${language === "es" ? "foto" : "photo"} ${index + 1}`}
-                width={image.width}
-                height={image.height}
-                loading={isNear(index) ? "eager" : "lazy"}
-                draggable={false}
-                className="casa-zii-carousel-image h-[58vw] w-auto max-w-full select-none bg-[#F5F5F5] object-contain md:h-[max(240px,min(calc(100svh-292px),820px,calc((100vw-2rem)/1.52)))]"
-                sizes={`(max-width: 767px) ${Math.ceil(58 * (image.width / image.height))}vw, ${Math.ceil(820 * (image.width / image.height))}px`}
-              />
-            </CarouselItem>
-          ))}
-        </CarouselContent>
+        <div
+          className={`flex flex-col gap-8 lg:items-center lg:justify-between lg:gap-10 ${
+            isImageLeft ? "lg:flex-row" : "lg:flex-row-reverse"
+          }`}
+        >
+          <div className="relative w-full lg:w-[64%]">
+            <CarouselContent className="ml-0 will-change-transform">
+              {images.map((image, index) => (
+                <CarouselItem
+                  key={image.src}
+                  className="basis-full pl-0 [backface-visibility:hidden]"
+                >
+                  <div className="relative isolate aspect-[4/3] w-full overflow-hidden bg-white lg:aspect-[688/446]">
+                    <Image
+                      src={image.src}
+                      alt={`${title} — ${language === "es" ? "foto" : "photo"} ${index + 1}`}
+                      fill
+                      loading={isNear(index) ? "eager" : "lazy"}
+                      draggable={false}
+                      className="casa-zii-carousel-image select-none object-contain"
+                      sizes="(max-width: 1023px) 100vw, 692px"
+                    />
+                  </div>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
 
-        <div className="mt-5">
-          <CarouselControls count={images.length} language={language} />
+            <div className="mt-5">
+              <CarouselControls count={images.length} language={language} />
+            </div>
+          </div>
+
+          <div className="flex w-full flex-col justify-center lg:w-[26%]">
+            <h2 className="font-[family-name:var(--font-courier)] text-2xl font-bold uppercase tracking-wide text-[#000000]">
+              {title}
+            </h2>
+
+            <div className="mt-6 space-y-[17px] lg:mt-9">
+              {features.map((feature) => (
+                <p
+                  key={feature}
+                  className="m-0 font-[family-name:var(--font-courier)] text-[15px] leading-[17px] text-[#000000]"
+                >
+                  {feature}
+                </p>
+              ))}
+            </div>
+
+            {connectionNote && (
+              <p className="m-0 mt-[17px] font-[family-name:var(--font-courier)] text-[13px] leading-[15px] text-[#000000]">
+                {connectionNote}
+              </p>
+            )}
+          </div>
         </div>
       </Carousel>
     </div>

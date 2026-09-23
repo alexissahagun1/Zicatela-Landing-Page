@@ -66,7 +66,7 @@ export default function CasaPalmasPage() {
         <AmenitiesSection amenities={currentContent.amenities} />
         
         {/* Property Carousels */}
-        <div className="space-y-16 px-4 py-6 md:space-y-24">
+        <div className="py-6 px-4 space-y-20">
           {/* Casa Palmas I */}
           <PropertyCarousel
             sectionId="palmas-i"
@@ -80,6 +80,7 @@ export default function CasaPalmasPage() {
               currentContent.features.terrace
             ]}
             connectionNote=""
+            layout="image-left"
           />
           
           {/* Casa Palmas II */}
@@ -95,6 +96,7 @@ export default function CasaPalmasPage() {
               currentContent.features.terrace
             ]}
             connectionNote=""
+            layout="image-right"
           />
         </div>
         

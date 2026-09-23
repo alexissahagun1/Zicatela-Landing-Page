@@ -69,7 +69,7 @@ export default function CasaCampechePage() {
         <AmenitiesSection amenities={currentContent.amenities} />
         
         {/* Static property carousels: all Figma gallery photographs stay in-flow. */}
-        <div className="space-y-16 px-4 py-6 md:space-y-24">
+        <div className="py-6 px-4 space-y-20">
           {/* Casa Campeche I */}
           <PropertyCarousel
             sectionId="campeche-i"
@@ -83,6 +83,7 @@ export default function CasaCampechePage() {
               currentContent.features.terrace
             ]}
             connectionNote={currentContent.connectionNote}
+            layout="image-left"
           />
           
           {/* Casa Campeche II */}
@@ -98,6 +99,7 @@ export default function CasaCampechePage() {
               currentContent.features.terrace
             ]}
             connectionNote={currentContent.connectionNote}
+            layout="image-right"
           />
         </div>
         
