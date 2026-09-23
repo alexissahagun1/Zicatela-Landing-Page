@@ -118,7 +118,7 @@ Listing mapping:
 
 ## Spec vs Figma (2026-08-23)
 
-Implementation source of truth is **only** the approved Figma footer node [CASA ZII — Copy](https://www.figma.com/design/2lNQfVwXyb9q3PlVs6yhgP/CASA-ZII--Copy-?node-id=29-373) plus the annotations in `docs/superpowers/specs/2026-08-24-casa-zii-map-footer-correction-design.md` for the map and footer correction. No other sites, no invented layout.
+Implementation source of truth is **only** the current Figma file [CASA ZII — Copy](https://www.figma.com/design/eNHBCVNfWSH0nXswrrvnuS/CASA-ZII--Copy-) at 1920px: Frame 1 `2006:3` home, Frame 2 `2011:90` Casa Campeche, Frame 3 `2011:237` Casa Palmas, Frame 4 `2017:748` FAQs, Frame 5 `2020:851` Términos, Frame 6 `2020:901` Aviso de Privacidad. Files `2lNQfVwXyb9q3PlVs6yhgP` and `JYwQ77v9OOLOlxmlKaTNu7` are older designs. Sizes use `calc(var(--f) * <Figma px>)` (`--f` = 100vw / 1920). Deliberate deviations: header kept at 104px (client request), booking bar fixed at the bottom (client request), interactive Google map (approved exception).
 
 | Node | Locked reading |
 |------|----------------|

@@ -23,10 +23,11 @@ const MAP_PINS = [
   },
 ];
 
-export default function MapSection() {
+// Figma 2026:1033: 1054×516 map, centred.
+export default function MapSection({ className = "px-4 py-14 md:px-8 md:py-20" }: { className?: string }) {
   return (
-    <section className="bg-white px-4 py-14 md:px-8 md:py-20">
-      <div className="mx-auto w-full max-w-[640px] overflow-hidden border border-[#222222]/10 bg-white">
+    <section className={`bg-[var(--page-bg)] ${className}`}>
+      <div className="mx-auto w-full max-w-[1054px] overflow-hidden border border-[#222222]/10 bg-white">
         <LazyGoogleMap
           title="Mapa de Casa Zii en Zicatela con las ubicaciones de Casa Palmas y Casa Campeche"
           center={MAP_CENTER}

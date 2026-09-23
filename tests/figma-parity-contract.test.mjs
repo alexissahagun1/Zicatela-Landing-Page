@@ -46,15 +46,21 @@ test("shared chrome uses Courier Prime and removes obsolete navigation", () => {
 });
 
 test("property routes keep the canonical interactive map and footer", () => {
+  const house = read("app/components/HousePage.tsx");
+  const closing = read("app/components/SiteClosing.tsx");
   for (const page of [campeche, palmas]) {
-    assert.match(page, /<MapSection \/>/);
-    assert.match(page, /<Footer \/>/);
+    assert.match(page, /<HousePage\b/);
     assert.doesNotMatch(page, /Prensa|Solo para adultos/);
   }
+  assert.match(house, /<SiteClosing \/>/);
+  assert.match(closing, /<MapSection\b/);
+  assert.match(closing, /<Footer \/>/);
 });
 
 test("Casa Campeche keeps every Figma photograph inside static property carousels", () => {
-  assert.match(campeche, /\/figma\/casa-campeche\/hero\.jpg/);
+  // Figma 2011:90: hero photo with the ● brand symbol.
+  assert.match(campeche, /\/figma\/latest\/hero-campeche\.jpg/);
+  assert.match(campeche, /symbol-campeche-circle\.svg/);
   assert.doesNotMatch(campeche, /\/CasaCampecheI\.png|\/CasaCampecheII\.png/);
   assert.doesNotMatch(campeche, /CasaCampecheSideGallery|Galería lateral/);
   assert.match(propertyCarousel, /<Carousel\b/);
@@ -63,8 +69,8 @@ test("Casa Campeche keeps every Figma photograph inside static property carousel
   assert.doesNotMatch(propertyCarousel, /key=\{`outgoing-/);
   assert.doesNotMatch(propertyCarousel, /setInterval|autoplay|autoPlay/);
 
-  assert.match(campeche, /images=\{campecheI\}/);
-  assert.match(campeche, /images=\{campecheII\}/);
+  assert.match(campeche, /images: campecheI\b/);
+  assert.match(campeche, /images: campecheII\b/);
   const manifest = read("lib/gallery-photos.ts");
   for (const [, src] of manifest.matchAll(/src: "([^"]+)"/g)) {
     assert.ok(existsSync(resolve(root, `public${src}`)), `Missing gallery photo: public${src}`);

@@ -310,7 +310,8 @@ export async function renderGoogleMap(
   const map = new google.maps.Map(element, {
     center,
     mapId,
-    zoom: 13,
+    // Figma 2026:1033 frames La Punta's streets around both houses.
+    zoom: 16,
     mapTypeControl: false,
     streetViewControl: false,
     fullscreenControl: true,

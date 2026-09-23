@@ -35,6 +35,6 @@ test("listing photos use optimized booking-card sources", async () => {
   const palmas = await readFile("app/casa-palmas/page.tsx", "utf8");
   assert.match(photos, /\/figma\/landing\/casa-campeche-i\.jpg/);
   assert.match(photos, /\/figma\/landing\/casa-campeche-ii\.jpg/);
-  assert.match(campeche, /images=\{campecheI\}/);
-  assert.match(palmas, /images=\{palmasII\}/);
+  assert.match(campeche, /images: campecheI\b/);
+  assert.match(palmas, /images: palmasII\b/);
 });

@@ -95,7 +95,7 @@ export default function PrensaPage() {
       <NavigationBar />
       
       {/* Prensa Content */}
-      <div className="bg-white py-16 px-4 pt-16 md:pt-[74px]">
+      <div className="bg-[var(--page-bg)] py-16 px-4 pt-16 md:pt-[var(--nav-h)]">
         <div className="max-w-6xl mx-auto">
           <h1 className="text-4xl font-bold text-gray-800 mb-8 text-center">
             {currentContent.title}
@@ -183,7 +183,7 @@ export default function PrensaPage() {
           </div>
 
           {/* Policies and Terms Section */}
-          <div className="bg-white border-t border-gray-200 pt-16">
+          <div className="bg-[var(--page-bg)] border-t border-gray-200 pt-16">
             <div className="max-w-4xl mx-auto">
               {/* Entry and Exit Policies */}
               <div className="mb-12">

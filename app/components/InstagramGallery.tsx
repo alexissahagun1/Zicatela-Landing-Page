@@ -59,7 +59,7 @@ export default function InstagramGallery() {
         ];
 
   return (
-    <section className="bg-white px-4 py-8" aria-label="Instagram">
+    <section className="bg-[var(--page-bg)] px-4 py-8" aria-label="Instagram">
       <div className="mx-auto grid w-full max-w-[836px] grid-cols-1 gap-x-[13px] gap-y-[12.5px] sm:grid-cols-2 md:grid-cols-3">
         {GALLERY_ITEMS.map((item, index) => {
           const alt = alts[index];

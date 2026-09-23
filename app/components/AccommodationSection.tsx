@@ -68,7 +68,7 @@ export default function AccommodationSection() {
   const currentAmenities = amenities[language];
 
   return (
-    <section className="bg-white px-4 py-12 md:py-14">
+    <section className="bg-[var(--page-bg)] px-4 py-12 md:py-14">
       <div className="mx-auto max-w-[954px]">
         <div className="flex flex-col items-start lg:flex-row lg:gap-[128px]">
           {/* Left Content */}

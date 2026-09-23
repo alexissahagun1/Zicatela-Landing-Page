@@ -7,7 +7,8 @@ test("mobile header has explicit compact logo, reserve button and tap-safe menu"
   const logo = await readFile("app/components/Logo.tsx", "utf8");
 
   assert.match(nav, /h-20/);
-  assert.match(nav, /md:h-\[96px\]/);
+  // Figma 2031:1130: 261px header band at 1920, scaled through --nav-h.
+  assert.match(nav, /md:h-\[var\(--nav-h\)\]/);
   assert.match(nav, /h-11 w-11/);
   assert.match(nav, /h-\[38px\] w-\[96px\]/);
   assert.match(logo, /h-\[42px\] w-\[88px\]/);

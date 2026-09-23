@@ -1,6 +1,6 @@
 "use client";
 
-import LegalPage, { type LegalContent } from "../components/LegalPage";
+import LegalPage, { legalTitleClass, type LegalContent } from "../components/LegalPage";
 
 // Figma eNHBCVNfWSH0nXswrrvnuS 2020:901 (Frame 6) — Spanish copy is the design source; English is a translation of it.
 
@@ -13,9 +13,9 @@ const EMAIL = (
 const es: LegalContent = {
   intro: (
     <>
-      <h1 className="text-[22px] font-bold leading-[26px] md:text-[24px] md:leading-[30px]">Aviso de Privacidad</h1>
-      <p className="mt-[40px]">● CASA Zii CAMPECHE  ▲ CASA Zii PALMAS</p>
-      <p className="mt-[64px]">Última actualización: 1 de septiembre de 2026</p>
+      <h1 className={legalTitleClass}>Aviso de Privacidad</h1>
+      <p className="mt-[40px] md:mt-[calc(var(--f)*92.7)] md:text-[max(12px,calc(var(--f)*16))] md:leading-normal">● CASA Zii CAMPECHE  ▲ CASA Zii PALMAS</p>
+      <p className="mt-[64px] md:mt-[calc(var(--f)*172)] md:text-[max(12px,calc(var(--f)*16))] md:leading-normal">Última actualización: 1 de septiembre de 2026</p>
     </>
   ),
   sections: [
@@ -133,9 +133,9 @@ const es: LegalContent = {
 const en: LegalContent = {
   intro: (
     <>
-      <h1 className="text-[22px] font-bold leading-[26px] md:text-[24px] md:leading-[30px]">Privacy Notice</h1>
-      <p className="mt-[40px]">● CASA Zii CAMPECHE  ▲ CASA Zii PALMAS</p>
-      <p className="mt-[64px]">Last updated: September 1, 2026</p>
+      <h1 className={legalTitleClass}>Privacy Notice</h1>
+      <p className="mt-[40px] md:mt-[calc(var(--f)*92.7)] md:text-[max(12px,calc(var(--f)*16))] md:leading-normal">● CASA Zii CAMPECHE  ▲ CASA Zii PALMAS</p>
+      <p className="mt-[64px] md:mt-[calc(var(--f)*172)] md:text-[max(12px,calc(var(--f)*16))] md:leading-normal">Last updated: September 1, 2026</p>
     </>
   ),
   sections: [
@@ -251,5 +251,5 @@ const en: LegalContent = {
 };
 
 export default function AvisoContent() {
-  return <LegalPage photo={{ src: "/figma/latest/privacy-photo.jpg", alt: "Casa Zii" }} content={{ es, en }} />;
+  return <LegalPage photo={{ src: "/figma/latest/privacy-photo.jpg", alt: "Casa Zii" }} content={{ es, en }} bodyTop={963} />;
 }

@@ -9,7 +9,7 @@ export default function MainContent() {
     es: {
       title: "Una forma única de alojarse",
       titleLine2: "en La Punta",
-      subtitle: "Dos espléndidas casas dúplex de estilo brutalista, donde el diseño se funde",
+      subtitle: "Dos espléndidas casas duplex de estilo brutalista, donde el diseño se funde",
       subtitleLine2: "con la naturaleza en el corazón de La Punta."
     },
     en: {
@@ -23,23 +23,20 @@ export default function MainContent() {
   const currentContent = content[language];
 
   return (
-    <section className="bg-white px-4 pb-8 pt-4 md:px-8 md:pb-16 md:pt-8">
-      <div className="max-w-[755px] mx-auto">
+    // Figma 2008:30: 36px bold title, an empty 36px line, 18/30 subtitle in an 821px box, 159px under the video.
+    <section className="bg-[var(--page-bg)] px-4 pb-8 pt-8 md:px-0 md:pb-0 md:pt-[calc(var(--f)*159)]">
+      <div className="mx-auto max-w-[821px] md:h-[calc(var(--f)*167)] md:w-[calc(var(--f)*821)] md:max-w-none">
         {/* Main Heading */}
-        <h1 className="mx-auto mb-4 max-w-full text-center font-[family-name:var(--font-courier)] text-[22px] font-bold leading-[24px] text-black md:mb-6 md:text-[24px] md:leading-[26px]">
+        <h1 className="mx-auto mb-4 max-w-full text-center font-[family-name:var(--font-courier)] text-[24px] font-bold leading-[26px] text-[#222222] md:mb-[calc(var(--f)*41)] md:text-[max(24px,calc(var(--f)*36))] md:leading-[1.133]">
           {currentContent.title}
           <br />
           {currentContent.titleLine2}
         </h1>
         
         {/* Slogan and introductory text */}
-        <div className="w-full md:w-[821px] mx-auto">
-          <p className="text-[12px] md:text-[16px] leading-[14px] md:leading-[18px] text-[#222222] text-center mb-2">
-            {currentContent.subtitle}
-            <br className="hidden md:block" />
-            {currentContent.subtitleLine2}
-          </p>
-        </div>
+        <p className="text-center text-[14px] leading-[20px] text-[#222222] md:text-[max(14px,calc(var(--f)*18))] md:leading-[1.667]">
+          {currentContent.subtitle} {currentContent.subtitleLine2}
+        </p>
         
       </div>
     </section>

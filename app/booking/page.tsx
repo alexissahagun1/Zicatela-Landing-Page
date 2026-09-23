@@ -94,12 +94,12 @@ export default function BookingPage() {
   };
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-[var(--page-bg)]">
       <NavigationBar />
 
       {/* Hero Section with Background */}
       <div
-        className="relative flex w-full items-center justify-center bg-cover bg-center bg-no-repeat px-4 pt-16 md:pt-[74px]"
+        className="relative flex w-full items-center justify-center bg-cover bg-center bg-no-repeat px-4 pt-16 md:pt-[var(--nav-h)]"
         style={{
           backgroundImage: "url('/BackgroundBookNow.png')",
           minHeight: "72vh",
@@ -117,13 +117,13 @@ export default function BookingPage() {
       {search && (
         <div
           ref={resultsRef}
-          className="scroll-mt-28 bg-white px-4 py-12 sm:py-16"
+          className="scroll-mt-28 bg-[var(--page-bg)] px-4 py-12 sm:py-16"
         >
           <BookingResults search={search} />
         </div>
       )}
 
-      <section className="bg-white px-4 py-12 sm:py-16">
+      <section className="bg-[var(--page-bg)] px-4 py-12 sm:py-16">
         <div className="mx-auto max-w-6xl">
           <h2 className="mb-8 text-center font-[family-name:var(--font-courier)] text-xl uppercase tracking-[0.12em] text-[#222]">
             {currentContent.contact}
@@ -155,7 +155,7 @@ export default function BookingPage() {
       </section>
 
       {/* Entry and Exit Policies Section */}
-      <div className="text-center sm:text-left bg-white py-8 sm:py-12 lg:py-16 px-4">
+      <div className="text-center sm:text-left bg-[var(--page-bg)] py-8 sm:py-12 lg:py-16 px-4">
         <div className="max-w-6xl mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-10 lg:gap-12">
             {/* Entry and Exit Policies */}
@@ -178,14 +178,14 @@ export default function BookingPage() {
       </div>
 
       {/* Horizontal Line */}
-      <div className="bg-white px-4">
+      <div className="bg-[var(--page-bg)] px-4">
         <div className="max-w-6xl mx-auto">
           <hr className="border-gray-300" />
         </div>
       </div>
 
       {/* Property and Cancellation Policies Section */}
-      <div className="bg-white py-8 sm:py-12 lg:py-16 px-4">
+      <div className="bg-[var(--page-bg)] py-8 sm:py-12 lg:py-16 px-4">
         <div className="max-w-6xl mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-10 lg:gap-12">
             {/* Property and Cancellation Policies */}
@@ -228,14 +228,14 @@ export default function BookingPage() {
       </div>
 
       {/* Horizontal Line */}
-      <div className="bg-white px-4">
+      <div className="bg-[var(--page-bg)] px-4">
         <div className="max-w-6xl mx-auto">
           <hr className="border-gray-300" />
         </div>
       </div>
 
       {/* Terms and Conditions Section */}
-      <div className="bg-white py-8 sm:py-12 lg:py-16 px-4">
+      <div className="bg-[var(--page-bg)] py-8 sm:py-12 lg:py-16 px-4">
         <div className="max-w-6xl mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-10 lg:gap-12">
             {/* Terms and Conditions */}

@@ -3,6 +3,10 @@
 @tailwind utilities;
 
 :root {
+  /* Figma frames are 1920 wide: calc(var(--f) * N) equals N Figma px at 1920 and scales below. */
+  --f: calc(100vw / 1920);
+  --page-bg: #eaeaea;
+  --nav-h: 80px;
   --radius: 0.625rem;
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
@@ -77,6 +81,14 @@
   }
   body {
     @apply bg-background text-foreground;
+    background-color: var(--page-bg);
+  }
+}
+
+@media (min-width: 768px) {
+  :root {
+    /* Header kept close to the pre-Figma size on request (Figma draws a 261px band at 1920). */
+    --nav-h: 104px;
   }
 }
 

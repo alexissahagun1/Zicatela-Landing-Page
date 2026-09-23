@@ -1,5 +1,4 @@
 export { default as AccommodationSection } from './AccommodationSection';
-export { default as AmenitiesSection } from './AmenitiesSection';
 export { default as AnnouncementBar } from './AnnouncementBar';
 export { default as ArchitecturalGallery } from './ArchitecturalGallery';
 export { default as BookNowButton } from './BookNowButton';
@@ -16,6 +15,3 @@ export { default as MapSection } from './MapSection';
 export { default as NavigationBar } from './NavigationBar';
 export { default as PhotoCollage } from './PhotoCollage';
 export { default as PropertyCarousel } from './PropertyCarousel';
-export { default as PropertyGallery } from './PropertyGallery';
-export { default as PropertyHeader } from './PropertyHeader';
-export { default as PropertyPageLayout } from './PropertyPageLayout';

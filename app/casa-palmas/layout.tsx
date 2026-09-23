@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     title: "Casa Palmas | Villa con terraza y alberca en Zicatela",
     description:
       "Villa brutalista con terraza privada y alberca en Brisas de Zicatela, Puerto Escondido. Solo adultos.",
-    images: ["/figma/casa-palmas/hero.jpg"],
+    images: ["/figma/latest/hero-palmas.jpg"],
   },
 };
 
@@ -25,7 +25,7 @@ const vacationRentalSchema = {
   "@context": "https://schema.org",
   "@type": "VacationRental",
   name: "Casa Palmas — Casa Zii",
-  image: `${SITE_URL}/figma/casa-palmas/hero.jpg`,
+  image: `${SITE_URL}/figma/latest/hero-palmas.jpg`,
   description:
     "Villa brutalista con terraza privada y alberca en Brisas de Zicatela, Puerto Escondido.",
   address: {

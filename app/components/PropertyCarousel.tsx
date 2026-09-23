@@ -85,7 +85,7 @@ function CarouselControls({
       </button>
 
       <div
-        className="flex items-center gap-[6px]"
+        className="flex max-w-[60vw] flex-wrap items-center justify-center gap-[6px] md:max-w-none"
         role="group"
         aria-label={language === "es" ? "Seleccionar imagen" : "Select image"}
       >
@@ -157,7 +157,7 @@ export default function PropertyCarousel({
   return (
     <div
       id={sectionId}
-      className="relative w-full scroll-mt-24 md:left-1/2 md:w-screen md:-translate-x-1/2"
+      className="relative w-full scroll-mt-24"
       onPointerEnter={loadNeighbours}
       onFocus={loadNeighbours}
     >
@@ -180,7 +180,7 @@ export default function PropertyCarousel({
                   className="basis-full pl-0 [backface-visibility:hidden]"
                 >
                   {/* Photos stay whole; on desktop they hug the screen edge like the Figma bleed. */}
-                  <div className="relative isolate aspect-[4/3] w-full overflow-hidden bg-white md:aspect-[1120/754]">
+                  <div className="relative isolate aspect-[4/3] w-full overflow-hidden bg-[var(--page-bg)] md:aspect-[1120/754]">
                     <Image
                       src={image.src}
                       alt={`${title} — ${language === "es" ? "foto" : "photo"} ${index + 1}`}

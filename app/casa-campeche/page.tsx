@@ -1,113 +1,41 @@
 "use client";
 
-import NavigationBar from "../components/NavigationBar";
-import Footer from "../components/Footer";
-import PropertyHeader from "../components/PropertyHeader";
-import AmenitiesSection from "../components/AmenitiesSection";
-import PropertyGallery from "../components/PropertyGallery";
-import PropertyCarousel from "../components/PropertyCarousel";
-import MapSection from "../components/MapSection";
+import HousePage from "../components/HousePage";
 import { campecheI, campecheII } from "@/lib/gallery-photos";
-import { useLanguage } from '../contexts/LanguageContext';
+import { AMENITIES } from "@/lib/house-amenities";
+
+// Figma eNHBCVNfWSH0nXswrrvnuS 2011:90 — Spanish copy is the design source; English is a translation of it.
+
+const features = {
+  es: ["4 huéspedes", "2 habitaciones", "2 camas matrimoniales", "Alberca privada", "Terraza", "Cocina equipada"],
+  en: ["4 guests", "2 bedrooms", "2 double beds", "Private pool", "Terrace", "Equipped kitchen"],
+};
 
 export default function CasaCampechePage() {
-  const { language } = useLanguage();
-
-  const content = {
-    es: {
-      title: "Casa Campeche I y II",
-      description: "Casa Campeche es una residencia dúplex elegante con un diseño simétrico y funcional. Puedes rentar toda la casa o cada unidad independientemente, ya que ambas son completamente autónomas. Los dos espacios se conectan a través de un área compartida que cuenta con una alberca privada — perfecta para disfrutar del sol y el exuberante entorno tropical. Ideal para grupos o parejas que viajan juntos.",
-      amenities: "Toallas de baño y alberca / Shampoo, gel de baño, acondicionador, jabón de manos, loción corporal / Cocina completamente equipada / WiFi de alta velocidad vía Starlink / Aire acondicionado / Mascotas bienvenidas",
-      features: {
-        guests: "4 huéspedes",
-        bedrooms: "2 habitaciones",
-        beds: "2 camas matrimoniales",
-        pool: "Alberca privada",
-        terrace: "Terraza",
-        kitchen: "Cocina equipada"
-      },
-    },
-    en: {
-      title: "Casa Campeche I and II",
-      description: "Casa Campeche is a stylish duplex residence with a symmetrical and functional design. You can rent the entire house or each unit independently, as both are fully self-contained. The two spaces connect through a shared area featuring a private pool — perfect for soaking up the sun and the lush tropical surroundings. Ideal for groups or couples traveling together.",
-      amenities: "Bath and pool towels / Shampoo, shower gel, conditioner, hand soap, body lotion / Fully equipped kitchen / High-speed WiFi via Starlink / Air conditioning / Pet friendly",
-      features: {
-        guests: "4 guests",
-        bedrooms: "2 bedrooms",
-        beds: "2 double beds",
-        pool: "Private pool",
-        terrace: "Terrace",
-        kitchen: "Equipped kitchen"
-      },
-    }
-  };
-
-  const currentContent = content[language];
-
   return (
-    <div className="relative min-h-screen overflow-x-clip bg-white">
-      <NavigationBar />
-      
-      {/* Casa Campeche Content */}
-      <div className="relative z-10 mx-auto max-w-7xl text-center md:text-left pt-16 md:pt-[74px]">
-        {/* Property Gallery */}
-        <PropertyGallery
-          exteriorImage="/figma/casa-campeche/hero.jpg"
-          interiorImage="/figma/casa-campeche/campeche-i.png"
-          exteriorAlt="Casa Campeche Exterior"
-          interiorAlt="Casa Campeche Interior"
-          objectPosition="center 90%"
-        />
-        
-        {/* Property Header */}
-        <PropertyHeader
-          title={currentContent.title}
-          description={currentContent.description}
-        />
-        
-        {/* Amenities Section */}
-        <AmenitiesSection amenities={currentContent.amenities} />
-        
-        {/* Static property carousels: all Figma gallery photographs stay in-flow. */}
-        <div className="space-y-20 px-4 py-6 md:space-y-[11.5vw] md:py-[6vw]">
-          {/* Casa Campeche I */}
-          <PropertyCarousel
-            sectionId="campeche-i"
-            title="Campeche I"
-            images={campecheI}
-            features={[
-              currentContent.features.guests,
-              currentContent.features.bedrooms,
-              currentContent.features.beds,
-              currentContent.features.pool,
-              currentContent.features.terrace,
-              currentContent.features.kitchen,
-            ]}
-            layout="image-left"
-          />
-          
-          {/* Casa Campeche II */}
-          <PropertyCarousel
-            sectionId="campeche-ii"
-            title="Campeche II"
-            images={campecheII}
-            features={[
-              currentContent.features.guests,
-              currentContent.features.bedrooms,
-              currentContent.features.beds,
-              currentContent.features.pool,
-              currentContent.features.terrace,
-              currentContent.features.kitchen,
-            ]}
-            layout="image-right"
-          />
-        </div>
-        
-        {/* Map Section */}
-        <MapSection />
-      </div>
-      
-      <Footer />
-    </div>
+    <HousePage
+      hero={{ src: "/figma/latest/hero-campeche.jpg", alt: "Casa Campeche" }}
+      symbol={{ src: "/figma/latest/symbol-campeche-circle.svg", width: 90, height: 90 }}
+      title={{ es: "Casa Campeche I y II", en: "Casa Campeche I and II" }}
+      intro={{
+        es: [
+          "Casa Campeche cuenta con dos casas independientes, excepcionalmente diseñadas, completamente equipadas y ubicadas una junto a la otra. Cada casa dispone de dos recámaras, dos baños, una amplia cocina, espacios ideales para convivir y una piscina privada.",
+          "Las dos casas pueden rentarse juntas. Una muy original puerta corrediza circular permite integrarlas en un solo espacio cuando se alquilan en conjunto, o cerrarlas y mantenerlas completamente independientes cuando se rentan por separado.",
+        ],
+        en: [
+          "Casa Campeche is made up of two independent, exceptionally designed and fully equipped houses standing side by side. Each house has two bedrooms, two bathrooms, a large kitchen, spaces made for spending time together and a private pool.",
+          "The two houses can be rented together. A striking circular sliding door joins them into a single space when they are booked together, or closes them off so they stay completely independent when rented separately.",
+        ],
+      }}
+      introHeight={361}
+      introDeco={{ src: "/figma/latest/deco-campeche-intro.svg", width: 479, height: 344, left: 1292, top: 402 }}
+      units={[
+        { sectionId: "campeche-i", title: "Campeche I", images: campecheI, features },
+        { sectionId: "campeche-ii", title: "Campeche II", images: campecheII, features },
+      ]}
+      amenities={AMENITIES}
+      amenityColumns={[[296, 456], [845, 277], [1261, 439]]}
+      amenitiesDeco={{ src: "/figma/latest/deco-campeche-amenities.svg", width: 531, height: 381, left: 694, top: 0, gapAbove: 134, gapBelow: 222 }}
+    />
   );
 }

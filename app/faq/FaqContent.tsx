@@ -1,6 +1,6 @@
 "use client";
 
-import LegalPage, { type LegalContent } from "../components/LegalPage";
+import LegalPage, { legalTitleClass, type LegalContent } from "../components/LegalPage";
 
 // Figma 2017:748 — Spanish copy is the design source; English is a translation of it.
 
@@ -34,11 +34,11 @@ const contact = {
 const es: LegalContent = {
   intro: (
     <>
-      <h1 className="text-[22px] font-bold leading-[26px] md:text-[24px]">Bienvenido a Casa Zii.</h1>
-      <p className="mt-[16px]">
+      <h1 className={legalTitleClass}>Bienvenido a Casa Zii.</h1>
+      <p className="mt-[16px] md:mt-[calc(var(--f)*30.4)]">
         Queremos que disfrutes plenamente de tu estancia y que la casa se conserve en las mejores condiciones para quienes nos visitan después de ti.
       </p>
-      <p className="mt-[64px] text-[18px] font-bold md:text-[20px]">FAQS</p>
+      <p className="mt-[64px] text-[24px] md:mt-[calc(var(--f)*170.8)] md:text-[max(22px,calc(var(--f)*36))] md:leading-normal">FAQS</p>
     </>
   ),
   sections: [
@@ -139,11 +139,11 @@ const es: LegalContent = {
 const en: LegalContent = {
   intro: (
     <>
-      <h1 className="text-[22px] font-bold leading-[26px] md:text-[24px]">Welcome to Casa Zii.</h1>
-      <p className="mt-[16px]">
+      <h1 className={legalTitleClass}>Welcome to Casa Zii.</h1>
+      <p className="mt-[16px] md:mt-[calc(var(--f)*30.4)]">
         We want you to fully enjoy your stay and to keep the house in the best condition for those who visit after you.
       </p>
-      <p className="mt-[64px] text-[18px] font-bold md:text-[20px]">FAQS</p>
+      <p className="mt-[64px] text-[24px] md:mt-[calc(var(--f)*170.8)] md:text-[max(22px,calc(var(--f)*36))] md:leading-normal">FAQS</p>
     </>
   ),
   sections: [
@@ -242,5 +242,5 @@ const en: LegalContent = {
 };
 
 export default function FaqContent() {
-  return <LegalPage photo={{ src: "/figma/latest/faq-photo.jpg", alt: "Casa Zii" }} content={{ es, en }} />;
+  return <LegalPage photo={{ src: "/figma/latest/faq-photo.jpg", alt: "Casa Zii" }} content={{ es, en }} bodyTop={933} sectionGap={25} />;
 }

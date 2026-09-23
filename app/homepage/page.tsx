@@ -3,30 +3,21 @@ import HeroSection from "../components/HeroSection";
 import MainContent from "../components/MainContent";
 import FigmaPropertyMosaic from "../components/FigmaPropertyMosaic";
 import ExperienceSection from "../components/ExperienceSection";
-import MapSection from "../components/MapSection";
-import NewsletterForm from "../components/NewsletterForm";
-import Footer from "../components/Footer";
+import SiteClosing from "../components/SiteClosing";
 
+// Figma eNHBCVNfWSH0nXswrrvnuS Frame 1 (2006:3).
 export default function Homepage() {
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen overflow-x-clip bg-[var(--page-bg)]">
       <NavigationBar />
       <HeroSection />
-      <div className="pt-[32px] lg:pt-[72px]">
-        <MainContent />
-      </div>
-
+      <MainContent />
       <FigmaPropertyMosaic />
-
       <ExperienceSection />
-
-      <MapSection />
-
-      <div className="pb-[60px] lg:pb-[120px]">
-        <NewsletterForm />
+      {/* Footer group starts 231px under the La Punta photos. */}
+      <div className="pt-20 md:pt-[calc(var(--f)*231)]">
+        <SiteClosing />
       </div>
-
-      <Footer />
     </div>
   );
 }

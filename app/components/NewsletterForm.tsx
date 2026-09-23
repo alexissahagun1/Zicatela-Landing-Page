@@ -9,11 +9,11 @@ type SubmissionState = "idle" | "submitting" | "success" | "error";
 const copy = {
   es: {
     description:
-      "De vez en cuando, recibe noticias, experiencias y ofertas especiales de Casa Zii directamente en tu bandeja de entrada.",
+      "Recibe de vez en cuando novedades, experiencias y beneficios especiales de Casa Zii directamente en tu correo.",
     emailLabel: "Tu correo electrónico",
     emailPlaceholder: "Ingresa tu E-mail",
     consent:
-      "Me gustaría recibir noticias y ofertas especiales de Casa Zii. Puedes cancelar tu suscripción en cualquier momento.",
+      "Quiero recibir novedades y beneficios especiales de Casa Zii. Puedes cancelar en cualquier momento",
     submit: "Suscribirme al newsletter",
     submitting: "Enviando…",
     success: "Listo. Revisa tu correo para confirmar la suscripción.",
@@ -25,11 +25,11 @@ const copy = {
   },
   en: {
     description:
-      "From time to time, receive Casa Zii news, experiences, and special offers straight to your inbox.",
+      "Receive Casa Zii news, experiences and special benefits in your inbox from time to time.",
     emailLabel: "Your email address",
     emailPlaceholder: "Enter your E-mail",
     consent:
-      "I’d like to receive news and special offers from Casa Zii. You can unsubscribe at any time.",
+      "I want to receive news and special benefits from Casa Zii. You can unsubscribe at any time",
     submit: "Subscribe to the newsletter",
     submitting: "Sending…",
     success: "Done. Check your inbox to confirm your subscription.",
@@ -95,7 +95,7 @@ export default function NewsletterForm() {
   return (
     <section
       aria-labelledby="newsletter-heading"
-      className="relative mx-auto mt-[4px] lg:mt-[40px] h-auto w-full max-w-[685px] md:h-[155px]"
+      className="relative mx-auto h-auto w-full max-w-[685px] md:h-[155px]"
     >
       <p
         id="newsletter-heading"

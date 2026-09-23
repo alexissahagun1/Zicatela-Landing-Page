@@ -7,7 +7,7 @@ export default function ContactPage() {
       <NavigationBar />
       
       {/* Contact Content */}
-      <div className="bg-white py-16 px-4 pt-16 md:pt-[74px]">
+      <div className="bg-[var(--page-bg)] py-16 px-4 pt-16 md:pt-[var(--nav-h)]">
         <div className="max-w-4xl mx-auto">
           <h1 className="text-4xl font-bold text-gray-800 mb-8">
             Contact Us

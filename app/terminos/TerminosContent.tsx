@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import LegalPage, { type LegalContent } from "../components/LegalPage";
+import LegalPage, { legalTitleClass, type LegalContent } from "../components/LegalPage";
 
 
 // Figma 2020:851 — Spanish copy is the design source; English is a translation of it.
@@ -15,13 +15,12 @@ const EMAIL = (
 const es: LegalContent = {
   intro: (
     <>
-      <h1 className="text-[22px] font-bold leading-[26px] md:text-[24px] md:leading-[30px]">
-        Términos y Condiciones
-        <br />
-        de Reservación y Hospedaje
+      <h1 className={legalTitleClass}>
+        <span className="block">Términos y Condiciones</span>
+        <span className="block md:mt-[calc(var(--f)*26)]">de Reservación y Hospedaje</span>
       </h1>
-      <p className="mt-[40px]">● CASA Zii CAMPECHE  ▲ CASA Zii PALMAS</p>
-      <p className="mt-[64px]">Última actualización: 1 de septiembre de 2026</p>
+      <p className="mt-[40px] md:mt-[calc(var(--f)*72.5)] md:text-[max(12px,calc(var(--f)*16))] md:leading-normal">● CASA Zii CAMPECHE  ▲ CASA Zii PALMAS</p>
+      <p className="mt-[64px] md:mt-[calc(var(--f)*171)] md:text-[max(12px,calc(var(--f)*16))] md:leading-normal">Última actualización: 1 de septiembre de 2026</p>
     </>
   ),
   sections: [
@@ -154,13 +153,12 @@ const es: LegalContent = {
 const en: LegalContent = {
   intro: (
     <>
-      <h1 className="text-[22px] font-bold leading-[26px] md:text-[24px] md:leading-[30px]">
-        Terms and Conditions
-        <br />
-        of Reservation and Lodging
+      <h1 className={legalTitleClass}>
+        <span className="block">Terms and Conditions</span>
+        <span className="block md:mt-[calc(var(--f)*26)]">of Reservation and Lodging</span>
       </h1>
-      <p className="mt-[40px]">● CASA Zii CAMPECHE  ▲ CASA Zii PALMAS</p>
-      <p className="mt-[64px]">Last updated: September 1, 2026</p>
+      <p className="mt-[40px] md:mt-[calc(var(--f)*72.5)] md:text-[max(12px,calc(var(--f)*16))] md:leading-normal">● CASA Zii CAMPECHE  ▲ CASA Zii PALMAS</p>
+      <p className="mt-[64px] md:mt-[calc(var(--f)*171)] md:text-[max(12px,calc(var(--f)*16))] md:leading-normal">Last updated: September 1, 2026</p>
     </>
   ),
   sections: [
@@ -291,5 +289,5 @@ const en: LegalContent = {
 };
 
 export default function TerminosContent() {
-  return <LegalPage photo={{ src: "/figma/latest/terms-photo.jpg", alt: "Casa Zii" }} content={{ es, en }} />;
+  return <LegalPage photo={{ src: "/figma/latest/terms-photo.jpg", alt: "Casa Zii" }} content={{ es, en }} bodyTop={933} />;
 }

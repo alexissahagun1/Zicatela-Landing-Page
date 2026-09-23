@@ -21,12 +21,13 @@ const nextConfig = readFileSync(resolve(root, "next.config.ts"), "utf8");
 const layout = readFileSync(resolve(root, "app/layout.tsx"), "utf8");
 
 test("footer follows the current Figma content and has no placeholder contact data", () => {
-  assert.match(footer, /bg-white/);
+  assert.match(footer, /bg-\[var\(--page-bg\)\]/);
   assert.match(footer, /Casa Zii Palmas/);
   assert.match(footer, /Casa Zii Campeche/);
-  assert.match(footer, /<span>Casa Zii<\/span>/);
-  assert.doesNotMatch(footer, /<span>CASA ZII<\/span>/);
-  assert.match(footer, /text-\[15px\]/);
+  // Figma 2026:1052: "CASA ZII" next to Instagram, 20px names, 13px lines.
+  assert.match(footer, /<span>CASA ZII<\/span>/);
+  assert.match(footer, /text-\[20px\]/);
+  assert.match(footer, /text-\[13px\]/);
   assert.match(footer, /FAQs/);
   assert.match(footer, /md:left-\[78\.5%\] md:top-\[111px\]/);
   assert.match(footer, /md:left-\[78\.5%\] md:top-\[192px\]/);
@@ -54,8 +55,9 @@ test("map remains a single Google map with the two exact pins and no route", () 
 });
 
 test("map section is a centered contemporary visual without location copy or links", () => {
-  assert.match(map, /mx-auto w-full max-w-\[640px\]/);
-  assert.match(map, /section className="bg-white/);
+  // Figma 2026:1033: 1054×516.
+  assert.match(map, /mx-auto w-full max-w-\[1054px\]/);
+  assert.match(map, /bg-\[var\(--page-bg\)\]/);
   assert.doesNotMatch(map, /F4EFE6|E8E1D7/);
   assert.doesNotMatch(map, /Calle de la Paloma|Calle Campeche/);
   assert.doesNotMatch(map, /Abrir mapa|maps\.app\.goo\.gl|<a\b/);
@@ -162,10 +164,13 @@ test("newsletter follows the Figma promotion block and uses Brevo server-side", 
   const newsletter = readFileSync(resolve(root, "app/components/NewsletterForm.tsx"), "utf8");
   const route = readFileSync(resolve(root, "app/api/newsletter/route.ts"), "utf8");
   const homepage = readFileSync(resolve(root, "app/homepage/page.tsx"), "utf8");
-  assert.match(homepage, /<NewsletterForm \/>/);
-  assert.ok(homepage.indexOf("<MapSection />") < homepage.indexOf("<NewsletterForm />"));
-  assert.ok(homepage.indexOf("<NewsletterForm />") < homepage.indexOf("<Footer />"));
-  assert.match(newsletter, /From time to time, receive Casa Zii news/);
+  const closing = readFileSync(resolve(root, "app/components/SiteClosing.tsx"), "utf8");
+  // Figma 2026:1000 / 2026:1031: closing line, map, newsletter, footer — shared by home and house pages.
+  assert.match(homepage, /<SiteClosing \/>/);
+  assert.match(closing, /<NewsletterForm \/>/);
+  assert.ok(closing.indexOf("<MapSection") < closing.indexOf("<NewsletterForm />"));
+  assert.ok(closing.indexOf("<NewsletterForm />") < closing.indexOf("<Footer />"));
+  assert.match(newsletter, /Recibe de vez en cuando novedades, experiencias y beneficios especiales de Casa Zii directamente en tu correo\./);
   assert.match(newsletter, /type="email"/);
   assert.match(newsletter, /type="checkbox"/);
   assert.match(route, /BREVO_API_KEY/);
