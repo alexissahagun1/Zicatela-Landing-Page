@@ -23,9 +23,9 @@ export default function CasaCampechePage() {
         bedrooms: "2 habitaciones",
         beds: "2 camas matrimoniales",
         pool: "Alberca privada",
-        terrace: "Terraza"
+        terrace: "Terraza",
+        kitchen: "Cocina equipada"
       },
-      connectionNote: "*Opción de conectarse con Campeche II por el área de la alberca.",
     },
     en: {
       title: "Casa Campeche I and II",
@@ -36,9 +36,9 @@ export default function CasaCampechePage() {
         bedrooms: "2 bedrooms",
         beds: "2 double beds",
         pool: "Private pool",
-        terrace: "Terrace"
+        terrace: "Terrace",
+        kitchen: "Equipped kitchen"
       },
-      connectionNote: "*Option to connect to Campeche II through the pool area.",
     }
   };
 
@@ -69,36 +69,36 @@ export default function CasaCampechePage() {
         <AmenitiesSection amenities={currentContent.amenities} />
         
         {/* Static property carousels: all Figma gallery photographs stay in-flow. */}
-        <div className="py-6 px-4 space-y-20">
+        <div className="space-y-20 px-4 py-6 md:space-y-[11.5vw] md:py-[6vw]">
           {/* Casa Campeche I */}
           <PropertyCarousel
             sectionId="campeche-i"
-            title="CAMPECHE I"
+            title="Campeche I"
             images={campecheI}
             features={[
               currentContent.features.guests,
               currentContent.features.bedrooms,
               currentContent.features.beds,
               currentContent.features.pool,
-              currentContent.features.terrace
+              currentContent.features.terrace,
+              currentContent.features.kitchen,
             ]}
-            connectionNote={currentContent.connectionNote}
             layout="image-left"
           />
           
           {/* Casa Campeche II */}
           <PropertyCarousel
             sectionId="campeche-ii"
-            title="CAMPECHE II"
+            title="Campeche II"
             images={campecheII}
             features={[
               currentContent.features.guests,
               currentContent.features.bedrooms,
               currentContent.features.beds,
               currentContent.features.pool,
-              currentContent.features.terrace
+              currentContent.features.terrace,
+              currentContent.features.kitchen,
             ]}
-            connectionNote={currentContent.connectionNote}
             layout="image-right"
           />
         </div>

@@ -23,7 +23,9 @@ export default function CasaPalmasPage() {
         bedrooms: "2 habitaciones",
         beds: "2 camas matrimoniales",
         pool: "Alberca privada",
-        terrace: "Terraza"
+        terrace: "Terraza",
+        kitchen: "Cocina equipada",
+        balcony: "Balcón"
       },
     },
     en: {
@@ -35,7 +37,9 @@ export default function CasaPalmasPage() {
         bedrooms: "2 bedrooms",
         beds: "2 double beds",
         pool: "Private pool",
-        terrace: "Terrace"
+        terrace: "Terrace",
+        kitchen: "Equipped kitchen",
+        balcony: "Balcony"
       },
     }
   };
@@ -43,7 +47,7 @@ export default function CasaPalmasPage() {
   const currentContent = content[language];
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="relative min-h-screen overflow-x-clip bg-white">
       <NavigationBar />
       
       {/* Casa Palmas Content */}
@@ -66,36 +70,38 @@ export default function CasaPalmasPage() {
         <AmenitiesSection amenities={currentContent.amenities} />
         
         {/* Property Carousels */}
-        <div className="py-6 px-4 space-y-20">
+        <div className="space-y-20 px-4 py-6 md:space-y-[11.5vw] md:py-[6vw]">
           {/* Casa Palmas I */}
           <PropertyCarousel
             sectionId="palmas-i"
-            title="PALMAS I"
+            title="Palmas I"
             images={palmasI}
             features={[
               currentContent.features.guests,
               currentContent.features.bedrooms,
               currentContent.features.beds,
+              currentContent.features.balcony,
               currentContent.features.pool,
-              currentContent.features.terrace
+              currentContent.features.terrace,
+              currentContent.features.kitchen,
             ]}
-            connectionNote=""
             layout="image-left"
           />
           
           {/* Casa Palmas II */}
           <PropertyCarousel
             sectionId="palmas-ii"
-            title="PALMAS II"
+            title="Palmas II"
             images={palmasII}
             features={[
               currentContent.features.guests,
               currentContent.features.bedrooms,
               currentContent.features.beds,
+              currentContent.features.balcony,
               currentContent.features.pool,
-              currentContent.features.terrace
+              currentContent.features.terrace,
+              currentContent.features.kitchen,
             ]}
-            connectionNote=""
             layout="image-right"
           />
         </div>

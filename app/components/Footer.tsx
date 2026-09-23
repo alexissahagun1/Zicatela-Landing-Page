@@ -62,7 +62,9 @@ export default function Footer() {
         </div>
 
         <div className="mt-6 font-[family-name:var(--font-courier)] text-[15px] leading-6 text-black md:absolute md:left-[78.5%] md:top-[192px] md:mt-0">
-          <p className="m-0 whitespace-nowrap">{t.privacy}</p>
+          <p className="m-0 whitespace-nowrap">
+            <Link href="/aviso-de-privacidad" className="hover:opacity-70">{t.privacy}</Link>
+          </p>
           <p className="m-0 whitespace-nowrap">
             <Link href="/terminos" className="hover:opacity-70">{t.terms}</Link>
           </p>

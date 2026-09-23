@@ -10,6 +10,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: "/booking", priority: 0.8 },
     { path: "/contact", priority: 0.5 },
     { path: "/prensa", priority: 0.5 },
+    { path: "/faq", priority: 0.3 },
+    { path: "/terminos", priority: 0.3 },
+    { path: "/aviso-de-privacidad", priority: 0.3 },
   ];
 
   return routes.map(({ path, priority }) => ({

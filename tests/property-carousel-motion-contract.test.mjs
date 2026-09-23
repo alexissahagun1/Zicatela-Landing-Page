@@ -26,11 +26,12 @@ test("property carousel labels its controls through a valid group role", () => {
   assert.match(carousel, /aria-label=\{language === "es"/);
 });
 
-test("property carousel follows Figma 1:2 proportions beside its text", () => {
-  assert.match(carousel, /lg:w-\[64%\]/);
-  assert.match(carousel, /lg:w-\[26%\]/);
-  assert.match(carousel, /lg:aspect-\[688\/446\]/);
-  assert.match(carousel, /isImageLeft \? "lg:flex-row" : "lg:flex-row-reverse"/);
+test("property carousel follows Figma frames 2011:90 / 2011:237", () => {
+  assert.match(carousel, /md:w-\[58\.333vw\]/);
+  assert.match(carousel, /md:aspect-\[1120\/754\]/);
+  assert.match(carousel, /isImageLeft \? "md:pl-\[13\.54vw\]" : "md:mr-auto md:pl-\[11\.98vw\]"/);
+  assert.match(carousel, />\s*Prev\s*</);
+  assert.match(carousel, /language === "es" \? "Sig" : "Next"/);
 });
 
 test("property carousel skips visual motion for reduced-motion users", () => {

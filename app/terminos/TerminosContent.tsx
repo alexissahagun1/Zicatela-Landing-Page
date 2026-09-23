@@ -1,6 +1,8 @@
 "use client";
 
+import Link from "next/link";
 import LegalPage, { type LegalContent } from "../components/LegalPage";
+
 
 // Figma 2020:851 — Spanish copy is the design source; English is a translation of it.
 
@@ -111,7 +113,7 @@ const es: LegalContent = {
       lines: [
         <>
           El tratamiento de los datos personales de los huéspedes se realizará conforme al Aviso de Privacidad de Casa Zii, disponible en:{" "}
-          <span className="text-[#a04e39]">[INSERTAR URL DEFINITIVA]</span>
+          <Link href="/aviso-de-privacidad" className="underline hover:opacity-70">Aviso de Privacidad</Link>
         </>,
         "Casa Zii utiliza Guesty para la gestión de reservaciones y Stripe para el procesamiento de pagos. Estos proveedores cuentan además con sus propios términos y políticas de privacidad.",
       ],
@@ -250,7 +252,7 @@ const en: LegalContent = {
       lines: [
         <>
           Guests' personal data will be processed in accordance with the Casa Zii Privacy Notice, available at:{" "}
-          <span className="text-[#a04e39]">[INSERT FINAL URL]</span>
+          <Link href="/aviso-de-privacidad" className="underline hover:opacity-70">Privacy Notice</Link>
         </>,
         "Casa Zii uses Guesty for reservation management and Stripe for payment processing. These providers also have their own terms and privacy policies.",
       ],
