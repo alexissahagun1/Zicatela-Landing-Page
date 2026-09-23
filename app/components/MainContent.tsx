@@ -24,7 +24,7 @@ export default function MainContent() {
 
   return (
     // Figma 2008:30: 36px bold title, an empty 36px line, 18/30 subtitle in an 821px box, 159px under the video.
-    <section className="bg-[var(--page-bg)] px-4 pb-8 pt-8 md:px-0 md:pb-0 md:pt-[calc(var(--f)*159)]">
+    <section className="bg-[var(--page-bg)] px-4 pb-8 pt-8 md:px-0 md:pb-0 md:pt-[min(calc(var(--f)*159),64px)]">
       <div className="mx-auto max-w-[821px] md:h-[calc(var(--f)*167)] md:w-[calc(var(--f)*821)] md:max-w-none">
         {/* Main Heading */}
         <h1 className="mx-auto mb-4 max-w-full text-center font-[family-name:var(--font-courier)] text-[24px] font-bold leading-[26px] text-[#222222] md:mb-[calc(var(--f)*41)] md:text-[max(24px,calc(var(--f)*36))] md:leading-[1.133]">

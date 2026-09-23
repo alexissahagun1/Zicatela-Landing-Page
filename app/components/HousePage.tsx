@@ -64,7 +64,14 @@ function DecoGraphic({ deco, className }: { deco: Deco; className: string }) {
     <div
       aria-hidden
       className={`pointer-events-none ${className}`}
-      style={{ width: fDeco(boxW), height: fDeco(boxH), ["--x" as string]: deco.left, ["--y" as string]: deco.top }}
+      style={{
+        width: fDeco(boxW),
+        height: fDeco(boxH),
+        ["--x" as string]: deco.left,
+        // Figma y is measured from the intro section top with its 152px padding; the padding is capped at 64px
+        // on laptops, so move the graphic up by the same amount to keep it where Figma puts it relative to the copy.
+        ["--deco-top" as string]: `calc(var(--f) * ${deco.top - 152} + min(var(--f) * 152, 64px))`,
+      }}
     >
       <Image
         src={deco.src}
@@ -92,8 +99,8 @@ export default function HousePage({ hero, symbol, title, intro, introHeight, int
       <NavigationBar />
 
       <main className="pt-16 md:pt-[var(--nav-h)]">
-        {/* Hero 1920×946 with the brand symbol centred. */}
-        <section className="relative h-[56vw] w-full md:h-[calc(var(--f)*946)]">
+        {/* Hero 1920×946 with the brand symbol centred, capped so the title still shows above the booking bar. */}
+        <section className="relative h-[56vw] w-full md:h-[max(300px,min(calc(var(--f)*946),calc(100svh-var(--nav-h)-220px)))]">
           <Image
             src={hero.src}
             alt={hero.alt}
@@ -116,7 +123,7 @@ export default function HousePage({ hero, symbol, title, intro, introHeight, int
         </section>
 
         {/* Intro: 36px bold title, 18/25 copy in an 895px column, decorative graphic to the right. */}
-        <section className="relative px-4 pb-16 pt-12 md:px-0 md:pb-[calc(var(--f)*116)] md:pt-[calc(var(--f)*152)]">
+        <section className="relative px-4 pb-16 pt-12 md:px-0 md:pb-[calc(var(--f)*116)] md:pt-[min(calc(var(--f)*152),64px)]">
           <div
             className="mx-auto max-w-[895px] text-center font-[family-name:var(--font-courier)] text-[#222222] md:min-h-[calc(var(--f)*var(--intro-h))] md:w-[calc(var(--f)*895)] md:max-w-none"
             style={{ ["--intro-h" as string]: introHeight }}
@@ -130,7 +137,7 @@ export default function HousePage({ hero, symbol, title, intro, introHeight, int
           </div>
           <DecoGraphic
             deco={introDeco}
-            className="relative mx-auto mt-10 xl:absolute xl:left-[calc(var(--f)*var(--x))] xl:top-[calc(var(--f)*var(--y))] xl:mx-0 xl:mt-0"
+            className="relative mx-auto mt-10 xl:absolute xl:left-[calc(var(--f)*var(--x))] xl:top-[var(--deco-top)] xl:mx-0 xl:mt-0"
           />
         </section>
 
