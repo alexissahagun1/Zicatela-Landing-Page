@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Reservar | Casa Zii — La Punta, Zicatela",
+  title: "Reservar",
   description:
     "Consulta disponibilidad en tiempo real, cotiza tu estancia y solicita tu reservación en Casa Campeche o Casa Palmas, La Punta de Zicatela.",
   alternates: {
@@ -13,7 +13,7 @@ export const metadata: Metadata = {
     },
   },
   openGraph: {
-    title: "Reservar | Casa Zii — La Punta, Zicatela",
+    title: "Casa\u00A0Zii | Reservar",
     description:
       "Disponibilidad en tiempo real y cotización directa en Casa Campeche o Casa Palmas.",
     images: ["/BackgroundBookNow.png"],

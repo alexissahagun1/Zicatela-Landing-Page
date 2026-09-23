@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Contacto | Casa Zii — La Punta, Zicatela",
+  title: "Contacto",
   description:
     "Contacta a Casa Zii para reservar tu estancia en La Punta de Zicatela, Puerto Escondido, Oaxaca. Teléfono, email y ubicación de nuestras villas.",
   alternates: {
@@ -13,7 +13,7 @@ export const metadata: Metadata = {
     },
   },
   openGraph: {
-    title: "Contacto | Casa Zii — La Punta, Zicatela",
+    title: "Casa\u00A0Zii | Contacto",
     description:
       "Contacta a Casa Zii en La Punta de Zicatela, Puerto Escondido, Oaxaca.",
     images: ["/LogoCasaZii.png"],

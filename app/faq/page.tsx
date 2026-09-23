@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import FaqContent from "./FaqContent";
 
 export const metadata: Metadata = {
-  title: "FAQs - Casa Zii",
+  title: "FAQs",
   description: "Reglas de la casa y preguntas frecuentes de Casa Zii Campeche y Casa Zii Palmas.",
 };
 

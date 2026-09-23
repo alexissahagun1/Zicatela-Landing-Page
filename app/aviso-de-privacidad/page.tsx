@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import AvisoContent from "./AvisoContent";
 
 export const metadata: Metadata = {
-  title: "Aviso de Privacidad - Casa Zii",
+  title: "Aviso de Privacidad",
   description: "Aviso de privacidad de Casa Zii Campeche y Casa Zii Palmas.",
 };
 

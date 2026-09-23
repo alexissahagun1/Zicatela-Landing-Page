@@ -15,8 +15,9 @@ const courierPrime = Courier_Prime({
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: "Casa\u00A0Zii - Villas de Lujo en Zicatela",
-    template: "%s",
+    // Every tab reads "Casa Zii | <page>". The no-break space stops Safari from hiding the leading "Casa".
+    default: "Casa\u00A0Zii | Villas de Lujo en Zicatela",
+    template: "Casa\u00A0Zii | %s",
   },
   description:
     "Villas de diseño solo para adultos con alberca privada en La Punta, Zicatela, Puerto Escondido. Reserva directa en Casa Campeche o Casa Palmas.",

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { SITE_URL } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "Casa\u00A0Campeche | Villa con alberca privada en La Punta",
+  title: "Casa\u00A0Campeche",
   description:
     "Casa Campeche es un dúplex de diseño con alberca privada en La Punta de Zicatela. Dos unidades independientes y conectables, solo adultos. Reserva directa.",
   alternates: {
@@ -14,7 +14,7 @@ export const metadata: Metadata = {
     },
   },
   openGraph: {
-    title: "Casa\u00A0Campeche | Villa con alberca privada en La Punta",
+    title: "Casa\u00A0Zii | Casa\u00A0Campeche",
     description:
       "Dúplex de diseño con alberca privada en La Punta de Zicatela. Dos unidades independientes y conectables, solo adultos.",
     images: ["/figma/latest/hero-campeche.jpg"],

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Prensa | Casa Zii — La Punta, Zicatela",
+  title: "Prensa",
   description:
     "Cobertura de prensa de Casa Zii: villas de diseño brutalista en La Punta, Zicatela, Puerto Escondido, Oaxaca.",
   alternates: {
@@ -13,7 +13,7 @@ export const metadata: Metadata = {
     },
   },
   openGraph: {
-    title: "Prensa | Casa Zii — La Punta, Zicatela",
+    title: "Casa\u00A0Zii | Prensa",
     description:
       "Villas de diseño brutalista en La Punta, Zicatela, Puerto Escondido, Oaxaca.",
     images: ["/LogoCasaZii.png"],
