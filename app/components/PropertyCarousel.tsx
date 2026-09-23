@@ -20,6 +20,15 @@ interface PropertyCarouselProps {
   layout?: "image-left" | "image-right";
 }
 
+// Photos are shown whole (object-contain), so a portrait only fills part of the frame's width: request that
+// width, not the frame's. Frames are 4:3 on mobile (100vw) and 1120×754 at 58.333vw from md up.
+function containedSizes({ width, height }: GalleryPhoto) {
+  const ratio = width / height;
+  const mobile = Math.ceil(100 * Math.min(1, 0.75 * ratio));
+  const desktop = Math.ceil(58.333 * Math.min(1, (754 / 1120) * ratio));
+  return `(max-width: 767px) ${mobile}vw, ${desktop}vw`;
+}
+
 function usePrefersReducedMotion() {
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
 
@@ -188,7 +197,7 @@ export default function PropertyCarousel({
                       loading={isNear(index) ? "eager" : "lazy"}
                       draggable={false}
                       className={`casa-zii-carousel-image select-none object-contain ${isImageLeft ? "md:object-left" : "md:object-right"}`}
-                      sizes="(max-width: 767px) 100vw, 59vw"
+                      sizes={containedSizes(image)}
                     />
                   </div>
                 </CarouselItem>

@@ -85,13 +85,13 @@ export default function NavigationBar() {
         <div className="hidden items-center justify-self-center whitespace-nowrap md:flex md:gap-8 lg:gap-12">
           <Link
             href="/casa-campeche"
-            className="font-[family-name:var(--font-courier)] text-[15px] leading-[18px] text-[#222222] hover:opacity-70 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#222222]"
+            className="font-[family-name:var(--font-courier)] text-[15px] leading-[18px] text-[#222222] md:text-[max(15px,calc(var(--f)*15))] hover:opacity-70 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#222222]"
           >
             {currentNavText.casaCampeche}
           </Link>
           <Link
             href="/casa-palmas"
-            className="font-[family-name:var(--font-courier)] text-[15px] leading-[18px] text-[#222222] hover:opacity-70 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#222222]"
+            className="font-[family-name:var(--font-courier)] text-[15px] leading-[18px] text-[#222222] md:text-[max(15px,calc(var(--f)*15))] hover:opacity-70 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#222222]"
           >
             {currentNavText.casaPalmas}
           </Link>

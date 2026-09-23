@@ -87,8 +87,8 @@
 
 @media (min-width: 768px) {
   :root {
-    /* Header kept close to the pre-Figma size on request (Figma draws a 261px band at 1920). */
-    --nav-h: 104px;
+    /* Header kept close to the pre-Figma size on request (Figma draws a 261px band at 1920); grows only past 1920. */
+    --nav-h: max(104px, calc(var(--f) * 104));
   }
 }
 

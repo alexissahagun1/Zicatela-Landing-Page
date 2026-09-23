@@ -35,7 +35,7 @@ const PROPERTIES: Property[] = [
     rows: [
       [
         { src: "/figma/latest/image-02.jpg", alt: "Casa Campeche, terraza con alberca y sillas de madera", x: 228, w: 845, h: 570 },
-        { src: "/figma/latest/image-05.png", alt: "Casa Campeche, patio interior de concreto", x: 1325, w: 420, h: 567 },
+        { src: "/figma/latest/image-05.jpg", alt: "Casa Campeche, patio interior de concreto", x: 1325, w: 420, h: 567 },
       ],
       [
         { src: "/figma/latest/image-08.jpg", alt: "Casa Campeche, sala con sofá de piel", x: 228, w: 420, h: 567 },
@@ -69,7 +69,8 @@ const PROPERTIES: Property[] = [
 const vars = (entries: Record<string, number>) =>
   Object.fromEntries(Object.entries(entries).map(([key, value]) => [`--${key}`, value]));
 
-function Photo({ tile, sizes }: { tile: Tile; sizes: string }) {
+function Photo({ tile }: { tile: Tile }) {
+  const sizes = `(min-width: 768px) ${Math.ceil((tile.w / 1920) * 100)}vw, 100vw`;
   return (
     <div
       className="relative w-full aspect-[var(--w)/var(--h)] md:absolute md:top-0 md:left-[calc(var(--f)*var(--x))] md:h-[calc(var(--f)*var(--h))] md:w-[calc(var(--f)*var(--w))] md:aspect-auto"
@@ -99,7 +100,7 @@ export default function FigmaPropertyMosaic() {
           </Link>
 
           <div className="relative mt-10 md:mt-[calc(var(--f)*var(--gap-heading))] md:h-[calc(var(--f)*754)]">
-            <Photo tile={property.main} sizes="(min-width: 768px) 59vw, 100vw" />
+            <Photo tile={property.main} />
           </div>
 
           {property.rows.map((row, index) => (
@@ -109,7 +110,7 @@ export default function FigmaPropertyMosaic() {
               style={vars({ "row-h": Math.max(row[0].h, row[1].h) })}
             >
               {row.map((tile) => (
-                <Photo key={tile.src} tile={tile} sizes="(min-width: 768px) 45vw, 100vw" />
+                <Photo key={tile.src} tile={tile} />
               ))}
             </div>
           ))}

@@ -44,6 +44,19 @@ type Props = {
 
 const f = (px: number) => `calc(var(--f) * ${px})`;
 
+/** Grid tracks that put each column at its Figma x with its Figma width: gap, col, gap, col, gap, col, rest. */
+function amenityTracks(columns: Props["amenityColumns"]) {
+  let cursor = 0;
+  const tracks: string[] = [];
+  for (const [x, width] of columns) {
+    tracks.push(f(x - cursor), f(width));
+    cursor = x + width;
+  }
+  return [...tracks, "1fr"].join(" ").replaceAll(" * ", "*");
+}
+// Brand graphics never shrink below 42% of their Figma size, so they stay readable on phones.
+const fDeco = (px: number) => `calc(max(var(--f), 0.42px) * ${px})`;
+
 function DecoGraphic({ deco, className }: { deco: Deco; className: string }) {
   const boxW = deco.rotated ? deco.height : deco.width;
   const boxH = deco.rotated ? deco.width : deco.height;
@@ -51,7 +64,7 @@ function DecoGraphic({ deco, className }: { deco: Deco; className: string }) {
     <div
       aria-hidden
       className={`pointer-events-none ${className}`}
-      style={{ width: f(boxW), height: f(boxH), ["--x" as string]: deco.left, ["--y" as string]: deco.top }}
+      style={{ width: fDeco(boxW), height: fDeco(boxH), ["--x" as string]: deco.left, ["--y" as string]: deco.top }}
     >
       <Image
         src={deco.src}
@@ -61,8 +74,8 @@ function DecoGraphic({ deco, className }: { deco: Deco; className: string }) {
         unoptimized
         className="absolute left-1/2 top-1/2 max-w-none"
         style={{
-          width: f(deco.width),
-          height: f(deco.height),
+          width: fDeco(deco.width),
+          height: fDeco(deco.height),
           transform: `translate(-50%, -50%)${deco.rotated ? " rotate(-90deg)" : ""}`,
         }}
       />
@@ -109,7 +122,7 @@ export default function HousePage({ hero, symbol, title, intro, introHeight, int
             style={{ ["--intro-h" as string]: introHeight }}
           >
             <h1 className="text-[26px] font-bold leading-normal md:text-[max(24px,calc(var(--f)*36))]">{title[language]}</h1>
-            <div className="mt-8 space-y-[20px] text-[15px] leading-[22px] md:mt-[calc(var(--f)*41)] md:text-[max(14px,calc(var(--f)*18))] md:leading-[1.39]">
+            <div className="mt-8 space-y-[20px] text-[15px] leading-[22px] md:mt-[calc(var(--f)*41)] md:text-[max(14px,calc(var(--f)*18))] md:leading-[1.39] lg:text-[max(12px,calc(var(--f)*18))]">
               {intro[language].map((paragraph) => (
                 <p key={paragraph}>{paragraph}</p>
               ))}
@@ -117,7 +130,7 @@ export default function HousePage({ hero, symbol, title, intro, introHeight, int
           </div>
           <DecoGraphic
             deco={introDeco}
-            className="hidden md:absolute md:left-[calc(var(--f)*var(--x))] md:top-[calc(var(--f)*var(--y))] md:block"
+            className="relative mx-auto mt-10 xl:absolute xl:left-[calc(var(--f)*var(--x))] xl:top-[calc(var(--f)*var(--y))] xl:mx-0 xl:mt-0"
           />
         </section>
 
@@ -139,13 +152,12 @@ export default function HousePage({ hero, symbol, title, intro, introHeight, int
           <h2 className="text-center font-[family-name:var(--font-courier)] text-[24px] leading-normal text-black md:text-[max(22px,calc(var(--f)*30))] md:leading-[1.133]">
             {amenitiesTitle}
           </h2>
-          <div className="relative mt-8 grid gap-6 font-[family-name:var(--font-courier)] text-[15px] leading-[28px] text-[#222222] md:mt-[calc(var(--f)*111)] md:block md:h-[calc(var(--f)*291)] md:text-[max(13px,calc(var(--f)*18))] md:leading-[1.944]">
+          <div
+            className="relative mx-auto mt-8 grid max-w-[1404px] gap-6 font-[family-name:var(--font-courier)] text-[15px] leading-[28px] text-[#222222] md:mt-[calc(var(--f)*111)] md:grid-cols-3 md:px-8 lg:min-h-[calc(var(--f)*291)] lg:max-w-none lg:grid-cols-[var(--amenity-tracks)] lg:gap-0 lg:px-0 lg:text-[max(12px,calc(var(--f)*18))] lg:leading-[1.944]"
+            style={{ ["--amenity-tracks" as string]: amenityTracks(amenityColumns) }}
+          >
             {amenities[language].map((column, index) => (
-              <ul
-                key={index}
-                className="md:absolute md:top-0 md:left-[calc(var(--f)*var(--col-x))] md:w-[calc(var(--f)*var(--col-w))]"
-                style={{ ["--col-x" as string]: amenityColumns[index][0], ["--col-w" as string]: amenityColumns[index][1] }}
-              >
+              <ul key={index} className="lg:[grid-column:var(--col)]" style={{ ["--col" as string]: String(index * 2 + 2) }}>
                 {column.map((item) => (
                   <li key={item}>{item}</li>
                 ))}
@@ -153,7 +165,7 @@ export default function HousePage({ hero, symbol, title, intro, introHeight, int
             ))}
           </div>
           <div className="flex justify-center pt-16 md:pt-[var(--deco-gap)]" style={{ ["--deco-gap" as string]: f(amenitiesDeco.gapAbove) }}>
-            <DecoGraphic deco={amenitiesDeco} className="relative min-h-[60px] min-w-[60px]" />
+            <DecoGraphic deco={amenitiesDeco} className="relative" />
           </div>
         </section>
 
