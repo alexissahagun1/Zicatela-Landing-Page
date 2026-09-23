@@ -194,7 +194,7 @@ const inputClass =
   `w-full rounded-lg border border-[#E6E6E6] bg-white px-3 py-2 ${fontCourier} text-sm text-[#222] outline-none transition-colors placeholder:text-[#B0B0B0] focus:border-[#7A7A7C] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#222]`;
 
 const ctaClass =
-  `inline-flex items-center justify-center gap-2 rounded-full bg-[#7A7A7C] px-6 py-2.5 ${fontCourier} text-xs uppercase tracking-[0.12em] text-white transition-colors hover:bg-[#5F5F61] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#222] disabled:cursor-not-allowed disabled:opacity-50`;
+  `inline-flex items-center justify-center gap-2 rounded-full bg-[#222222] px-6 py-2.5 ${fontCourier} text-xs uppercase tracking-[0.12em] text-white transition-colors hover:bg-black focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#222] disabled:cursor-not-allowed disabled:opacity-50`;
 
 export default function BookingResults({ search }: BookingResultsProps) {
   const { language } = useLanguage();
@@ -639,7 +639,7 @@ export default function BookingResults({ search }: BookingResultsProps) {
                                     [listing.id]: { status: "idle" },
                                   }))
                                 }
-                                className={`inline-flex items-center rounded-full border border-[#D0D0D0] px-5 py-2.5 ${fontCourier} text-xs uppercase tracking-[0.12em] text-[#7A7A7C] transition-colors hover:bg-[#FAFAFA] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#222]`}
+                                className={`inline-flex items-center rounded-full border border-[#222222] px-5 py-2.5 ${fontCourier} text-xs uppercase tracking-[0.12em] text-[#222222] transition-colors hover:bg-[#F4F4F4] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#222]`}
                               >
                                 {t.back}
                               </button>

@@ -296,8 +296,7 @@ export default function BookingSearchBar({
             type="button"
             onClick={handleSearch}
             className={cn(
-              "w-[92px] shrink-0 rounded-xl bg-[#7A7A7C] px-2 font-['Courier_Prime'] text-[12px] text-white transition-all hover:bg-[#5F5F61] active:scale-[0.99]",
-              !canSearch && "opacity-90",
+              "w-[92px] shrink-0 rounded-xl bg-[#222222] px-2 font-['Courier_Prime'] text-[12px] text-white transition-all hover:bg-black active:scale-[0.99]",
             )}
           >
             {submitLabel ?? t.search}
@@ -370,9 +369,8 @@ export default function BookingSearchBar({
             onClick={handleSearch}
             className={cn(
               "w-full rounded-xl px-8 py-3.5 font-['Courier_Prime'] text-base text-white transition-all",
-              "bg-[#7A7A7C] hover:bg-[#5F5F61] active:scale-[0.99]",
-              "lg:min-w-[132px] lg:rounded-full",
-              !canSearch && "opacity-90"
+              "bg-[#222222] hover:bg-black active:scale-[0.99]",
+              "lg:min-w-[132px] lg:rounded-full"
             )}
           >
             {submitLabel ?? t.search}
