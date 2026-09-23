@@ -22,11 +22,17 @@ test("whole-home reservations collect dates and guests only", () => {
   assert.doesNotMatch(results, /search\.promoCode|promoCode/);
 });
 
-test("booking result cards show a photo for each Guesty unit", () => {
+test("booking result cards show a photo for each Guesty unit", async () => {
   assert.match(results, /BookingListingPhoto/);
   assert.match(results, /from "@\/lib\/listing-photos"/);
   assert.match(results, /BookingResultsSkeleton/);
   assert.match(results, /casa-zii-booking-card/);
+  // Each result shows its unit's gallery as a native scroll-snap carousel; only the first photo loads eagerly.
+  const photo = await readFile("app/components/BookingListingPhoto.tsx", "utf8");
+  assert.match(results, /GALLERY_BY_UNIT\[listing\.unit\]/);
+  assert.match(photo, /snap-x snap-mandatory/);
+  assert.match(photo, /loading=\{i === 0 \? undefined : "lazy"\}/);
+  assert.doesNotMatch(results, /preloadListingPhotos/);
 });
 
 test("listing photos use optimized booking-card sources", async () => {

@@ -61,13 +61,3 @@ export function getListingPhoto(
   }
   return null;
 }
-
-/** Warm the browser cache for photos that will appear in the results list. */
-export function preloadListingPhotos(sources: string[]): void {
-  if (typeof window === "undefined") return;
-  for (const src of sources) {
-    const img = new window.Image();
-    img.decoding = "async";
-    img.src = src;
-  }
-}

@@ -81,3 +81,11 @@ export const palmasII: GalleryPhoto[] = [
   { src: "/figma/casa-palmas/gallery-palmas-ii-19.jpg", width: 1600, height: 2400 },
   { src: "/figma/casa-palmas/gallery-palmas-ii-20.jpg", width: 1592, height: 2400 },
 ];
+
+/** Gallery for each Guesty unit name (as returned by the availability API). */
+export const GALLERY_BY_UNIT: Record<string, GalleryPhoto[]> = {
+  "Campeche I": campecheI,
+  "Campeche II": campecheII,
+  "Palmas I": palmasI,
+  "Palmas II": palmasII,
+};

@@ -6,7 +6,8 @@ import { useLanguage } from "../contexts/LanguageContext";
 import type { BookingSearchValues } from "./BookingSearchBar";
 import BookingListingPhoto from "./BookingListingPhoto";
 import BookingResultsSkeleton from "./BookingResultsSkeleton";
-import { getListingPhoto, preloadListingPhotos } from "@/lib/listing-photos";
+import { getListingPhoto } from "@/lib/listing-photos";
+import { GALLERY_BY_UNIT } from "@/lib/gallery-photos";
 
 type AvailableListing = {
   id: string;
@@ -247,10 +248,6 @@ export default function BookingResults({ search }: BookingResultsProps) {
         setResults(nextResults);
         setNights(Number(data?.nights) || 0);
         setPhase("ready");
-        const photoSources = nextResults
-          .map((listing) => getListingPhoto(listing.unit, listing.house, language)?.src)
-          .filter((src): src is string => Boolean(src));
-        preloadListingPhotos([...new Set(photoSources)]);
       } catch (err) {
         if (cancelled) return;
         setError(err instanceof Error ? err.message : "GUESTY_ERROR");
@@ -425,21 +422,24 @@ export default function BookingResults({ search }: BookingResultsProps) {
                 const quote = quotes[listing.id];
                 const booking = bookings[listing.id] ?? { status: "idle" as const };
                 const photo = getListingPhoto(listing.unit, listing.house, language);
+                // The unit's full gallery (Drive order); fall back to its single listing photo.
+                const gallery = (listing.unit && GALLERY_BY_UNIT[listing.unit]) || (photo ? [{ src: photo.src }] : []);
                 return (
                   <article
                     key={listing.id}
                     className="casa-zii-booking-card overflow-hidden rounded-xl border border-[#E6E6E6] bg-white shadow-sm transition-shadow hover:shadow-md motion-reduce:transition-none"
                     style={{ animationDelay: `${index * 60}ms` }}
                   >
-                    <div className="flex gap-4 p-4 md:block md:p-0">
-                      {photo && (
+                    <div>
+                      {gallery.length > 0 && (
                         <BookingListingPhoto
-                          src={photo.src}
-                          alt={photo.alt}
+                          photos={gallery}
+                          alt={photo?.alt ?? listing.unit ?? "Casa Zii"}
                           priority={index < 2}
+                          language={language}
                         />
                       )}
-                      <div className="min-w-0 flex-1 md:p-6">
+                      <div className="min-w-0 p-4 md:p-6">
                         <p className={`${fontCourier} text-[11px] uppercase tracking-[0.16em] text-[#8A8A8A]`}>
                           {listing.unit ?? listing.nickname ?? listing.house ?? ""}
                         </p>
