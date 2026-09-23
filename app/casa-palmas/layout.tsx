@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { SITE_URL } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "Casa Palmas | Villa con terraza y alberca en Zicatela",
+  title: "Casa\u00A0Palmas | Villa con terraza y alberca en Zicatela",
   description:
     "Casa Palmas es una villa brutalista con terraza privada y alberca en Brisas de Zicatela, Puerto Escondido. Solo adultos, con Starlink y reserva directa.",
   alternates: {
@@ -14,7 +14,7 @@ export const metadata: Metadata = {
     },
   },
   openGraph: {
-    title: "Casa Palmas | Villa con terraza y alberca en Zicatela",
+    title: "Casa\u00A0Palmas | Villa con terraza y alberca en Zicatela",
     description:
       "Villa brutalista con terraza privada y alberca en Brisas de Zicatela, Puerto Escondido. Solo adultos.",
     images: ["/figma/latest/hero-palmas.jpg"],
