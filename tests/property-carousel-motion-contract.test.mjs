@@ -15,7 +15,8 @@ test("property carousel keeps its image slides mounted through Embla", () => {
   assert.match(carousel, /<CarouselContent\b/);
   assert.match(carousel, /<CarouselItem\b/);
   assert.match(carousel, /duration: prefersReducedMotion \? 0 : 35/);
-  assert.match(carousel, /loading="eager"/);
+  assert.match(carousel, /loading=\{isNear\(index\) \? "eager" : "lazy"\}/);
+  assert.doesNotMatch(carousel, /priority=/);
   assert.doesNotMatch(carousel, /key=\{`outgoing-/);
   assert.doesNotMatch(carousel, /transition-opacity/);
 });
@@ -25,9 +26,10 @@ test("property carousel labels its controls through a valid group role", () => {
   assert.match(carousel, /aria-label=\{language === "es"/);
 });
 
-test("property carousel aligns reversed desktop controls beneath the image", () => {
-  assert.match(carousel, /isImageLeft \? "" : "ml-auto"/);
-  assert.match(carousel, /lg:w-\[calc\(\(100%_-_3rem\)_\/_2\)\]/);
+test("property carousel keeps photos big with natural proportions", () => {
+  assert.match(carousel, /basis-auto/);
+  assert.match(carousel, /md:h-\[max\(240px,min\(calc\(100svh-292px\),820px,calc\(\(100vw-2rem\)\/1\.52\)\)\)\]/);
+  assert.match(carousel, /w-auto/);
 });
 
 test("property carousel skips visual motion for reduced-motion users", () => {

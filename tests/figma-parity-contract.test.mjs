@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import test from "node:test";
 
@@ -63,28 +63,10 @@ test("Casa Campeche keeps every Figma photograph inside static property carousel
   assert.doesNotMatch(propertyCarousel, /key=\{`outgoing-/);
   assert.doesNotMatch(propertyCarousel, /setInterval|autoplay|autoPlay/);
 
-  const carouselPhotographs = [
-    "\/figma\/casa-campeche\/campeche-i\\.png",
-    "\/figma\/casa-campeche\/campeche-ii\\.jpg",
-    "\/figma\/casa-campeche\/left-01-kitchen\\.png",
-    "\/figma\/casa-campeche\/left-02-lounge\\.png",
-    "\/figma\/casa-campeche\/left-03-bathroom\\.png",
-    "\/figma\/casa-campeche\/left-04-bedroom\\.png",
-    "\/figma\/casa-campeche\/left-05-interior\\.jpg",
-    "\/figma\/casa-campeche\/left-06-interior\\.jpg",
-    "\/figma\/casa-campeche\/left-07-interior\\.jpg",
-    "\/figma\/casa-campeche\/left-08-vertical\\.jpg",
-    "\/figma\/casa-campeche\/right-01-shower\\.png",
-    "\/figma\/casa-campeche\/right-02-bedroom\\.png",
-    "\/figma\/casa-campeche\/right-03-pool\\.png",
-    "\/figma\/casa-campeche\/right-04-lounge\\.png",
-    "\/figma\/casa-campeche\/right-05-portal\\.png",
-    "\/figma\/casa-campeche\/right-06-dining\\.png",
-    "\/figma\/casa-campeche\/right-07-kitchen\\.png",
-    "\/figma\/casa-campeche\/right-08-bathroom\\.png",
-  ];
-
-  for (const photograph of carouselPhotographs) {
-    assert.match(campeche, new RegExp(photograph), `Missing carousel photograph: ${photograph}`);
+  assert.match(campeche, /images=\{campecheI\}/);
+  assert.match(campeche, /images=\{campecheII\}/);
+  const manifest = read("lib/gallery-photos.ts");
+  for (const [, src] of manifest.matchAll(/src: "([^"]+)"/g)) {
+    assert.ok(existsSync(resolve(root, `public${src}`)), `Missing gallery photo: public${src}`);
   }
 });

@@ -10,8 +10,9 @@ test("sticky booking bar reuses the reservation form and opens Guesty results in
 
   assert.match(sticky, /BookingSearchBar/);
   assert.match(sticky, /BookingResults/);
-  assert.match(sticky, /popoverDirection=\{isHomepage \? "down" : "up"\}/);
-  assert.match(sticky, /isHomepage\s*\?\s*"pointer-events-none absolute/);
+  assert.match(sticky, /popoverDirection="up"/);
+  assert.match(sticky, /"pointer-events-none fixed inset-x-0 bottom-0/);
+  assert.doesNotMatch(sticky, /isHomepage/);
   assert.match(sticky, /mobileCompact/);
   assert.match(sticky, /role="dialog"/);
   assert.match(sticky, /data-state=\{isPanelClosing \? "closing" : "open"\}/);

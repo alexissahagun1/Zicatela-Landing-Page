@@ -7,7 +7,7 @@ import AmenitiesSection from "../components/AmenitiesSection";
 import PropertyGallery from "../components/PropertyGallery";
 import PropertyCarousel from "../components/PropertyCarousel";
 import MapSection from "../components/MapSection";
-import { listingPhotoAlt, withListingPhoto } from "@/lib/listing-photos";
+import { palmasI, palmasII } from "@/lib/gallery-photos";
 import { useLanguage } from '../contexts/LanguageContext';
 
 export default function CasaPalmasPage() {
@@ -66,33 +66,12 @@ export default function CasaPalmasPage() {
         <AmenitiesSection amenities={currentContent.amenities} />
         
         {/* Property Carousels */}
-        <div className="py-6 px-4 space-y-20">
+        <div className="space-y-16 px-4 py-6 md:space-y-24">
           {/* Casa Palmas I */}
           <PropertyCarousel
             sectionId="palmas-i"
             title="PALMAS I"
-            images={withListingPhoto("Palmas I", [
-              "/figma/casa-palmas/palmas-i-01.jpg",
-              "/figma/casa-palmas/palmas-i-02.jpg",
-              "/figma/casa-palmas/palmas-i-03.jpg",
-              "/figma/casa-palmas/palmas-i-04.jpg",
-              "/figma/casa-palmas/palmas-i-05.jpg",
-              "/figma/casa-palmas/palmas-i-06.jpg",
-              "/figma/casa-palmas/palmas-i-07.jpg",
-              "/figma/casa-palmas/palmas-i-08.jpg",
-              "/figma/casa-palmas/palmas-i-09.jpg"
-            ])}
-            imageAlts={[
-              listingPhotoAlt("Palmas I", language),
-              "Habitación de Casa Palmas I",
-              "Espejo y regadera de Casa Palmas I",
-              "Sala con ventana circular de Casa Palmas I",
-              "Cocina de Casa Palmas I",
-              "Terraza junto a la alberca de Casa Palmas I",
-              "Alberca privada de Casa Palmas I",
-              "Comedor y cocina de Casa Palmas I",
-              "Regadera exterior de Casa Palmas I"
-            ]}
+            images={palmasI}
             features={[
               currentContent.features.guests,
               currentContent.features.bedrooms,
@@ -101,35 +80,13 @@ export default function CasaPalmasPage() {
               currentContent.features.terrace
             ]}
             connectionNote=""
-            layout="image-left"
           />
           
           {/* Casa Palmas II */}
           <PropertyCarousel
             sectionId="palmas-ii"
             title="PALMAS II"
-            images={withListingPhoto("Palmas II", [
-              "/figma/casa-palmas/palmas-ii-01.jpg",
-              "/figma/casa-palmas/palmas-ii-02.jpg",
-              "/figma/casa-palmas/palmas-ii-03.jpg",
-              "/figma/casa-palmas/palmas-ii-04.jpg",
-              "/figma/casa-palmas/palmas-ii-05.jpg",
-              "/figma/casa-palmas/palmas-ii-06.jpg",
-              "/figma/casa-palmas/palmas-ii-07.jpg",
-              "/figma/casa-palmas/palmas-ii-08.jpg",
-              "/figma/casa-palmas/palmas-ii-09.jpg"
-            ])}
-            imageAlts={[
-              listingPhotoAlt("Palmas II", language),
-              "Habitación de Casa Palmas II",
-              "Regadera exterior de Casa Palmas II",
-              "Baño de Casa Palmas II",
-              "Sala con ventana circular de Casa Palmas II",
-              "Sala comedor y cocina de Casa Palmas II",
-              "Sala con arte de Casa Palmas II",
-              "Comedor de Casa Palmas II",
-              "Alberca privada de Casa Palmas II"
-            ]}
+            images={palmasII}
             features={[
               currentContent.features.guests,
               currentContent.features.bedrooms,
@@ -138,7 +95,6 @@ export default function CasaPalmasPage() {
               currentContent.features.terrace
             ]}
             connectionNote=""
-            layout="image-right"
           />
         </div>
         

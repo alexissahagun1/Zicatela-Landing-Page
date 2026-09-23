@@ -7,7 +7,7 @@ import AmenitiesSection from "../components/AmenitiesSection";
 import PropertyGallery from "../components/PropertyGallery";
 import PropertyCarousel from "../components/PropertyCarousel";
 import MapSection from "../components/MapSection";
-import { listingPhotoAlt, withListingPhoto } from "@/lib/listing-photos";
+import { campecheI, campecheII } from "@/lib/gallery-photos";
 import { useLanguage } from '../contexts/LanguageContext';
 
 export default function CasaCampechePage() {
@@ -69,34 +69,12 @@ export default function CasaCampechePage() {
         <AmenitiesSection amenities={currentContent.amenities} />
         
         {/* Static property carousels: all Figma gallery photographs stay in-flow. */}
-        <div className="py-6 px-4 space-y-20">
+        <div className="space-y-16 px-4 py-6 md:space-y-24">
           {/* Casa Campeche I */}
           <PropertyCarousel
             sectionId="campeche-i"
             title="CAMPECHE I"
-            images={withListingPhoto("Campeche I", [
-              "/figma/casa-campeche/campeche-i.png",
-              "/figma/casa-campeche/right-01-shower.png",
-              "/figma/casa-campeche/right-02-bedroom.png",
-              "/figma/casa-campeche/right-03-pool.png",
-              "/figma/casa-campeche/right-04-lounge.png",
-              "/figma/casa-campeche/right-05-portal.png",
-              "/figma/casa-campeche/right-06-dining.png",
-              "/figma/casa-campeche/right-07-kitchen.png",
-              "/figma/casa-campeche/right-08-bathroom.png",
-            ])}
-            imageAlts={[
-              listingPhotoAlt("Campeche I", language),
-              "Habitación de Casa Campeche I",
-              "Regadera de concreto de Casa Campeche I",
-              "Habitación con arte de Casa Campeche I",
-              "Alberca privada de Casa Campeche I",
-              "Sala junto a la alberca de Casa Campeche I",
-              "Portal circular de Casa Campeche I",
-              "Comedor de Casa Campeche I",
-              "Cocina de Casa Campeche I",
-              "Baño de Casa Campeche I",
-            ]}
+            images={campecheI}
             features={[
               currentContent.features.guests,
               currentContent.features.bedrooms,
@@ -105,36 +83,13 @@ export default function CasaCampechePage() {
               currentContent.features.terrace
             ]}
             connectionNote={currentContent.connectionNote}
-            layout="image-left"
           />
           
           {/* Casa Campeche II */}
           <PropertyCarousel
             sectionId="campeche-ii"
             title="CAMPECHE II"
-            images={withListingPhoto("Campeche II", [
-              "/figma/casa-campeche/campeche-ii.jpg",
-              "/figma/casa-campeche/left-01-kitchen.png",
-              "/figma/casa-campeche/left-02-lounge.png",
-              "/figma/casa-campeche/left-03-bathroom.png",
-              "/figma/casa-campeche/left-04-bedroom.png",
-              "/figma/casa-campeche/left-05-interior.jpg",
-              "/figma/casa-campeche/left-06-interior.jpg",
-              "/figma/casa-campeche/left-07-interior.jpg",
-              "/figma/casa-campeche/left-08-vertical.jpg",
-            ])}
-            imageAlts={[
-              listingPhotoAlt("Campeche II", language),
-              "Habitación de Casa Campeche II",
-              "Cocina y comedor de Casa Campeche II",
-              "Sala abierta de Casa Campeche II",
-              "Baño de concreto de Casa Campeche II",
-              "Habitación de Casa Campeche II",
-              "Interior de Casa Campeche II",
-              "Espacio interior de Casa Campeche II",
-              "Arquitectura interior de Casa Campeche II",
-              "Detalle vertical de Casa Campeche II",
-            ]}
+            images={campecheII}
             features={[
               currentContent.features.guests,
               currentContent.features.bedrooms,
@@ -143,7 +98,6 @@ export default function CasaCampechePage() {
               currentContent.features.terrace
             ]}
             connectionNote={currentContent.connectionNote}
-            layout="image-right"
           />
         </div>
         

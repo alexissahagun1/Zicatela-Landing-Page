@@ -51,10 +51,6 @@ export default function StickyBookingBar() {
 
   if (pathname === "/booking") return null;
 
-  // Figma 2031:1166: on the homepage the pill sits on the hero's bottom edge instead of floating.
-  // The offset mirrors HeroSection's nav padding + hero height, minus half the pill height.
-  const isHomepage = pathname === "/" || pathname === "/homepage";
-
   function handleSearch(values: BookingSearchValues) {
     if (closeTimerRef.current !== null) {
       window.clearTimeout(closeTimerRef.current);
@@ -79,16 +75,12 @@ export default function StickyBookingBar() {
     <>
       <aside
         aria-label={t.panel}
-        className={
-          isHomepage
-            ? "pointer-events-none absolute inset-x-0 top-[calc(64px+max(46vh,360px)-48px)] z-30 px-3 sm:top-[calc(64px+56vh-48px)] md:top-[calc(74px+min(66vh,680px)-48px)] md:px-6"
-            : "pointer-events-none fixed inset-x-0 bottom-3 z-30 px-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] md:bottom-5 md:px-6"
-        }
+        className="pointer-events-none fixed inset-x-0 bottom-0 z-30 px-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] md:px-6"
       >
         <div className="pointer-events-auto mx-auto w-full max-w-4xl">
           <BookingSearchBar
             onSearch={handleSearch}
-            popoverDirection={isHomepage ? "down" : "up"}
+            popoverDirection="up"
             submitLabel={t.action}
             mobileCompact
           />
