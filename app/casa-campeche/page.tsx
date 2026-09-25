@@ -7,8 +7,8 @@ import { AMENITIES } from "@/lib/house-amenities";
 // Figma eNHBCVNfWSH0nXswrrvnuS 2011:90 — Spanish copy is the design source; English is a translation of it.
 
 const features = {
-  es: ["4 huéspedes", "2 habitaciones", "2 camas matrimoniales", "Alberca privada", "Terraza", "Cocina equipada"],
-  en: ["4 guests", "2 bedrooms", "2 double beds", "Private pool", "Terrace", "Equipped kitchen"],
+  es: ["4 huéspedes", "2 habitaciones", "2 camas king size", "Alberca privada", "Terraza escalonada de piscina", "Cocina equipada"],
+  en: ["4 guests", "2 bedrooms", "2 king size beds", "Private pool", "Terraced Poolside Lounge", "Equipped kitchen"],
 };
 
 export default function CasaCampechePage() {
