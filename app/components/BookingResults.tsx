@@ -108,6 +108,8 @@ const copy = {
     confirmationCode: "Código de confirmación",
     back: "Volver",
     retry: "Reintentar",
+    currencyNote: "Los precios en USD son estimados con el tipo de cambio de referencia diario. Guesty conserva la moneda de la propiedad (MXN) en la solicitud.",
+    usdUnavailable: "Precio USD no disponible",
   },
   en: {
     availability: "Availability",
@@ -150,6 +152,8 @@ const copy = {
     confirmationCode: "Confirmation code",
     back: "Back",
     retry: "Retry",
+    currencyNote: "USD prices are estimates using the daily reference exchange rate. Guesty keeps the property's currency (MXN) on the request.",
+    usdUnavailable: "USD price unavailable",
   },
 } as const;
 
@@ -169,16 +173,50 @@ function formatDateLabel(dateStr: string, language: "es" | "en"): string {
   });
 }
 
-function formatMoney(amount: number, currency: string | null, language: "es" | "en"): string {
-  try {
-    return new Intl.NumberFormat(language === "es" ? "es-MX" : "en-US", {
-      style: "currency",
-      currency: currency ?? "MXN",
-      maximumFractionDigits: 0,
-    }).format(amount);
-  } catch {
-    return `${currency ?? "MXN"} ${amount}`;
+function formatMoney(
+  amount: number,
+  currency: string | null,
+  language: "es" | "en",
+  usdPerMxn: number | null
+): string {
+  let displayAmount = amount;
+  let displayCurrency = currency ?? "MXN";
+
+  if (language === "en" && displayCurrency === "MXN") {
+    if (usdPerMxn == null) return "USD price unavailable";
+    displayAmount *= usdPerMxn;
+    displayCurrency = "USD";
   }
+
+  try {
+    const formatted = new Intl.NumberFormat(language === "es" ? "es-MX" : "en-US", {
+      style: "currency",
+      currency: displayCurrency,
+      currencyDisplay: "narrowSymbol",
+      maximumFractionDigits: 0,
+    }).format(displayAmount);
+    return `${formatted} ${displayCurrency}`;
+  } catch {
+    return `${displayCurrency} ${displayAmount}`;
+  }
+}
+
+function formatListingTitle(
+  title: string | null,
+  unit: string | null,
+  language: "es" | "en"
+): string {
+  if (language === "en" || !title) return title ?? unit ?? "—";
+
+  const casaName = unit ? `Casa Zii ${unit.toUpperCase()}` : "Casa Zii";
+  if (/new\s+2br\s+villa/i.test(title)) {
+    return `Villa nueva de 2 recámaras con alberca privada y Starlink — ${casaName}`;
+  }
+  if (/entire\s+villa/i.test(title)) {
+    return `Villa completa con alberca privada y Starlink — ${casaName}`;
+  }
+
+  return title;
 }
 
 function createIdempotencyKey(): string {
@@ -204,6 +242,7 @@ export default function BookingResults({ search }: BookingResultsProps) {
   const [error, setError] = useState<string | null>(null);
   const [results, setResults] = useState<AvailableListing[]>([]);
   const [nights, setNights] = useState(0);
+  const [usdPerMxn, setUsdPerMxn] = useState<number | null>(null);
   const [quotes, setQuotes] = useState<Record<string, QuoteState>>({});
   const [bookings, setBookings] = useState<Record<string, BookingState>>({});
   const [idempotencyKeys, setIdempotencyKeys] = useState<Record<string, string>>({});
@@ -238,7 +277,22 @@ export default function BookingResults({ search }: BookingResultsProps) {
           checkOut: toDateInput(to),
           adults: String(search.adults),
         });
-        const res = await fetch(`/api/guesty/availability?${params}`);
+        const exchangeRatePromise = language === "en"
+          ? fetch("/api/exchange-rate")
+              .then(async (response) => {
+                if (!response.ok) return null;
+                const data = await response.json().catch(() => null);
+                return typeof data?.rate === "number" && Number.isFinite(data.rate) && data.rate > 0
+                  ? data.rate as number
+                  : null;
+              })
+              .catch(() => null)
+          : Promise.resolve(null);
+
+        const [res, exchangeRate] = await Promise.all([
+          fetch(`/api/guesty/availability?${params}`),
+          exchangeRatePromise,
+        ]);
         const data = await res.json().catch(() => null);
         if (cancelled) return;
         if (!res.ok) throw new Error(data?.error ?? "GUESTY_ERROR");
@@ -247,6 +301,7 @@ export default function BookingResults({ search }: BookingResultsProps) {
           : [];
         setResults(nextResults);
         setNights(Number(data?.nights) || 0);
+        setUsdPerMxn(exchangeRate);
         setPhase("ready");
       } catch (err) {
         if (cancelled) return;
@@ -407,6 +462,11 @@ export default function BookingResults({ search }: BookingResultsProps) {
             <p className={`mt-1 ${fontCourier} text-sm text-[#7A7A7C]`}>
               {dateLabel} · {search.adults} {t.guests} · {nights} {t.nights}
             </p>
+            {language === "en" && (
+              <p className={`mt-2 ${fontCourier} text-xs text-[#7A7A7C]`}>
+                {t.currencyNote}
+              </p>
+            )}
           </div>
 
           {results.length === 0 ? (
@@ -444,7 +504,7 @@ export default function BookingResults({ search }: BookingResultsProps) {
                           {listing.unit ?? listing.nickname ?? listing.house ?? ""}
                         </p>
                         <h3 className={`mt-1 ${fontCourier} text-base leading-snug text-[#222] md:text-lg`}>
-                          {listing.title ?? listing.nickname ?? "—"}
+                          {formatListingTitle(listing.title, listing.unit ?? listing.nickname, language)}
                         </h3>
                         <p className={`mt-1 ${fontCourier} text-xs text-[#7A7A7C]`}>
                           {listing.accommodates} {t.guests}
@@ -458,12 +518,12 @@ export default function BookingResults({ search }: BookingResultsProps) {
                             <>
                               {t.from}{" "}
                               <span className="text-base">
-                                {formatMoney(listing.basePrice, listing.currency, language)}
+                                {formatMoney(listing.basePrice, listing.currency, language, usdPerMxn)}
                               </span>{" "}
                               {t.perNight}
                               {listing.cleaningFee != null ? (
                                 <span className="ml-1 text-xs text-[#7A7A7C]">
-                                  · {t.plusCleaning(formatMoney(listing.cleaningFee, listing.currency, language))}
+                                  · {t.plusCleaning(formatMoney(listing.cleaningFee, listing.currency, language, usdPerMxn))}
                                 </span>
                               ) : null}
                             </>
@@ -517,7 +577,7 @@ export default function BookingResults({ search }: BookingResultsProps) {
                                 {plan.name} · {quote.quote.nights} {t.nightsBreakdown}
                               </span>
                               <span className={`${fontCourier} text-sm tabular-nums text-[#222]`}>
-                                {formatMoney(plan.total, plan.currency, language)}
+                                {formatMoney(plan.total, plan.currency, language, usdPerMxn)}
                               </span>
                             </div>
                             <div className="mt-2 space-y-1">
@@ -528,7 +588,7 @@ export default function BookingResults({ search }: BookingResultsProps) {
                                 >
                                   <span>{formatDateLabel(day.date, language)}</span>
                                   <span className="tabular-nums">
-                                    {formatMoney(day.price, plan.currency, language)}
+                                    {formatMoney(day.price, plan.currency, language, usdPerMxn)}
                                   </span>
                                 </div>
                               ))}
@@ -537,19 +597,19 @@ export default function BookingResults({ search }: BookingResultsProps) {
                               <div className="flex justify-between">
                                 <span>{t.subtotal}</span>
                                 <span className="tabular-nums">
-                                  {formatMoney(plan.subtotal, plan.currency, language)}
+                                  {formatMoney(plan.subtotal, plan.currency, language, usdPerMxn)}
                                 </span>
                               </div>
                               <div className="flex justify-between">
                                 <span>{t.cleaningFee}</span>
                                 <span className="tabular-nums">
-                                  {formatMoney(plan.cleaningFee, plan.currency, language)}
+                                  {formatMoney(plan.cleaningFee, plan.currency, language, usdPerMxn)}
                                 </span>
                               </div>
                               <div className="flex justify-between text-sm font-semibold text-[#222]">
                                 <span>{t.total}</span>
                                 <span className="tabular-nums">
-                                  {formatMoney(plan.total, plan.currency, language)}
+                                  {formatMoney(plan.total, plan.currency, language, usdPerMxn)}
                                 </span>
                               </div>
                             </div>
